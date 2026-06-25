@@ -1,0 +1,43 @@
+import { createAppRefreshController } from "./app-refresh-controller.mjs";
+
+export function createConfiguredRefreshController({
+	pluginId,
+	map,
+	getHttpResponse,
+	targets,
+	getSelfMmsi,
+	setSelfTarget,
+	getSelfTarget,
+	targetSilence,
+	serverAlertEvents,
+	alertPopup,
+	initialPluginTargets,
+	targetMapRenderer,
+	maximumTargetRange,
+	targetMaxAge,
+	ageOutEnabled,
+	showAlarmsInterval,
+}) {
+	return createAppRefreshController({
+		pluginId,
+		map,
+		getHttpResponse,
+		targets,
+		getSelfMmsi,
+		setSelfTarget,
+		getSelfTarget,
+		targetSilence,
+		serverAlertEvents,
+		alertPopup,
+		initialPluginTargets,
+		updateUI: targetMapRenderer.updateUI,
+		ageOutOldTargets: targetMapRenderer.ageOutOldTargets,
+		removeMissingTargets: targetMapRenderer.removeMissingTargets,
+		resetTargetCounts: targetMapRenderer.resetTargetCounts,
+		getAlarmTargetCount: targetMapRenderer.getAlarmTargetCount,
+		maximumTargetRange,
+		targetMaxAge,
+		ageOutEnabled,
+		showAlarmsInterval,
+	});
+}

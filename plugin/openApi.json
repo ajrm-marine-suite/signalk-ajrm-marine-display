@@ -1,0 +1,45 @@
+{
+  "openapi": "3.0.3",
+  "info": {
+    "title": "AJRM Marine Display API",
+    "version": "0.5.0",
+    "description": "Display status and chart-webapp projections backed by Traffic Core and Notifications Plus."
+  },
+  "servers": [
+    {
+      "url": "/plugins/signalk-ajrm-marine-display"
+    }
+  ],
+  "paths": {
+    "/status": {
+      "get": {
+        "summary": "Get Display runtime status and browser defaults",
+        "responses": {
+          "200": {
+            "description": "Current Display plugin state"
+          }
+        }
+      }
+    },
+    "/getTargets": {
+      "get": {
+        "summary": "Get Traffic Core targets projected for the Display webapp",
+        "responses": {
+          "200": {
+            "description": "Projected targets keyed by MMSI"
+          }
+        }
+      }
+    },
+    "/uiState": {
+      "get": {
+        "summary": "Get Display UI state projected from Traffic Core, Notifications Plus and Audio",
+        "responses": {
+          "200": {
+            "description": "Current Display UI state"
+          }
+        }
+      }
+    }
+  }
+}

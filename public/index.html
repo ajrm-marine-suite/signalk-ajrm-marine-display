@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <title>AJRM Marine Display</title>
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+    <script>
+      window.AIS_PLUS_WEBAPP_VERSION = "0.5.0";
+      (async () => {
+        try {
+          const response = await fetch(`./version.json?ts=${Date.now()}`, {
+            cache: "no-store",
+          });
+          if (!response.ok) return;
+          const latest = (await response.json()).version;
+          const current = window.AIS_PLUS_WEBAPP_VERSION;
+          if (!latest || latest === current) {
+            sessionStorage.removeItem("aisPlusReloadedForVersion");
+            return;
+          }
+          const reloadKey = `${current}->${latest}`;
+          if (sessionStorage.getItem("aisPlusReloadedForVersion") === reloadKey) {
+            return;
+          }
+          sessionStorage.setItem("aisPlusReloadedForVersion", reloadKey);
+          const url = new URL(location.href);
+          url.searchParams.set("aisPlusVersion", latest);
+          url.searchParams.set("ts", String(Date.now()));
+          location.replace(url.toString());
+        } catch (_err) {
+          // Keep startup resilient if the static version file is unavailable.
+        }
+      })();
+    </script>
+    <style>
+      html,
+      body {
+        height: 100%;
+        overflow: hidden;
+      }
+
+      #map {
+        height: 100dvh;
+        width: 100vw;
+      }
+
+      body.ais-plus-alert-panel-open #map {
+        height: calc(100dvh - var(--ais-plus-alert-panel-height, 9rem));
+      }
+
+      .ais-plus-alert-panel {
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        width: auto;
+        max-width: 100dvw;
+        z-index: 1030;
+        height: auto;
+        max-height: var(--ais-plus-alert-panel-height, 9rem);
+        overflow: hidden;
+        border-radius: 0;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .ais-plus-alert-list {
+        flex: 1 1 auto;
+        max-height: calc(var(--ais-plus-alert-panel-height, 9rem) - 2.4rem);
+        overflow-y: auto;
+        padding: 0.35rem 0.5rem;
+      }
+
+      .ais-plus-alert-item {
+        background: rgba(var(--bs-warning-rgb), 0.12);
+        border-left: 0.3rem solid var(--bs-warning);
+        border-radius: 0.25rem;
+        font-size: 0.9375rem;
+        line-height: 1.25;
+        margin-bottom: 0.25rem;
+        max-width: 100%;
+        overflow-wrap: anywhere;
+        padding: 0.3rem 0.5rem;
+        word-break: break-word;
+      }
+
+      .ais-plus-alert-item.alert-danger {
+        background: rgba(var(--bs-danger-rgb), 0.12);
+        border-left-color: var(--bs-danger);
+      }
+
+      .ais-plus-alert-item.alert-success {
+        background: rgba(var(--bs-success-rgb), 0.12);
+        border-left-color: var(--bs-success);
+      }
+
+      .ais-plus-alert-show {
+        position: fixed;
+        left: 50%;
+        bottom: 0.75rem;
+        transform: translateX(-50%);
+        z-index: 1030;
+      }
+
+      :root {
+        --ais-plus-alert-panel-height: clamp(7.5rem, 22dvh, 12rem);
+      }
+
+      @media (max-width: 640px) {
+        :root {
+          --ais-plus-alert-panel-height: clamp(8.5rem, 30dvh, 14rem);
+        }
+      }
+
+      .ais-plus-silence-badge {
+        align-items: center;
+        background: #111827;
+        border: 2px solid #fff;
+        border-radius: 999px;
+        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.45);
+        color: #fff;
+        display: flex;
+        font: 700 12px/1 system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        height: 18px;
+        justify-content: center;
+        width: 18px;
+      }
+
+      .ais-plus-help-table-scroll {
+        max-height: min(52vh, 34rem);
+        overflow: auto;
+      }
+
+      .ais-plus-help-table-scroll thead th {
+        background: var(--bs-body-bg);
+        box-shadow: inset 0 -1px 0 var(--bs-border-color);
+        position: sticky;
+        top: 0;
+        z-index: 2;
+      }
+
+      .ais-plus-help-diagrams {
+        display: grid;
+        gap: 1rem;
+        grid-template-columns: repeat(auto-fit, minmax(17rem, 1fr));
+      }
+
+      .ais-plus-help-diagram {
+        border: 1px solid var(--bs-border-color);
+        border-radius: 0.5rem;
+        padding: 0.75rem;
+      }
+
+      .ais-plus-help-diagram svg {
+        display: block;
+        height: auto;
+        margin: 0 auto;
+        max-width: 19rem;
+        width: 100%;
+      }
+
+      .ais-plus-help-diagram .legend-item {
+        align-items: center;
+        display: flex;
+        gap: 0.4rem;
+      }
+
+      .ais-plus-help-swatch {
+        border-radius: 999px;
+        display: inline-block;
+        flex: 0 0 auto;
+        height: 0.7rem;
+        width: 0.7rem;
+      }
+
+      .ais-plus-display-version {
+        position: fixed;
+        right: 0.5rem;
+        bottom: 0.25rem;
+        z-index: 1020;
+        border: 1px solid rgba(var(--bs-secondary-rgb), 0.45);
+        border-radius: 999px;
+        background: rgba(var(--bs-body-bg-rgb), 0.82);
+        padding: 0.12rem 0.45rem;
+        color: var(--bs-secondary-color);
+        font-size: 0.68rem;
+        pointer-events: none;
+      }
+    </style>
+    <script type="module" crossorigin src="./assets/index-CcdUbDxS.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-BUKJx3E2.css">
+  </head>
+
+  <body>
+    <div id="map"></div>
+    <div class="ais-plus-display-version">AJRM Marine Display v0.5.0</div>
+    <div id="topStatusStack" class="ais-plus-top-status-stack">
+      <div
+        id="connectionStatus"
+        class="ais-plus-connection-status shadow-sm d-none"
+        role="status"
+        aria-live="polite"
+      >
+        <span class="fw-semibold">
+          <i class="bi bi-wifi-off"></i>
+          <span id="connectionStatusMode">Pi connection lost</span>
+        </span>
+        <span id="connectionStatusDetail">
+          Showing last received chart and vessel data.
+        </span>
+      </div>
+      <div
+        id="replayStatus"
+        class="ais-plus-replay-status shadow-sm d-none"
+        role="status"
+        aria-live="polite"
+      >
+        <span class="fw-semibold">
+          <i class="bi bi-clock-fill"></i>
+          <span id="replayStatusMode">Replay</span>
+        </span>
+        <span id="replayStatusTime"></span>
+        <span id="replayStatusFile" class="text-body-secondary"></span>
+      </div>
+    </div>
+    <button
+      type="button"
+      class="d-none"
+      id="buttonOpenHelp"
+      data-bs-toggle="modal"
+      data-bs-target="#modalHelp"
+    >
+      Help
+    </button>
+
+    <div class="container">
+      <div
+        id="targetCounts"
+        class="text-center user-select-none pe-none"
+        tabindex="-1"
+      >
+        <p class="display-3 text-info mb-0" id="totalTargetCountUI">0</p>
+        <p class="text-secondary small">TARGETS</p>
+        <p class="display-3 text-primary mb-0" id="filteredTargetCountUI">0</p>
+        <p class="text-secondary small">FILTERED</p>
+        <p class="display-3 text-danger mb-0" id="alarmTargetCountUI">0</p>
+        <p class="text-secondary small">ALARMS</p>
+      </div>
+
+      <div
+        id="alarmMessagePanel"
+        class="ais-plus-alert-panel card shadow-lg d-none"
+        role="status"
+        aria-live="polite"
+      >
+        <div class="card-header py-1 d-flex align-items-center justify-content-between gap-2">
+          <span class="fw-semibold">
+            <i class="bi bi-exclamation-triangle-fill text-danger"></i>
+            Active alerts
+          </span>
+          <button
+            type="button"
+            class="btn btn-sm btn-outline-secondary"
+            id="buttonHideAlarmMessages"
+          >
+            Hide
+          </button>
+        </div>
+        <div id="alarmMessageList" class="ais-plus-alert-list" role="list"></div>
+      </div>
+
+      <button
+        type="button"
+        class="ais-plus-alert-show btn btn-danger shadow d-none"
+        id="buttonShowAlarmMessages"
+      >
+        Show alerts
+      </button>
+
+      <!-- ERROR MODAL -->
+      <div class="modal" tabindex="-1" id="modalAlert">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="alert alert-danger mb-0" role="alert">
+              <div class="alert-dismissible">
+                <span class="h4 alert-heading">
+                  <i class="bi bi-exclamation-triangle-fill"></i>
+                  Error</span
+                >
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+              <hr />
+              <p class="mb-0" id="errorMessage"></p>
+              <button
+                type="button"
+                class="btn btn-warning btn-sm mt-3 d-none"
+                id="buttonPauseGpsAlarm"
+              >
+                Pause lost GPS alarm
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="modalAlarm">
+        <div class="modal-dialog modal-dialog-centered">
+          <div
+            class="modal-content bg-danger-subtle text-danger-emphasis border-danger-subtle"
+          >
+            <div class="modal-header border-danger-subtle">
+              <h5 class="modal-title">
+                <i class="bi bi-exclamation-triangle-fill"></i>
+                Alarm
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+
+            <div class="modal-body" id="alarmDiv"></div>
+
+            <div class="modal-footer border-danger-subtle">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                data-bs-dismiss="modal"
+                id="buttonMuteAllAlarms"
+                disabled
+              >
+                Silence all
+              </button>
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="modalClosebyBoats">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="list-group" id="listOfClosebyBoats"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="modalSelectedVesselProperties">
+        <div class="modal-dialog modal-dialog-centered modal-sm">
+          <div class="modal-content">
+            <div class="modal-header">
+              <div class="col-2">
+                <button
+                  type="button"
+                  class="btn btn-outline-secondary"
+                  id="buttonMuteToggle"
+                  title="Silence or unsilence this target"
+                  aria-label="Silence or unsilence this target"
+                >
+                  <i class="bi bi-volume-mute-fill"></i>
+                </button>
+              </div>
+              <div class="col">
+                <h5 class="modal-title text-center" id="target.name"></h5>
+              </div>
+              <div class="col-2 text-end">
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                ></button>
+              </div>
+            </div>
+            <div class="modal-body">
+              <div id="alertPlaceholder"></div>
+              <h6
+                class="alert alert-warning text-center d-none"
+                role="alert"
+                id="selectedVesselAlert"
+              ></h6>
+              <table class="table table-sm">
+                <tbody>
+                  <tr>
+                    <th scope="row">Message</th>
+                    <td class="text-wrap" style="white-space: normal; word-break: normal;">
+                      <span id="target.spokenSummary"></span>
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Last Seen</th>
+                    <td><span id="target.lastSeen"></span> secs</td>
+                  </tr>
+                  <tr>
+                    <th scope="row">CPA</th>
+                    <td><span id="target.cpaFormatted"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">TCPA</th>
+                    <td id="target.tcpaFormatted"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Range</th>
+                    <td><span id="target.rangeFormatted"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Bearing</th>
+                    <td><span id="target.bearingFormatted"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">SOG</th>
+                    <td><span id="target.sogFormatted"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">COG</th>
+                    <td><span id="target.cogFormatted"></span></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">HDG</th>
+                    <td><span id="target.hdgFormatted"></span></td>
+                  </tr>
+                  <!-- ${target.aisClass == 'A' ? ` -->
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">Rate of Turn</th>
+                    <td><span id="target.rotFormatted"></span> deg/s</td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">Callsign</th>
+                    <td id="target.callsign"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">MMSI</th>
+                    <td>
+                      <span id="target.mmsi"></span> (<a
+                        href="#"
+                        data-bs-toggle="tooltip"
+                        data-bs-placement="right"
+                        data-bs-title=""
+                        id="target.mmsiCountryCode"
+                      ></a
+                      >)
+                    </td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Type</th>
+                    <td id="target.type"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Class</th>
+                    <td id="target.aisClassFormatted"></td>
+                  </tr>
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">Status</th>
+                    <td id="target.status"></td>
+                  </tr>
+
+                  <tr>
+                    <th scope="row">Size</th>
+                    <td id="target.sizeFormatted"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">GPS Antenna</th>
+                    <td id="target.vesselFootprintSourceFormatted"></td>
+                  </tr>
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">Draft</th>
+                    <td id="target.draft"></td>
+                  </tr>
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">Destination</th>
+                    <td id="target.destination"></td>
+                  </tr>
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">ETA</th>
+                    <td id="target.eta"></td>
+                  </tr>
+                  <tr class="ais-class-a d-none">
+                    <th scope="row">IMO</th>
+                    <td id="target.imoFormatted"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Lat</th>
+                    <td id="target.latitudeFormatted"></td>
+                  </tr>
+                  <tr>
+                    <th scope="row">Lon</th>
+                    <td id="target.longitudeFormatted"></td>
+                  </tr>
+                  <!--navigation.specialManeuver-->
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="offcanvasTargetInfo"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Target Info</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body" id="offcanvasTargetInfoBody"></div>
+      </div>
+
+      <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="offcanvasTargetList"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">
+            AIS Targets (<span id="numberOfAisTargets"></span>)
+          </h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="target-list-actions row g-2 mb-3">
+            <div class="col-12">
+              <div class="small text-secondary fw-semibold">
+                Alert silence controls
+              </div>
+            </div>
+            <div class="col-6 d-grid">
+              <button
+                type="button"
+                class="btn btn-outline-danger"
+                id="buttonSilenceAllTargets"
+                disabled
+              >
+                Silence current alerts
+              </button>
+            </div>
+            <div class="col-6 d-grid">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                id="buttonUnsilenceAllTargets"
+                disabled
+              >
+                Unsilence all targets
+              </button>
+            </div>
+          </div>
+          <div class="mb-3">
+            <label for="selectTableSort" class="form-label">Sort By</label>
+            <select class="form-select fw-bold" id="selectTableSort">
+              <option value="priority">Priority</option>
+              <option value="tcpa">TCPA</option>
+              <option value="cpa">CPA</option>
+              <option value="range">Range</option>
+              <option value="name">Name</option>
+            </select>
+          </div>
+          <table class="table table-sm align-middle target-list-table">
+            <thead>
+              <tr>
+                <th scope="col" class="" colspan="2">NAME</th>
+                <th scope="col" class="text-end" style="width: 5em">BRG</th>
+                <th scope="col" class="text-end" style="width: 6em">RNG</th>
+                <th scope="col" class="text-end" style="width: 5em">SOG</th>
+                <th scope="col" class="text-end" style="width: 6em">CPA</th>
+                <th scope="col" class="text-end" style="width: 6em">TCPA</th>
+                <th scope="col" class="text-end" style="width: 3em">SILENCE</th>
+                <!-- <th scope="col" class="text-end">ORDER</th> -->
+              </tr>
+            </thead>
+            <tbody id="tableOfTargetsBody"></tbody>
+          </table>
+          <div class="d-flex align-items-center justify-content-between mt-4 mb-2">
+            <h6 class="mb-0">Announcements</h6>
+            <button
+              type="button"
+              class="btn btn-sm btn-outline-secondary"
+              id="buttonClearAnnouncementLog"
+            >
+              Clear
+            </button>
+          </div>
+          <div id="announcementLogBody" class="list-group list-group-flush small"></div>
+        </div>
+      </div>
+
+      <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="offcanvasProfiles"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Profiles</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <form>
+            <div class="mb-3">
+              <label for="selectActiveProfile" class="form-label"
+                >Active Profile</label
+              >
+              <select class="form-select fw-bold" id="selectActiveProfile">
+                <option value="anchor">Anchored</option>
+                <option value="harbor">Harbour</option>
+                <option value="coastal">Coastal</option>
+                <option value="offshore">Offshore</option>
+              </select>
+            </div>
+            <div class="card mb-3">
+              <ul class="list-group list-group-flush">
+                <li
+                  class="bg-body-secondary list-group-item d-flex align-items-center justify-content-between gap-2"
+                >
+                  <span class="h5 mb-0">Active profile sensitivity</span>
+                  <span class="btn-group btn-group-sm" role="group">
+                    <button
+                      type="button"
+                      class="btn btn-outline-secondary"
+                      id="buttonResetSensitivity"
+                    >
+                      Reset 100%
+                    </button>
+                    <button
+                      type="button"
+                      class="btn btn-primary"
+                      id="buttonSaveProfile"
+                    >
+                      Save Profile
+                    </button>
+                  </span>
+                </li>
+                <li class="list-group-item">
+                  <div class="row mb-3">
+                    <div class="col-4 pe-0">
+                      <label for="configCpaSensitivityRange" class="form-label"
+                        >CPA sensitivity</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="configCpaSensitivityRange"
+                        min="0"
+                        max="200"
+                        step="1"
+                      />
+                    </div>
+                    <div class="col-2 text-end">
+                      <span id="configCpaSensitivity" class="fw-bold">100</span
+                      ><span>%</span>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-4 pe-0">
+                      <label for="configTcpaLookaheadRange" class="form-label"
+                        >TCPA lookahead</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="configTcpaLookaheadRange"
+                        min="0"
+                        max="200"
+                        step="1"
+                      />
+                    </div>
+                    <div class="col-2 text-end">
+                      <span id="configTcpaLookahead" class="fw-bold">100</span
+                      ><span>%</span>
+                    </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-4 pe-0">
+                      <label for="configRepeatSensitivityRange" class="form-label"
+                        >Repeat sensitivity</label
+                      >
+                    </div>
+                    <div class="col-6">
+                      <input
+                        type="range"
+                        class="form-range"
+                        id="configRepeatSensitivityRange"
+                        min="0"
+                        max="200"
+                        step="1"
+                      />
+                    </div>
+                    <div class="col-2 text-end">
+                      <span id="configRepeatSensitivity" class="fw-bold">100</span
+                      ><span>%</span>
+                    </div>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="card mb-3">
+              <div class="card-body">
+                <div class="form-check mb-3">
+                  <input
+                    class="form-check-input"
+                    type="checkbox"
+                    id="checkAutoProfile"
+                  />
+                  <label class="form-check-label" for="checkAutoProfile">
+                    Auto Profile Switch
+                  </label>
+                </div>
+                <div class="form-text" id="autoProfileValidation"></div>
+                <div
+                  class="alert alert-secondary small mt-3 mb-0"
+                  id="autoProfileStatusMessage"
+                  role="status"
+                >
+                  Auto Profile Switch status unavailable.
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              class="btn btn-primary col-12 mb-3 d-none"
+              id="buttonEditProfiles"
+            >
+              Edit Profiles
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <div
+        class="offcanvas offcanvas-start"
+        tabindex="-1"
+        id="offcanvasSettings"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Settings</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <div class="collapse multi-collapse show" id="collapseSettings">
+            <div class="card card-body">
+              <form id="settingsForm">
+                <div class="d-none" aria-hidden="true">
+                  <input
+                    class="btn-check"
+                    type="checkbox"
+                    id="checkSoundMuted"
+                    autocomplete="off"
+                  />
+                  <label
+                    class="btn btn-success col-12"
+                    for="checkSoundMuted"
+                    id="buttonSoundMuted"
+                  >
+                    Audio status
+                  </label>
+                  <div class="form-text" id="soundMuteStatus">
+                    Sound status unavailable.
+                  </div>
+                  <div
+                    class="collapse d-none"
+                    id="collapseSoundOutputs"
+                    aria-hidden="true"
+                  >
+                    <input type="checkbox" id="checkBrowserSpeech" />
+                    <input type="checkbox" id="checkPiSpeech" />
+                    <input type="checkbox" id="checkAudioStream" />
+                    <input type="checkbox" id="checkAutomuteStationary" />
+                    <button type="button" id="buttonSoundCheck"></button>
+                  </div>
+                </div>
+                <div class="card mb-3">
+                  <button
+                    class="btn btn-light d-flex align-items-center justify-content-between"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#settingsAlertsCollapse"
+                    aria-expanded="false"
+                    aria-controls="settingsAlertsCollapse"
+                  >
+                    <span>Alerts</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                  <div
+                    class="collapse"
+                    id="settingsAlertsCollapse"
+                    data-bs-parent="#settingsForm"
+                  >
+                    <div class="card-body border-top">
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkShowAlertPanel"
+                        />
+                        <label class="form-check-label" for="checkShowAlertPanel">
+                          Show bottom alert panel
+                        </label>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkShowAlarmPopup"
+                        />
+                        <label class="form-check-label" for="checkShowAlarmPopup">
+                          Show popup alerts
+                        </label>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkAlertPopupSound"
+                        />
+                        <label class="form-check-label" for="checkAlertPopupSound">
+                          Popup alert sound
+                        </label>
+                      </div>
+                      <div class="form-check mb-3 d-none" aria-hidden="true">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkAllWellEnabled"
+                        />
+                        <label class="form-check-label" for="checkAllWellEnabled">
+                          All's well message
+                        </label>
+                      </div>
+                      <div class="mb-0 d-none" aria-hidden="true">
+                        <label class="form-label" for="inputAllWellIntervalMinutes">
+                          All's well quiet time (minutes)
+                        </label>
+                        <input
+                          class="form-control"
+                          type="number"
+                          min="1"
+                          step="1"
+                          id="inputAllWellIntervalMinutes"
+                        />
+                      </div>
+                      <div class="mt-3 mb-0 d-none" aria-hidden="true">
+                        <label class="form-label" for="inputAllWellMessage">
+                          All's well phrase
+                        </label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          maxlength="120"
+                          id="inputAllWellMessage"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card mb-3">
+                  <button
+                    class="btn btn-light d-flex align-items-center justify-content-between"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#settingsDeviceCollapse"
+                    aria-expanded="false"
+                    aria-controls="settingsDeviceCollapse"
+                  >
+                    <span>Device display</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                  <div
+                    class="collapse"
+                    id="settingsDeviceCollapse"
+                    data-bs-parent="#settingsForm"
+                  >
+                    <div class="card-body border-top">
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkDarkMode"
+                        />
+                        <label class="form-check-label" for="checkDarkMode">
+                          Dark Mode
+                        </label>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkFullScreen"
+                        />
+                        <label class="form-check-label" for="checkFullScreen">
+                          Fullscreen Mode
+                        </label>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkNoSleep"
+                        />
+                        <label class="form-check-label" for="checkNoSleep">
+                          Prevent screen sleeping in iOS and Android
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="card mb-3">
+                  <button
+                    class="btn btn-light d-flex align-items-center justify-content-between"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#settingsCourseGuideCollapse"
+                    aria-expanded="false"
+                    aria-controls="settingsCourseGuideCollapse"
+                  >
+                    <span>Own-vessel appearance</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                  <div
+                    class="collapse"
+                    id="settingsCourseGuideCollapse"
+                    data-bs-parent="#settingsForm"
+                  >
+                    <div class="card-body border-top">
+                      <div class="mb-3">
+                        <label class="form-label" for="selectSelfIconVariant">
+                          Own-vessel icon
+                        </label>
+                        <select class="form-select" id="selectSelfIconVariant">
+                          <option value="rings">Classic rings</option>
+                          <option value="crosshair">Crosshair</option>
+                          <option value="triangle">Heading triangle</option>
+                          <option value="boat">Boat outline</option>
+                          <option value="diamond">Diamond</option>
+                          <option value="dot">Position dot</option>
+                        </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="colorSelfIconFill">
+                          Own-vessel fill colour
+                        </label>
+                        <input
+                          class="form-control form-control-color"
+                          type="color"
+                          id="colorSelfIconFill"
+                          value="#ff00ff"
+                        />
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="selectSelfTcpaGuideMode">
+                          Mode
+                        </label>
+                        <select class="form-select" id="selectSelfTcpaGuideMode">
+                          <option value="course">Standard projected course</option>
+                          <option value="tcpa">Profile TCPA guide lines</option>
+                        </select>
+                        <div class="form-text">
+                          TCPA guide lines use the current profile's warning TCPA for large, medium and small vessels.
+                        </div>
+                      </div>
+                      <div class="row g-2">
+                        <div class="col-4">
+                          <label class="form-label" for="colorSelfTcpaGuideLarge">
+                            Large
+                          </label>
+                          <input
+                            class="form-control form-control-color"
+                            type="color"
+                            id="colorSelfTcpaGuideLarge"
+                            value="#000000"
+                          />
+                        </div>
+                        <div class="col-4">
+                          <label class="form-label" for="colorSelfTcpaGuideMedium">
+                            Medium
+                          </label>
+                          <input
+                            class="form-control form-control-color"
+                            type="color"
+                            id="colorSelfTcpaGuideMedium"
+                            value="#0d6efd"
+                          />
+                        </div>
+                        <div class="col-4">
+                          <label class="form-label" for="colorSelfTcpaGuideSmall">
+                            Small
+                          </label>
+                          <input
+                            class="form-control form-control-color"
+                            type="color"
+                            id="colorSelfTcpaGuideSmall"
+                            value="#198754"
+                          />
+                        </div>
+                      </div>
+                      <hr />
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkUseVesselShapeForCpa"
+                        />
+                        <label class="form-check-label" for="checkUseVesselShapeForCpa">
+                          Use ship shape for CPA
+                        </label>
+                      </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkDisplayScaledVesselShapes"
+                        />
+                        <label class="form-check-label" for="checkDisplayScaledVesselShapes">
+                          Display scaled ship shapes
+                        </label>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <button
+                  type="button"
+                  class="btn btn-primary col-12"
+                  id="buttonVerifySettingsSave"
+                >
+                  Save Settings
+                </button>
+                <div
+                  class="form-text text-center"
+                  id="settingsSaveStatus"
+                  role="status"
+                ></div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal fade" tabindex="-1" id="modalHelp">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">AJRM Marine Display Help</h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <div class="alert alert-warning" role="alert">
+                <strong>Simulator/test release:</strong>
+                AJRM Marine Display is an aid to awareness, not a navigation or
+                collision-avoidance authority. Use the chart, AIS targets, and
+                alerts as supporting information only.
+              </div>
+              <p>
+                Display is deliberately lean: it draws the chart, shows targets,
+                presents active alerts, and offers the controls needed while
+                sailing. Traffic Core, Notifications, Audio, Logger, and Voyage
+                Capture own their deeper settings and diagnostics.
+              </p>
+              <h6>Map controls</h6>
+              <ul class="ais-plus-help-control-list">
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M14.082 2.182a.5.5 0 0 1 .103.557l-5.5 12a.5.5 0 0 1-.95-.084L6.57 9.43 1.345 8.265a.5.5 0 0 1-.084-.95l12-5.5a.5.5 0 0 1 .821.367" />
+                    </svg>
+                  </span>
+                  <span><strong>Centre vessel:</strong> recentres on own vessel and resumes following.</span>
+                </li>
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M8.235 1.559a.5.5 0 0 0-.47 0l-7.5 4a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882z" />
+                      <path d="m2.125 8.567-1.86.992a.5.5 0 0 0 0 .882l7.5 4a.5.5 0 0 0 .47 0l7.5-4a.5.5 0 0 0 0-.882l-1.86-.992-5.17 2.756a1.5 1.5 0 0 1-1.41 0z" />
+                    </svg>
+                  </span>
+                  <span><strong>Chart selector:</strong> chooses basemaps, Signal K chart layers, Auto Charts, OpenSeaMap, and harbour limits.</span>
+                </li>
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
+                      <path d="M1 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 4m0 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 8m0 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 12" />
+                    </svg>
+                  </span>
+                  <span><strong>AIS Targets:</strong> opens the live target list and selected-vessel details.</span>
+                </li>
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M8 1.5a.5.5 0 0 1 .5.5v1.04a5.01 5.01 0 0 1 4.46 4.46H14a.5.5 0 0 1 0 1h-1.04a5.01 5.01 0 0 1-4.46 4.46V14a.5.5 0 0 1-1 0v-1.04A5.01 5.01 0 0 1 3.04 8.5H2a.5.5 0 0 1 0-1h1.04A5.01 5.01 0 0 1 7.5 3.04V2a.5.5 0 0 1 .5-.5m0 2.5a4 4 0 1 0 0 8 4 4 0 0 0 0-8" />
+                      <path d="M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5" />
+                    </svg>
+                  </span>
+                  <span><strong>Profiles:</strong> selects the active Traffic Core profile and adjusts current-profile sensitivity.</span>
+                </li>
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.46 1.46 0 0 1-2.105.872l-.31-.18c-1.266-.73-2.668.672-1.937 1.937l.178.31c.446.775.072 1.767-.871 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.46 1.46 0 0 1 .872 2.105l-.18.31c-.73 1.266.672 2.668 1.937 1.937l.31-.178a1.46 1.46 0 0 1 2.105.871l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.46 1.46 0 0 1 2.105-.872l.31.18c1.266.73 2.668-.672 1.937-1.937l-.178-.31a1.46 1.46 0 0 1 .871-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.46 1.46 0 0 1-.872-2.105l.18-.31c.73-1.266-.672-2.668-1.937-1.937l-.31.178a1.46 1.46 0 0 1-2.105-.871zM8 10.93a2.93 2.93 0 1 1 0-5.86 2.93 2.93 0 0 1 0 5.86" />
+                    </svg>
+                  </span>
+                  <span><strong>Settings:</strong> controls Display-only options such as alerts, dark mode, no-sleep, own-vessel icon, harbour limits, and TCPA guide lines.</span>
+                </li>
+                <li>
+                  <span class="ais-plus-help-control-icon" aria-hidden="true">
+                    <svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0M5.496 6.033h1.237c.064-.54.37-.878 1.102-.878.678 0 1.02.34 1.02.853 0 .45-.203.696-.78 1.06-.705.44-1.17.887-1.126 1.873l.007.311h1.16v-.25c0-.58.22-.836.86-1.22.668-.4 1.24-.853 1.24-1.82 0-1.19-.96-1.98-2.29-1.98-1.43 0-2.33.78-2.43 2.05zm1.27 5.06c0 .46.37.84.86.84.49 0 .86-.38.86-.84 0-.47-.37-.85-.86-.85-.49 0-.86.38-.86.85z" />
+                    </svg>
+                  </span>
+                  <span><strong>Help:</strong> opens this quick Display reference.</span>
+                </li>
+              </ul>
+              <h6>Alerts shown by Display</h6>
+              <p>
+                Alert severity, CPA/TCPA, profile choice, muting, and speech
+                decisions come from the suite services. Display shows those
+                projections; it does not recalculate traffic safety state.
+              </p>
+              <ul>
+                <li><strong>Bottom alert panel:</strong> keeps active alerts visible at the bottom of the chart.</li>
+                <li><strong>Popup alerts:</strong> shows a modal popup for important alert events.</li>
+                <li><strong>Popup alert sound:</strong> plays a short local browser sound for popups when suite audio is not muted.</li>
+              </ul>
+              <h6>Charts and following</h6>
+              <p>
+                Auto Charts chooses a chart for the current vessel or map
+                position. Manual panning pauses following; press centre vessel
+                to follow own vessel again. OpenSeaMap is a transparent seamark
+                overlay and is kept above chart tiles.
+              </p>
+              <h6>After an update</h6>
+              <p>
+                If the version changed but the browser still behaves like an
+                older release, hard-refresh the page. On Safari, try
+                <code>Option+Cmd+R</code> on Mac or clear website data for the
+                Signal K hostname on iPhone/iPad.
+              </p>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div
+        class="offcanvas offcanvas-start d-none"
+        tabindex="-1"
+        id="offcanvasEditProfiles"
+      >
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title">Edit Profiles</h5>
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="offcanvas"
+          ></button>
+        </div>
+        <div class="offcanvas-body">
+          <label for="selectProfileToEdit" class="form-label"
+            >Select profile to edit</label
+          >
+          <div class="row mb-3">
+            <div class="col-6">
+              <select class="form-select fw-bold" id="selectProfileToEdit">
+                <option value="anchor" selected>Anchored</option>
+                <option value="harbor">Harbour</option>
+                <option value="coastal">Coastal</option>
+                <option value="offshore">Offshore</option>
+              </select>
+            </div>
+            <div class="col-6 d-grid">
+              <button
+                type="button"
+                class="btn btn-warning"
+                id="buttonRestoreDefaults"
+              >
+                Factory Reset All
+              </button>
+	            </div>
+	          </div>
+
+	          <div class="card mb-3">
+	            <ul class="list-group list-group-flush">
+	              <li class="h5 bg-body-secondary list-group-item">
+	                Vessel Size
+	              </li>
+	              <li class="list-group-item">
+	                <div class="row mb-3">
+	                  <div class="col-5">
+	                    <label for="selectVesselSizeToEdit" class="form-label"
+	                      >Edit limits for</label
+	                    >
+	                  </div>
+	                  <div class="col-7">
+	                    <select class="form-select" id="selectVesselSizeToEdit">
+	                      <option value="small" selected>Small</option>
+	                      <option value="medium">Medium</option>
+	                      <option value="large">Large</option>
+	                    </select>
+	                  </div>
+	                </div>
+	                <div class="row mb-3">
+	                  <div class="col-5">
+	                    <label
+	                      for="configSmallVesselMaxLengthMeters"
+	                      class="form-label"
+	                      >Small up to</label
+	                    >
+	                  </div>
+	                  <div class="col-5">
+	                    <input
+	                      type="number"
+	                      class="form-control"
+	                      id="configSmallVesselMaxLengthMeters"
+	                      min="1"
+	                      step="1"
+	                    />
+	                  </div>
+	                  <div class="col-2 pt-2">m</div>
+	                </div>
+	                <div class="row mb-3">
+	                  <div class="col-5">
+	                    <label
+	                      for="configMediumVesselMaxLengthMeters"
+	                      class="form-label"
+	                      >Medium up to</label
+	                    >
+	                  </div>
+	                  <div class="col-5">
+	                    <input
+	                      type="number"
+	                      class="form-control"
+	                      id="configMediumVesselMaxLengthMeters"
+	                      min="2"
+	                      step="1"
+	                    />
+	                  </div>
+	                  <div class="col-2 pt-2">m</div>
+	                </div>
+	                <div class="row">
+	                  <div class="col-5">
+	                    <label
+	                      for="selectUnknownVesselSizeCategory"
+	                      class="form-label"
+	                      >Unknown length</label
+	                    >
+	                  </div>
+	                  <div class="col-7">
+	                    <select
+	                      class="form-select"
+	                      id="selectUnknownVesselSizeCategory"
+	                    >
+	                      <option value="small" selected>Small</option>
+	                      <option value="medium">Medium</option>
+	                    </select>
+	                  </div>
+	                </div>
+	              </li>
+	            </ul>
+	          </div>
+
+	          <div class="card mb-3">
+	            <ul class="list-group list-group-flush">
+              <!--traffic advisory-->
+              <li class="h5 bg-body-secondary list-group-item">
+                Traffic Advisory
+              </li>
+
+              <li class="list-group-item">
+                <p class="card-text">
+                  Targets that meet all three of the conditions below will be
+                  shown as a traffic advisory in <code>orange</code> in the
+                  plotter.
+                </p>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configWarningCpaRange" class="form-label"
+                      >CPA Less Than</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configWarningCpaRange"
+                      min="0"
+                      max="96"
+                      step="1"
+                      data-target="configWarningCpa"
+                      data-alarm-type="warning"
+                      data-alarm-criteria="cpa"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configWarningCpa" class="fw-bold">2.0</span
+                    ><span id="configWarningCpaUnits"> NM</span>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configWarningTcpaRange" class="form-label"
+                      >TCPA Less Than</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configWarningTcpaRange"
+                      min="1"
+                      max="12"
+                      step="1"
+                      data-target="configWarningTcpa"
+                      data-alarm-type="warning"
+                      data-alarm-criteria="tcpa"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configWarningTcpa" class="fw-bold">10</span
+                    ><span> Min</span>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configWarningSogRange" class="form-label"
+                      >Ignore Below</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configWarningSogRange"
+                      min="0"
+                      max="10"
+                      step="1"
+                      data-target="configWarningSog"
+                      data-alarm-type="warning"
+                      data-alarm-criteria="speed"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configWarningSog" class="fw-bold">2.0</span
+                    ><span> Knots</span>
+                  </div>
+                </div>
+              </li>
+              <!--end traffic advisory-->
+
+              <!--collision alarm-->
+              <li class="h5 bg-body-secondary list-group-item">
+                Collision Alarm
+              </li>
+
+              <li class="list-group-item">
+                <p class="card-text">
+                  Targets that meet all three of the conditions below will be
+                  shown as a collision alarm in <code>red</code> in the
+                  plotter.
+                </p>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configAlarmCpaRange" class="form-label"
+                      >CPA Less Than</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configAlarmCpaRange"
+                      min="0"
+                      max="96"
+                      step="1"
+                      data-target="configAlarmCpa"
+                      data-alarm-type="danger"
+                      data-alarm-criteria="cpa"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configAlarmCpa" class="fw-bold">2.0</span
+                    ><span id="configAlarmCpaUnits"> NM</span>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configAlarmTcpaRange" class="form-label"
+                      >TCPA Less Than</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configAlarmTcpaRange"
+                      min="1"
+                      max="12"
+                      step="1"
+                      data-target="configAlarmTcpa"
+                      data-alarm-type="danger"
+                      data-alarm-criteria="tcpa"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configAlarmTcpa" class="fw-bold">10</span
+                    ><span> Min</span>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configAlarmSogRange" class="form-label"
+                      >Ignore Below</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configAlarmSogRange"
+                      min="0"
+                      max="10"
+                      step="1"
+                      data-target="configAlarmSog"
+                      data-alarm-type="danger"
+                      data-alarm-criteria="speed"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configAlarmSog" class="fw-bold">2.0</span
+                    ><span> Knots</span>
+                  </div>
+                </div>
+              </li>
+              <!--end collision alarm-->
+
+              <!--guard alarm-->
+              <li class="h5 bg-body-secondary list-group-item">Guard Alarm</li>
+
+              <li class="list-group-item">
+                <p class="card-text">
+                  Targets that meet both of the conditions below will be shown
+                  as a collision alarm in <code>red</code> in the plotter.
+                </p>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configGuardRangeRange" class="form-label"
+                      >Range Within</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configGuardRangeRange"
+                      min="0"
+                      max="96"
+                      step="1"
+                      data-target="configGuardRange"
+                      data-alarm-type="guard"
+                      data-alarm-criteria="range"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configGuardRange" class="fw-bold">2.0</span
+                    ><span id="configGuardRangeUnits"> NM</span>
+                  </div>
+                </div>
+
+                <div class="row mb-3">
+                  <div class="col-3 pe-0">
+                    <label for="configGuardSogRange" class="form-label"
+                      >Speed Exceeds</label
+                    >
+                  </div>
+                  <div class="col-7">
+                    <input
+                      type="range"
+                      class="form-range"
+                      id="configGuardSogRange"
+                      min="0"
+                      max="10"
+                      step="1"
+                      data-target="configGuardSog"
+                      data-alarm-type="guard"
+                      data-alarm-criteria="speed"
+                    />
+                  </div>
+                  <div class="col-2 text-end">
+                    <span id="configGuardSog" class="fw-bold">2.0</span
+                    ><span> Knots</span>
+                  </div>
+                </div>
+              </li>
+              <!--end guard alarm-->
+            </ul>
+          </div>
+          <!--end card-->
+        </div>
+        <!--end offcanvas-body-->
+      </div>
+      <!--end offcanvasProfile-->
+    </div>
+    <!--end container-->
+  </body>
+</html>

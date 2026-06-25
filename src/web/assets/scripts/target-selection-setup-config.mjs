@@ -1,0 +1,43 @@
+import { targetSelectionConfig } from "./target-ui-config.mjs";
+
+export function configuredTargetSelectionConfig({
+	pluginId,
+	map,
+	boatMarkers,
+	targets,
+	metersPerNm,
+	getSelfMmsi,
+	getSelectedVesselMmsi,
+	setSelectedVesselMmsi,
+	selectionMarkers,
+	targetSilence,
+	getHttpResponse,
+	serverAlertEvents,
+	getTargetMapRenderer,
+	clearAlert,
+	requiredElement,
+	elements,
+	modals,
+	offcanvas,
+}) {
+	return targetSelectionConfig({
+		pluginId,
+		map,
+		boatMarkers,
+		targets,
+		metersPerNm,
+		getSelfMmsi,
+		getSelectedVesselMmsi,
+		setSelectedVesselMmsi,
+		selectionMarkers,
+		targetSilence,
+		getHttpResponse,
+		serverAlertEvents,
+		getTargetMapRenderer,
+		clearAlert,
+		requiredElement,
+		elements,
+		modals,
+		offcanvas,
+	});
+}

@@ -1,0 +1,41 @@
+import { targetRefreshConfig } from "./target-ui-config.mjs";
+
+export function configuredTargetRefreshConfig({
+	pluginId,
+	map,
+	getHttpResponse,
+	targets,
+	getSelfMmsi,
+	setSelfTarget,
+	getSelfTarget,
+	targetSilence,
+	serverAlertEvents,
+	alertPopup,
+	initialPluginTargets,
+	targetMapRenderer,
+	maximumTargetRange,
+	targetMaxAge,
+	ageOutEnabled,
+	showAlarmsInterval,
+	replayStatusControls,
+}) {
+	return targetRefreshConfig({
+		pluginId,
+		map,
+		getHttpResponse,
+		targets,
+		getSelfMmsi,
+		setSelfTarget,
+		getSelfTarget,
+		targetSilence,
+		serverAlertEvents,
+		alertPopup,
+		initialPluginTargets,
+		targetMapRenderer,
+		maximumTargetRange,
+		targetMaxAge,
+		ageOutEnabled,
+		showAlarmsInterval,
+		replayStatusControls,
+	});
+}

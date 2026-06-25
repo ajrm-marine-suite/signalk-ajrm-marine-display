@@ -1,0 +1,47 @@
+export function targetSelectionConfig({
+	pluginId,
+	map,
+	boatMarkers,
+	targets,
+	metersPerNm,
+	getSelfMmsi,
+	getSelectedVesselMmsi,
+	setSelectedVesselMmsi,
+	selectionMarkers,
+	targetSilence,
+	getHttpResponse,
+	serverAlertEvents,
+	getTargetMapRenderer,
+	clearAlert,
+	requiredElement,
+	elements,
+	modals,
+	offcanvas,
+}) {
+	return {
+		pluginId,
+		map,
+		boatMarkers,
+		targets,
+		metersPerNm,
+		getSelfMmsi,
+		getSelectedVesselMmsi,
+		setSelectedVesselMmsi,
+		getSelectionMarkers: () => selectionMarkers,
+		targetSilence,
+		getHttpResponse,
+		refreshServerAlertEvents: serverAlertEvents.refresh,
+		updateSingleVesselUI: (...args) =>
+			getTargetMapRenderer()?.updateSingleVesselUI(...args),
+		updateSelectedVesselProperties: (...args) =>
+			getTargetMapRenderer()?.updateSelectedVesselProperties(...args),
+		updateTableOfTargets: (...args) =>
+			getTargetMapRenderer()?.updateTableOfTargets(...args),
+		clearAlert,
+		closebyListContainer: requiredElement("listOfClosebyBoats"),
+		closebyModalElement: elements.modalClosebyBoats,
+		closebyModal: modals.closebyBoats,
+		targetListOffcanvas: offcanvas.targetList,
+		selectedVesselModal: modals.selectedVesselProperties,
+	};
+}

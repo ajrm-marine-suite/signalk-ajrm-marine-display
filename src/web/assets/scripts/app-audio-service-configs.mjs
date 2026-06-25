@@ -1,0 +1,31 @@
+export function speechOutputServiceConfig({
+	window,
+	pluginId,
+	feedback,
+}) {
+	return {
+		controls: window.aisPlusSpeechControls,
+		pluginId,
+		showAlert: feedback.showAlert,
+	};
+}
+
+export function alertPopupServiceConfig({
+	window,
+	elements,
+	modals,
+	targets,
+	escapeHtml,
+	hornMp3Url,
+	serverAlertEvents,
+}) {
+	return {
+		modal: modals.alarm,
+		container: elements.alarmDiv,
+		controls: window.aisPlusSpeechControls,
+		getEvents: () => serverAlertEvents.getEvents(),
+		getTarget: (mmsi) => targets.get(mmsi),
+		escapeHtml,
+		hornUrl: hornMp3Url,
+	};
+}

@@ -1,0 +1,136 @@
+# AJRM Marine Display
+
+Operational chart, target and alert Display for the AJRM Marine suite.
+
+Version `2.2.14` improves local CPA geometry by using midpoint latitude for
+east-west target projection.
+
+Version `2.2.13` uses Signal K distance display-unit metadata for target range
+and CPA presentation while keeping raw target values in Signal K base units.
+
+Version `2.2.12` lets browser speech finish the current announcement before
+queued system or sound-state messages play, avoiding mid-sentence interruptions
+during collision alarms.
+
+Version `2.2.10` turns Display Help into a screen-ordered control legend with
+matching inline SVG icons.
+
+Version `2.2.9` makes Display's map-control buttons use inline SVG icons so
+they do not depend on browser font loading.
+
+Version `2.2.8` trims Display Help to Display-owned sailing controls, fixes
+Display Settings save verification so the Save button verifies only local
+Display alert toggles, and makes popup-alert sound a browser-local Display cue
+independent of suite mute.
+
+Version `2.2.7` fixes Display Settings save verification so the Save button
+verifies only Display-owned alert settings and no longer checks Audio-owned
+output routing.
+
+Version `2.2.6` keeps Display's local popup-alert sound option visible under
+Alerts while leaving Audio-owned output routing out of Display.
+
+Version `2.2.5` removes visible sound-output management from Display. Audio
+output routing, mute policy, stream controls, and sound checks now belong in
+AJRM Marine Audio.
+
+Version `2.2.4` restores the three active-profile sensitivity sliders in Display
+and saves them through AJRM Marine Traffic while
+keeping the package id and Signal K paths stable for compatibility.
+
+Version `2.2.13` is the sailing display for the AJRM Marine architecture:
+
+- AJRM Marine Traffic owns target safety state, CPA/TCPA, profile selection,
+  Auto Profile, Audio Policy, and silence state.
+- AJRM Marine Notifications owns alert lifecycle, presentation, priority, and history.
+- AJRM Marine Audio owns authoritative playback.
+- Display owns chart interaction, rendering, target browsing, browser-local
+  visual settings, and Help.
+
+## Display functionality
+
+- Offline NaturalEarth basemap.
+- OpenStreetMap, OpenTopoMap and Satellite basemaps.
+- Auto Charts as one overlay selecting the best Signal K provider chart for the
+  current position and zoom.
+- OpenSeaMap seamarks.
+- Own-vessel follow/recentre and manual chart browsing.
+- AIS vessel, base-station, AtoN and special-safety target symbols.
+- Target labels, projected courses, footprints, range rings and CPA overlays.
+- Target table, sorting, selection and detailed vessel information.
+- Bottom alert panel and optional alert popups.
+- Profile selection, profile sensitivity sliders, and target silence controls
+  backed by Traffic Core.
+- Auto Profile status and enable/disable control backed by Traffic Core.
+- Global mute and stationary automute controls backed by Traffic Core Audio Policy.
+- Harbour Limits loaded directly from Signal K region resources.
+- Immediate announcement-feed updates from Notifications Plus audio delivery,
+  deduplicated when the same event later enters history.
+- Replay indication, display settings, responsive phone/tablet presentation and
+  the established Help interface.
+
+## Deliberately not in Display
+
+- Collision-risk calculation and severity assignment.
+- Alert wording or lifecycle ownership.
+- Profile threshold editing; this belongs to the Traffic Core administration webapp.
+- Sound generation; AJRM Marine Audio owns playback.
+- Traffic Core health/configuration; this belongs to the Traffic Core webapp.
+
+## Reduced mode
+
+The Display remains usable without Traffic Core. Standard Signal K subscriptions
+and API data continue to provide own-vessel navigation, vessel positions,
+identity and chart resources. Targets cannot be assigned Traffic Core safety
+state in that mode and must be treated as unassessed.
+
+If Notifications Plus or Audio is unavailable, chart and target operation
+continues with reduced alert or playback status.
+
+## Configuration
+
+AJRM Marine Display appears in Signal K Plugin Config.
+
+- **Enable AJRM Marine Display**
+- **Data refresh interval**
+- **Fallback map latitude, longitude and zoom**
+
+Chart selection, pan, zoom, overlays and display preferences remain
+browser-local so map interaction does not wait for server round trips.
+
+## Install
+
+```bash
+cd ~/.signalk
+npm install git+ssh://git@ssh.github.com:443/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.0 --omit=dev --no-package-lock
+sudo systemctl restart signalk
+```
+
+Open **Webapps → AJRM Marine Display** and hard-refresh after upgrading.
+
+## Development
+
+```bash
+npm install
+npm test
+```
+
+## Attribution
+
+AJRM Marine Display is authored and maintained by Anthony McDonald, with assistance from William McAusland. The chart interface was extracted from
+the AJRM Marine chart work and retains its MIT licensing and
+acknowledgements. It builds on the Signal K project and the work of Signal K
+plugin authors.
+
+## Safety
+
+> This software is Alpha Release and has not been tested in live environments
+> and must not be relied upon for navigation or safety. The Authors do not accept
+> any responsibility for loss or damage as a result of using this software.
+
+
+## Public Beta
+
+Chart, traffic, and vessel-status display for the AJRM Marine Suite.
+
+Development assistance: OpenAI Codex helped with code generation, refactoring, and automated testing during the beta development cycle.
