@@ -27,3 +27,34 @@ test("Traffic Core projection overlays authoritative fields onto standard Signal
 	assert.equal(target.cpa, 40);
 	assert.equal(target.name, "Standard name");
 });
+
+test("Traffic Core projection preserves database-filled vessel dimensions when absent", () => {
+	const target = {
+		mmsi: "235900005",
+		name: "HARBOUR TUG",
+		length: 18.5,
+		beam: 5.2,
+		sizeFormatted: "18.5 m x 5.2 m",
+		vesselFootprintSourceFormatted: "Vessel database",
+	};
+	const targets = new Map([["235900005", target]]);
+	const applied = applyEngineTargetProjection({
+		targets,
+		projection: {
+			235900005: {
+				mmsi: "235900005",
+				alarmState: "warning",
+				length: undefined,
+				beam: undefined,
+				sizeFormatted: "--- m x --- m",
+			},
+		},
+	});
+
+	assert.equal(applied, 1);
+	assert.equal(target.alarmState, "warning");
+	assert.equal(target.length, 18.5);
+	assert.equal(target.beam, 5.2);
+	assert.equal(target.sizeFormatted, "18.5 m x 5.2 m");
+	assert.equal(target.vesselFootprintSourceFormatted, "Vessel database");
+});

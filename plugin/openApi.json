@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.5.4",
+    "version": "0.5.5",
     "description": "Display status and chart-webapp projections backed by Traffic Core and Notifications Plus."
   },
   "servers": [
