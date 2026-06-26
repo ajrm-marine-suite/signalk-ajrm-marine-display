@@ -72,10 +72,6 @@ export function normalizeCollisionProfiles(profiles, defaultProfiles) {
 			),
 			warning: normalizeCriteria(profile.warning, fallback.warning),
 			danger: normalizeCriteria(profile.danger, fallback.danger),
-			guard: {
-				range: finiteOr(profile.guard?.range, finiteOr(fallback.guard?.range, 0)),
-				speed: finiteOr(profile.guard?.speed, finiteOr(fallback.guard?.speed, 0)),
-			},
 		};
 	}
 	if (!normalised.current || !normalised[normalised.current]) {

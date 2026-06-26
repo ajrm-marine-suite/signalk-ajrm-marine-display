@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.1` removes obsolete profile-range settings and editor controls.
+CPA/TCPA profile limits remain the target-alert threshold controls.
+
 Version `2.2.14` improves local CPA geometry by using midpoint latitude for
 east-west target projection.
 
@@ -102,7 +105,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+ssh://git@ssh.github.com:443/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.0 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.1 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

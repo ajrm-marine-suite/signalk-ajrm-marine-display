@@ -37,7 +37,6 @@ function profilesFixture() {
 			cpaSensitivity: 2,
 			tcpaLookahead: 2,
 			repeatSensitivity: 2,
-			guard: { range: 0.5, speed: 0.2 },
 			warning: {
 				cpa: 0.05,
 				tcpa: 120,

@@ -57,8 +57,6 @@ export function appEventBindingControls({
 			alarmCpa: elements.configAlarmCpaRange,
 			alarmTcpa: elements.configAlarmTcpaRange,
 			alarmSog: elements.configAlarmSogRange,
-			guardRange: elements.configGuardRangeRange,
-			guardSog: elements.configGuardSogRange,
 		},
 	};
 }

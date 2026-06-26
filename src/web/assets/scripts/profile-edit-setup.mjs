@@ -31,8 +31,6 @@ export function createConfiguredProfileEditController({
 			alarmCpaRange: elements.configAlarmCpaRange,
 			alarmTcpaRange: elements.configAlarmTcpaRange,
 			alarmSogRange: elements.configAlarmSogRange,
-			guardRangeRange: elements.configGuardRangeRange,
-			guardSogRange: elements.configGuardSogRange,
 		},
 		sizeControls,
 		sensitivityControls: {

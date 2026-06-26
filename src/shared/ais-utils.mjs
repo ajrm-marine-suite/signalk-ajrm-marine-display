@@ -170,7 +170,6 @@ function collisionCandidateDisplayOrder(target) {
 }
 
 function clearTargetAlarmState(target, order = 40000) {
-	target.guardAlarm = false;
 	target.collisionAlarm = false;
 	target.collisionWarning = false;
 	target.sartAlarm = false;

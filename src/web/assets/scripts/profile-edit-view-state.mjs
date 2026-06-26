@@ -23,7 +23,6 @@ export function profileEditRangeTicks({ profiles, profileName, size }) {
 		alarmType: "danger",
 		size,
 	});
-	const guardCriteria = profiles[profileName].guard;
 
 	return {
 		warningCpa: distanceToTick(warningCriteria.cpa),
@@ -32,8 +31,6 @@ export function profileEditRangeTicks({ profiles, profileName, size }) {
 		alarmCpa: distanceToTick(dangerCriteria.cpa),
 		alarmTcpa: timeToTick(dangerCriteria.tcpa / 60),
 		alarmSog: speedToTick(dangerCriteria.speed),
-		guardRange: distanceToTick(guardCriteria.range),
-		guardSog: speedToTick(guardCriteria.speed),
 	};
 }
 
@@ -44,8 +41,6 @@ export function applyProfileEditRangeTicks(controls, ticks) {
 	controls.alarmCpaRange.value = ticks.alarmCpa;
 	controls.alarmTcpaRange.value = ticks.alarmTcpa;
 	controls.alarmSogRange.value = ticks.alarmSog;
-	controls.guardRangeRange.value = ticks.guardRange;
-	controls.guardSogRange.value = ticks.guardSog;
 }
 
 export function dispatchProfileEditInputEvents(controls, EventClass = Event) {
@@ -56,8 +51,6 @@ export function dispatchProfileEditInputEvents(controls, EventClass = Event) {
 	controls.alarmCpaRange.dispatchEvent(inputEvent);
 	controls.alarmTcpaRange.dispatchEvent(inputEvent);
 	controls.alarmSogRange.dispatchEvent(inputEvent);
-	controls.guardRangeRange.dispatchEvent(inputEvent);
-	controls.guardSogRange.dispatchEvent(inputEvent);
 }
 
 function displayStateForControl(control, state) {
@@ -90,7 +83,6 @@ export function profileEditRangeDisplayStates({
 		alarmType: "danger",
 		size,
 	});
-	const guardCriteria = profiles[profileName].guard;
 
 	return [
 		displayStateForControl(
@@ -112,13 +104,6 @@ export function profileEditRangeDisplayStates({
 		}),
 		displayStateForControl(controls.alarmSogRange, {
 			text: speedDisplayText(dangerCriteria.speed),
-		}),
-		displayStateForControl(
-			controls.guardRangeRange,
-			distanceDisplayState(guardCriteria.range),
-		),
-		displayStateForControl(controls.guardSogRange, {
-			text: speedDisplayText(guardCriteria.speed),
 		}),
 	].filter(Boolean);
 }

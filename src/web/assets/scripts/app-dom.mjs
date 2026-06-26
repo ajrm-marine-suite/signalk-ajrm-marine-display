@@ -31,8 +31,6 @@ export function createAppDom() {
 		configAlarmCpaRange: getRequiredElement("configAlarmCpaRange"),
 		configAlarmTcpaRange: getRequiredElement("configAlarmTcpaRange"),
 		configAlarmSogRange: getRequiredElement("configAlarmSogRange"),
-		configGuardRangeRange: getRequiredElement("configGuardRangeRange"),
-		configGuardSogRange: getRequiredElement("configGuardSogRange"),
 		cpaSensitivityRange: getRequiredElement("configCpaSensitivityRange"),
 		tcpaLookaheadRange: getRequiredElement("configTcpaLookaheadRange"),
 		repeatSensitivityRange: getRequiredElement("configRepeatSensitivityRange"),

@@ -94,7 +94,6 @@ export function renderHelpSettingsHtml(
 	const activeProfile = profiles.current || "harbor";
 	const vesselSize = profiles.vesselSize || {};
 	const profileRows = [];
-	const guardRows = [];
 
 	for (const profileKey of ["anchor", "harbor", "coastal", "offshore"]) {
 		const profile = profiles[profileKey] || {};
@@ -137,14 +136,6 @@ export function renderHelpSettingsHtml(
                 `);
 			}
 		}
-
-		guardRows.push(`
-              <tr${profileKey === activeProfile ? ' class="table-active"' : ""}>
-                <td>${escapeHelpSettingsHtml(profileLabels[profileKey] || profileKey)}</td>
-                <td>${escapeHelpSettingsHtml(formatHelpSettingsDistanceNm(profile.guard?.range))}</td>
-                <td>${escapeHelpSettingsHtml(formatHelpSettingsSpeed(profile.guard?.speed))}</td>
-              </tr>
-            `);
 	}
 
 	return `
@@ -192,20 +183,6 @@ export function renderHelpSettingsHtml(
                   </tr>
                 </thead>
                 <tbody>${profileRows.join("")}</tbody>
-              </table>
-            </div>
-
-            <h6>Guard Limits</h6>
-            <div class="table-responsive">
-              <table class="table table-sm table-striped align-middle">
-                <thead>
-                  <tr>
-                    <th>Profile</th>
-                    <th>Guard range</th>
-                    <th>Ignore below</th>
-                  </tr>
-                </thead>
-                <tbody>${guardRows.join("")}</tbody>
               </table>
             </div>
           `;

@@ -90,12 +90,4 @@ export function registerProfileRangeControlBindings({ controls, profileEdit }) {
 		speedRangeControls(controls),
 		profileEdit.processSpeedRangeControl,
 	);
-	controls.profileRanges.guardRange.addEventListener(
-		"input",
-		profileEdit.processDistanceRangeControl,
-	);
-	controls.profileRanges.guardSog.addEventListener(
-		"input",
-		profileEdit.processSpeedRangeControl,
-	);
 }

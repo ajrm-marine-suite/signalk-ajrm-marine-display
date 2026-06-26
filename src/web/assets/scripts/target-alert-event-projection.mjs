@@ -6,7 +6,6 @@ export function resetTargetAlertDisplayState(target) {
 	target.alertLabel = "";
 	target.collisionAlarm = false;
 	target.collisionWarning = false;
-	target.guardAlarm = false;
 	target.sartAlarm = false;
 	target.mobAlarm = false;
 	target.epirbAlarm = false;

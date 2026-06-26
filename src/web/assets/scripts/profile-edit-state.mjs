@@ -25,9 +25,6 @@ export function selectedProfileCriteriaForDataset({
 	dataset,
 	sizeControls,
 }) {
-	if (dataset.alarmType === "guard") {
-		return profiles[profileName].guard;
-	}
 	return selectedProfileCriteria({
 		profiles,
 		profileName,

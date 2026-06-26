@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AIS_PLUS_WEBAPP_VERSION = "0.5.0";
+      window.AIS_PLUS_WEBAPP_VERSION = "0.5.1";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ais-plus-display-version">AJRM Marine Display v0.5.0</div>
+    <div class="ais-plus-display-version">AJRM Marine Display v0.5.1</div>
     <div id="topStatusStack" class="ais-plus-top-status-stack">
       <div
         id="connectionStatus"
@@ -1486,66 +1486,6 @@
               </li>
               <!--end collision alarm-->
 
-              <!--guard alarm-->
-              <li class="h5 bg-body-secondary list-group-item">Guard Alarm</li>
-
-              <li class="list-group-item">
-                <p class="card-text">
-                  Targets that meet both of the conditions below will be shown
-                  as a collision alarm in <code>red</code> in the plotter.
-                </p>
-
-                <div class="row mb-3">
-                  <div class="col-3 pe-0">
-                    <label for="configGuardRangeRange" class="form-label"
-                      >Range Within</label
-                    >
-                  </div>
-                  <div class="col-7">
-                    <input
-                      type="range"
-                      class="form-range"
-                      id="configGuardRangeRange"
-                      min="0"
-                      max="96"
-                      step="1"
-                      data-target="configGuardRange"
-                      data-alarm-type="guard"
-                      data-alarm-criteria="range"
-                    />
-                  </div>
-                  <div class="col-2 text-end">
-                    <span id="configGuardRange" class="fw-bold">2.0</span
-                    ><span id="configGuardRangeUnits"> NM</span>
-                  </div>
-                </div>
-
-                <div class="row mb-3">
-                  <div class="col-3 pe-0">
-                    <label for="configGuardSogRange" class="form-label"
-                      >Speed Exceeds</label
-                    >
-                  </div>
-                  <div class="col-7">
-                    <input
-                      type="range"
-                      class="form-range"
-                      id="configGuardSogRange"
-                      min="0"
-                      max="10"
-                      step="1"
-                      data-target="configGuardSog"
-                      data-alarm-type="guard"
-                      data-alarm-criteria="speed"
-                    />
-                  </div>
-                  <div class="col-2 text-end">
-                    <span id="configGuardSog" class="fw-bold">2.0</span
-                    ><span> Knots</span>
-                  </div>
-                </div>
-              </li>
-              <!--end guard alarm-->
             </ul>
           </div>
           <!--end card-->

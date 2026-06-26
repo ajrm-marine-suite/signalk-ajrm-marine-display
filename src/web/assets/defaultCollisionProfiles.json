@@ -23,8 +23,7 @@
 				"medium": { "cpa": 0, "tcpa": 3600, "speed": 0 },
 				"large": { "cpa": 0, "tcpa": 3600, "speed": 0 }
 			}
-		},
-		"guard": { "range": 0, "speed": 0 }
+		}
 	},
 	"harbor": {
 		"cpaSensitivity": 1,
@@ -49,8 +48,7 @@
 				"medium": { "cpa": 0.026998, "tcpa": 120, "speed": 3 },
 				"large": { "cpa": 0.053996, "tcpa": 180, "speed": 3 }
 			}
-		},
-		"guard": { "range": 0, "speed": 0 }
+		}
 	},
 	"coastal": {
 		"cpaSensitivity": 1,
@@ -75,8 +73,7 @@
 				"medium": { "cpa": 0.4, "tcpa": 480, "speed": 0.5 },
 				"large": { "cpa": 0.8, "tcpa": 720, "speed": 0.5 }
 			}
-		},
-		"guard": { "range": 0, "speed": 0 }
+		}
 	},
 	"offshore": {
 		"cpaSensitivity": 1,
@@ -101,8 +98,7 @@
 				"medium": { "cpa": 0.6, "tcpa": 600, "speed": 0 },
 				"large": { "cpa": 1.5, "tcpa": 900, "speed": 0 }
 			}
-		},
-		"guard": { "range": 0, "speed": 0 }
+		}
 	},
 	"vesselSize": {
 		"smallMaxLengthMeters": 15,
