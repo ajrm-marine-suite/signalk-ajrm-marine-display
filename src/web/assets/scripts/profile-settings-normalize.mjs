@@ -55,6 +55,10 @@ export function normalizeCollisionProfiles(profiles, defaultProfiles) {
 		const profile = normalised[profileName] || {};
 		const fallback = defaultProfiles[profileName] || {};
 		normalised[profileName] = {
+			automuteStationary:
+				typeof profile.automuteStationary === "boolean"
+					? profile.automuteStationary
+					: fallback.automuteStationary === true,
 			cpaSensitivity: Math.max(
 				0,
 				finiteOr(profile.cpaSensitivity, finiteOr(fallback.cpaSensitivity, 1)),

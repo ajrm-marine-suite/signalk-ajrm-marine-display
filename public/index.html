@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AIS_PLUS_WEBAPP_VERSION = "0.5.1";
+      window.AIS_PLUS_WEBAPP_VERSION = "0.5.2";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-B--kbiSf.js"></script>
+    <script type="module" crossorigin src="./assets/index-Dz4XsaR4.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-BUKJx3E2.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ais-plus-display-version">AJRM Marine Display v0.5.1</div>
+    <div class="ais-plus-display-version">AJRM Marine Display v0.5.2</div>
     <div id="topStatusStack" class="ais-plus-top-status-stack">
       <div
         id="connectionStatus"
@@ -803,6 +803,52 @@
                     <input type="checkbox" id="checkAudioStream" />
                     <input type="checkbox" id="checkAutomuteStationary" />
                     <button type="button" id="buttonSoundCheck"></button>
+                  </div>
+                </div>
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <div
+                      class="btn-group w-100 mb-2"
+                      role="group"
+                      aria-label="Audio mode"
+                    >
+                      <input
+                        type="radio"
+                        class="btn-check"
+                        name="displayAudioMode"
+                        id="radioAudioModeAuto"
+                        value="auto"
+                        autocomplete="off"
+                      />
+                      <label class="btn btn-outline-primary" for="radioAudioModeAuto">
+                        Auto
+                      </label>
+                      <input
+                        type="radio"
+                        class="btn-check"
+                        name="displayAudioMode"
+                        id="radioAudioModeOn"
+                        value="on"
+                        autocomplete="off"
+                      />
+                      <label class="btn btn-outline-success" for="radioAudioModeOn">
+                        On
+                      </label>
+                      <input
+                        type="radio"
+                        class="btn-check"
+                        name="displayAudioMode"
+                        id="radioAudioModeOff"
+                        value="off"
+                        autocomplete="off"
+                      />
+                      <label class="btn btn-outline-danger" for="radioAudioModeOff">
+                        Off
+                      </label>
+                    </div>
+                    <div class="form-text" id="displayAudioModeStatus">
+                      Audio status unavailable.
+                    </div>
                   </div>
                 </div>
                 <div class="card mb-3">

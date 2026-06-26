@@ -1,6 +1,7 @@
 {
 	"current": "harbor",
 	"anchor": {
+		"automuteStationary": true,
 		"cpaSensitivity": 1,
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
@@ -26,6 +27,7 @@
 		}
 	},
 	"harbor": {
+		"automuteStationary": true,
 		"cpaSensitivity": 1,
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
@@ -51,6 +53,7 @@
 		}
 	},
 	"coastal": {
+		"automuteStationary": false,
 		"cpaSensitivity": 1,
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
@@ -76,6 +79,7 @@
 		}
 	},
 	"offshore": {
+		"automuteStationary": false,
 		"cpaSensitivity": 1,
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,

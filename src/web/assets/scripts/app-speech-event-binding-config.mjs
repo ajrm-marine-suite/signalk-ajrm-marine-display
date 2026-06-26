@@ -12,6 +12,10 @@ export function speechAutomuteControl(controls) {
 	return controls.automute;
 }
 
+export function speechAudioModeControls(controls) {
+	return [controls.audioModeAuto, controls.audioModeOn, controls.audioModeOff];
+}
+
 export function speechSoundCheckControl(controls) {
 	return controls.soundCheck;
 }

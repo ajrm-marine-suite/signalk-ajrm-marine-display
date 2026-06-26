@@ -1,5 +1,6 @@
 import {
 	speechAutomuteControl,
+	speechAudioModeControls,
 	speechEncounterInputSettingControls,
 	speechEncounterSettingControls,
 	speechManualMuteControl,
@@ -25,6 +26,11 @@ export function registerSpeechEventBindings({
 	speechAutomuteControl(controls).addEventListener("change", () => {
 		speechOutput.handleAutomuteChange();
 	});
+	for (const control of speechAudioModeControls(controls)) {
+		control.addEventListener("change", () => {
+			if (control.checked) speechOutput.handleAudioModeChange(control.value);
+		});
+	}
 	for (const binding of speechStorageBindings({ controls, storage })) {
 		bindCheckboxStorage(binding);
 	}
