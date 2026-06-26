@@ -2,7 +2,8 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
-Version `0.5.3` adds a visible Sounds title to the Display audio mode selector.
+Version `0.5.4` fixes the Display Auto Profile switch so turning it off does
+not immediately bounce back on from a stale status refresh.
 
 Version `0.5.1` removes obsolete profile-range settings and editor controls.
 CPA/TCPA profile limits remain the target-alert threshold controls.
@@ -107,7 +108,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.3 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.4 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

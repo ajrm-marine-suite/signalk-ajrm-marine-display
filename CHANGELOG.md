@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.4
+
+- Keep the Auto Profile switch state from the Traffic command response instead
+  of immediately overwriting it with a stale Display status refresh.
+
 ## 0.5.3
 
 - Add a visible Sounds title to the Display audio mode selector.

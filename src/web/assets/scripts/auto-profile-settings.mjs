@@ -60,7 +60,6 @@ export function createAutoProfileSettingsController({
 			}
 			const body = await response.json().catch(() => ({}));
 			applyStatus(autoProfileStatusFromResponse(body));
-			await refreshStatus();
 		} catch (error) {
 			console.error("Error saving auto profile settings", error);
 			setValidation(error.message, true);
