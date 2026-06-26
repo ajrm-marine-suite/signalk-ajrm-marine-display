@@ -30,6 +30,7 @@ assert.match(
   new RegExp(`AIS_PLUS_WEBAPP_VERSION = "${packageInfo.version.replaceAll(".", "\\.")}"`),
 );
 assert.match(sourceIndex, /AJRM Marine Display Help/);
+assert.match(sourceIndex, /id="displayAudioModeLabel"[\s\S]*Sounds/);
 assert.match(refreshController, /applyEngineTargetProjection/);
 assert.doesNotMatch(refreshController, /updateDerivedData/);
 assert.match(readme, /AJRM Marine architecture/i);

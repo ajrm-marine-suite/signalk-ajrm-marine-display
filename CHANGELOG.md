@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.3
+
+- Add a visible Sounds title to the Display audio mode selector.
+
 ## 0.5.2
 
 - Add top-level Display audio mode controls for Auto, On, and Off.

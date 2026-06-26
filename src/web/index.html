@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AIS_PLUS_WEBAPP_VERSION = "0.5.2";
+      window.AIS_PLUS_WEBAPP_VERSION = "0.5.3";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ais-plus-display-version">AJRM Marine Display v0.5.2</div>
+    <div class="ais-plus-display-version">AJRM Marine Display v0.5.3</div>
     <div id="topStatusStack" class="ais-plus-top-status-stack">
       <div
         id="connectionStatus"
@@ -807,10 +807,13 @@
                 </div>
                 <div class="card mb-3">
                   <div class="card-body">
+                    <div class="form-label" id="displayAudioModeLabel">
+                      Sounds
+                    </div>
                     <div
                       class="btn-group w-100 mb-2"
                       role="group"
-                      aria-label="Audio mode"
+                      aria-labelledby="displayAudioModeLabel"
                     >
                       <input
                         type="radio"
