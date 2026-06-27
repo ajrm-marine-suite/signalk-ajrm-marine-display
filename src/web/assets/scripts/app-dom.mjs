@@ -22,6 +22,8 @@ export function createAppDom() {
 		alarmDiv: getRequiredElement("alarmDiv"),
 		offcanvasEditProfiles: getRequiredElement("offcanvasEditProfiles"),
 		modalClosebyBoats: getRequiredElement("modalClosebyBoats"),
+		gpsStatusIndicator: getRequiredElement("gpsStatusIndicator"),
+		gpsStatusText: getRequiredElement("gpsStatusText"),
 		totalTargetCountUI: getRequiredElement("totalTargetCountUI"),
 		filteredTargetCountUI: getRequiredElement("filteredTargetCountUI"),
 		alarmTargetCountUI: getRequiredElement("alarmTargetCountUI"),

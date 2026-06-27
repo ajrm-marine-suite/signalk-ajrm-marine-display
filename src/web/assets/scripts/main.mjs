@@ -17,6 +17,7 @@ import { createAppRuntimeState } from "./app-runtime-state.mjs";
 import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
+import { createGpsStatusIndicator } from "./gps-status-indicator.mjs";
 import {
 	createMainDom,
 	createMainServices,
@@ -67,6 +68,11 @@ const {
 } = createMainDom({ createDom: createAppDom });
 
 const { selectActiveProfile } = elements;
+createGpsStatusIndicator({
+	element: elements.gpsStatusIndicator,
+	textElement: elements.gpsStatusText,
+	windowObject: window,
+}).start();
 
 const {
 	feedback,

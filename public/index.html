@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AIS_PLUS_WEBAPP_VERSION = "0.5.5";
+      window.AIS_PLUS_WEBAPP_VERSION = "0.5.6";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-Dh2nDpN2.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-BUKJx3E2.css">
+    <script type="module" crossorigin src="./assets/index-BxgDhvSW.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-B9-9b5Xg.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ais-plus-display-version">AJRM Marine Display v0.5.5</div>
+    <div class="ais-plus-display-version">AJRM Marine Display v0.5.6</div>
     <div id="topStatusStack" class="ais-plus-top-status-stack">
       <div
         id="connectionStatus"
@@ -241,8 +241,19 @@
 
     <div class="container">
       <div
+        id="gpsStatusIndicator"
+        class="ais-plus-gps-status ais-plus-gps-status-unknown user-select-none"
+        role="status"
+        aria-live="polite"
+        title="GPS status unknown"
+      >
+        <span class="ais-plus-gps-status-led" aria-hidden="true"></span>
+        <span id="gpsStatusText">GPS ?</span>
+      </div>
+
+      <div
         id="targetCounts"
-        class="text-center user-select-none pe-none"
+        class="d-none"
         tabindex="-1"
       >
         <p class="display-3 text-info mb-0" id="totalTargetCountUI">0</p>

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.6
+
+- Replace the top-right target, filtered, and alarm counts with a compact GPS
+  status lamp backed by AJRM Marine GPS Integrity.
+
 ## 0.5.5
 
 - Preserve vessel-database-filled dimensions in Display target popups when the
