@@ -77,7 +77,7 @@ export function createHarbourDisplayController({
 				fill: false,
 				dashArray: "6 8",
 				interactive: false,
-				className: "aisPlusHarbourLimit",
+				className: "ajrmMarineHarbourLimit",
 			}).addTo(layer);
 			const labelPoint = harbourLabelPoint(polygon);
 			if (labelPoint) {

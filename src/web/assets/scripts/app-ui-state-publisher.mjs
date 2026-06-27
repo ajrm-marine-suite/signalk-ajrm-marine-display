@@ -1,5 +1,5 @@
-export const AIS_PLUS_UI_STATE_EVENT = "ais-plus-ui-state";
-export const AIS_PLUS_LATEST_UI_STATE_KEY = "aisPlusLatestUiState";
+export const AJRM_MARINE_UI_STATE_EVENT = "ajrm-marine-ui-state";
+export const AJRM_MARINE_LATEST_UI_STATE_KEY = "ajrmMarineLatestUiState";
 
 export function publishUiStateToWindow(
 	uiState,
@@ -13,7 +13,7 @@ export function publishUiStateToWindow(
 	) {
 		return false;
 	}
-	windowObject[AIS_PLUS_LATEST_UI_STATE_KEY] = uiState;
+	windowObject[AJRM_MARINE_LATEST_UI_STATE_KEY] = uiState;
 
 	const EventConstructor = windowObject.CustomEvent || globalThis.CustomEvent;
 	if (
@@ -21,7 +21,7 @@ export function publishUiStateToWindow(
 		typeof EventConstructor === "function"
 	) {
 		windowObject.dispatchEvent(
-			new EventConstructor(AIS_PLUS_UI_STATE_EVENT, {
+			new EventConstructor(AJRM_MARINE_UI_STATE_EVENT, {
 				detail: { uiState },
 			}),
 		);

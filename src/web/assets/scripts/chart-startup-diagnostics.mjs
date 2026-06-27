@@ -9,7 +9,7 @@ export {
 } from "./chart-startup-diagnostic-recorders.mjs";
 
 export const DEFAULT_CHART_DIAGNOSTIC_LIMIT = 100;
-export const DEFAULT_CHART_DIAGNOSTIC_KEY = "aisPlusChartDiagnostics";
+export const DEFAULT_CHART_DIAGNOSTIC_KEY = "ajrmMarineChartDiagnostics";
 export const CHART_STARTUP_DIAGNOSTIC_STEPS = {
 	start: "chart-startup:start",
 	resolved: "chart-startup:resolved",

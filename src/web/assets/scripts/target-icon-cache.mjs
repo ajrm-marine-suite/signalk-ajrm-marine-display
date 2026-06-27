@@ -27,8 +27,8 @@ export function targetIconCacheKey({
 }
 
 export function resolveCachedTargetIcon({ marker, cacheKey, createIcon }) {
-	if (marker?._aisPlusIconCacheKey === cacheKey && marker._aisPlusCachedIcon) {
-		return marker._aisPlusCachedIcon;
+	if (marker?._ajrmMarineIconCacheKey === cacheKey && marker._ajrmMarineCachedIcon) {
+		return marker._ajrmMarineCachedIcon;
 	}
 	const icon = createIcon();
 	rememberTargetIcon({ marker, cacheKey, icon });
@@ -37,8 +37,8 @@ export function resolveCachedTargetIcon({ marker, cacheKey, createIcon }) {
 
 export function rememberTargetIcon({ marker, cacheKey, icon }) {
 	if (!marker) return;
-	marker._aisPlusIconCacheKey = cacheKey;
-	marker._aisPlusCachedIcon = icon;
+	marker._ajrmMarineIconCacheKey = cacheKey;
+	marker._ajrmMarineCachedIcon = icon;
 }
 
 function booleanKey(value) {

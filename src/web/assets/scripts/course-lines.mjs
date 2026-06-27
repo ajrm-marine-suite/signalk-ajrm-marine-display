@@ -17,7 +17,7 @@ export function setSelectedCourseLine({
 		opacity: 1.0,
 		dashArray: "",
 	};
-	if (!sameCourseLineState(line._aisPlusCourseLineState, state)) {
+	if (!sameCourseLineState(line._ajrmMarineCourseLineState, state)) {
 		line.setLatLngs([start, projectedCpaLocation]);
 		line.setStyle({
 			color: "blue",
@@ -26,7 +26,7 @@ export function setSelectedCourseLine({
 			dashArray: "",
 			className: "blueStuff",
 		});
-		line._aisPlusCourseLineState = state;
+		line._ajrmMarineCourseLineState = state;
 	}
 
 	setMarkerLatLngIfChanged(cpaMarker, projectedCpaLocation);
@@ -53,7 +53,7 @@ export function setProjectedCourseLine({
 		opacity: 0.7,
 		dashArray: "20 10",
 	};
-	if (sameCourseLineState(line._aisPlusCourseLineState, state)) return;
+	if (sameCourseLineState(line._ajrmMarineCourseLineState, state)) return;
 	line.setLatLngs([start, end]);
 	line.setStyle({
 		color,
@@ -61,19 +61,19 @@ export function setProjectedCourseLine({
 		interactive: false,
 		dashArray: "20 10",
 	});
-	line._aisPlusCourseLineState = state;
+	line._ajrmMarineCourseLineState = state;
 }
 
 export function clearCourseLine(line) {
-	if (line?._aisPlusCourseLineState == null) return;
+	if (line?._ajrmMarineCourseLineState == null) return;
 	line.setLatLngs([]);
-	line._aisPlusCourseLineState = null;
+	line._ajrmMarineCourseLineState = null;
 }
 
 function setMarkerLatLngIfChanged(marker, latLng) {
-	if (sameLatLng(marker._aisPlusLatLng, latLng)) return;
+	if (sameLatLng(marker._ajrmMarineLatLng, latLng)) return;
 	marker.setLatLng(latLng);
-	marker._aisPlusLatLng = latLng;
+	marker._ajrmMarineLatLng = latLng;
 }
 
 function sameCourseLineState(previous, next) {

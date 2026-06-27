@@ -4,7 +4,7 @@ import {
 } from "./chart-selector-panel.mjs";
 
 export function chartSelectorPanelForControl(control) {
-	return control.getContainer()?._aisPlusChartPanel || null;
+	return control.getContainer()?._ajrmMarineChartPanel || null;
 }
 
 export function updateChartSelectorPanel({

@@ -9,9 +9,9 @@ import {
 	setCollisionProfilesPath,
 } from "./collision-profile-routes.mjs";
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 
 export function createCollisionProfileService({
 	pluginId,
@@ -51,7 +51,7 @@ export function createCollisionProfileService({
 			credentials: "include",
 			method: "PUT",
 			body: JSON.stringify(normalizedProfiles),
-			headers: aisPlusAuthHeaders({
+			headers: ajrmMarineAuthHeaders({
 				"Content-Type": "application/json",
 			}),
 		});

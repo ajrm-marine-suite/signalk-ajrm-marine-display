@@ -59,18 +59,18 @@ export function updateSelfTcpaGuideLines({
 export function hideSelfTcpaGuideLines(guidesOrLine) {
 	const guides = Array.isArray(guidesOrLine)
 		? guidesOrLine
-		: guidesOrLine?._aisPlusSelfTcpaGuideLines || [];
+		: guidesOrLine?._ajrmMarineSelfTcpaGuideLines || [];
 	for (const guide of guides) {
 		const guideLine = guide.line || guide;
-		if (guideLine._aisPlusCourseLineState == null) continue;
+		if (guideLine._ajrmMarineCourseLineState == null) continue;
 		guideLine.setLatLngs([]);
-		guideLine._aisPlusCourseLineState = null;
+		guideLine._ajrmMarineCourseLineState = null;
 	}
 }
 
 export function ensureGuideLines({ line, map, L }) {
-	if (line._aisPlusSelfTcpaGuideLines) return line._aisPlusSelfTcpaGuideLines;
-	line._aisPlusSelfTcpaGuideLines = GUIDE_SIZES.map((guide, index) => ({
+	if (line._ajrmMarineSelfTcpaGuideLines) return line._ajrmMarineSelfTcpaGuideLines;
+	line._ajrmMarineSelfTcpaGuideLines = GUIDE_SIZES.map((guide, index) => ({
 		...guide,
 		line: index === 0
 			? line
@@ -81,7 +81,7 @@ export function ensureGuideLines({ line, map, L }) {
 				weight: guide.weight,
 			}).addTo(map),
 	}));
-	return line._aisPlusSelfTcpaGuideLines;
+	return line._ajrmMarineSelfTcpaGuideLines;
 }
 
 function finiteOr(value, fallback) {
@@ -91,7 +91,7 @@ function finiteOr(value, fallback) {
 
 function updateGuideLine({ guide, map, state }) {
 	const line = guide.line;
-	const changed = !sameGuideLineState(line._aisPlusCourseLineState, state);
+	const changed = !sameGuideLineState(line._ajrmMarineCourseLineState, state);
 	if (changed) {
 		line.setLatLngs([state.start, state.end]);
 		line.setStyle({
@@ -101,7 +101,7 @@ function updateGuideLine({ guide, map, state }) {
 			dashArray: state.dashArray,
 			weight: state.weight,
 		});
-		line._aisPlusCourseLineState = state;
+		line._ajrmMarineCourseLineState = state;
 	}
 	const added = !map.hasLayer(line);
 	if (added) line.addTo(map);

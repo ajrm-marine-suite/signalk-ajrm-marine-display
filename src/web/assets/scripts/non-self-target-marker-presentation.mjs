@@ -19,11 +19,11 @@ export function applyNonSelfTargetMarkerPresentation({
 
 	const counts = targetCountContribution(target, selfMmsi);
 	const tooltipSignature = tooltipSignatureForTarget(target);
-	if (boatMarker._aisPlusTooltipSignature !== tooltipSignature) {
+	if (boatMarker._ajrmMarineTooltipSignature !== tooltipSignature) {
 		const tooltipHtml = tooltipHtmlForTarget(target);
 		boatMarker.setTooltipContent(tooltipHtml);
-		boatMarker._aisPlusTooltipHtml = tooltipHtml;
-		boatMarker._aisPlusTooltipSignature = tooltipSignature;
+		boatMarker._ajrmMarineTooltipHtml = tooltipHtml;
+		boatMarker._ajrmMarineTooltipSignature = tooltipSignature;
 	}
 	if (!deferLabelCollision) {
 		labelCollision.add(boatMarker, target.mmsi, target.order);

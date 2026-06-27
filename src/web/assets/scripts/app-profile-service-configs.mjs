@@ -9,7 +9,7 @@ export function autoProfileSettingsServiceConfig({
 }) {
 	return {
 		pluginId,
-		controls: window.aisPlusAutoProfileControls,
+		controls: window.ajrmMarineAutoProfileControls,
 		getCurrentProfile: () => getProfiles()?.current,
 		setCurrentProfile: (profile) => {
 			setCurrentProfile(profile);
@@ -54,7 +54,7 @@ export function profileEditServiceConfig({
 }) {
 	return {
 		elements,
-		sizeControls: window.aisPlusSizeControls,
+		sizeControls: window.ajrmMarineSizeControls,
 		profileService: collisionProfileService,
 		profileActions,
 		pluginId,

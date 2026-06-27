@@ -27,7 +27,7 @@ assert.ok(
 );
 assert.match(
   sourceIndex,
-  new RegExp(`AIS_PLUS_WEBAPP_VERSION = "${packageInfo.version.replaceAll(".", "\\.")}"`),
+  new RegExp(`AJRM_MARINE_WEBAPP_VERSION = "${packageInfo.version.replaceAll(".", "\\.")}"`),
 );
 assert.match(sourceIndex, /AJRM Marine Display Help/);
 assert.match(sourceIndex, /id="displayAudioModeLabel"[\s\S]*Sounds/);

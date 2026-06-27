@@ -1,5 +1,5 @@
 import { applyServerAlertEventsToTargets } from "./server-alert-event-application.mjs";
-import { aisPlusAuthHeaders } from "./ais-plus-api-access.mjs";
+import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 import { alertEventsPath } from "./server-alert-events-routes.mjs";
 import {
 	applyServerAlertEventToTarget,
@@ -49,7 +49,7 @@ export function createServerAlertEventsController({
 			const response = await fetch(alertEventsPath(pluginId), {
 				credentials: "include",
 				cache: "no-store",
-				headers: aisPlusAuthHeaders(),
+				headers: ajrmMarineAuthHeaders(),
 			});
 			if (!response.ok) return events;
 

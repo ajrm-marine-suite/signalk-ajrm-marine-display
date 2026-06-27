@@ -12,7 +12,7 @@ export function updateTargetTableView({
 	const tableBody = document.getElementById("tableOfTargetsBody");
 	const targetCount = document.getElementById("numberOfAisTargets");
 	const renderKey = targetTableRenderKey({ targets, selfMmsi, sortBy });
-	if (tableBody._aisPlusRenderKey === renderKey) {
+	if (tableBody._ajrmMarineRenderKey === renderKey) {
 		targetSilence.updateGlobalSilenceControls();
 		return;
 	}
@@ -23,14 +23,14 @@ export function updateTargetTableView({
 		sortBy,
 		getTargetSvg: getTargetSvgFn,
 	});
-	if (tableBody._aisPlusRenderedHtml !== html) {
+	if (tableBody._ajrmMarineRenderedHtml !== html) {
 		tableBody.innerHTML = html;
-		tableBody._aisPlusRenderedHtml = html;
+		tableBody._ajrmMarineRenderedHtml = html;
 	}
-	if (targetCount._aisPlusRenderedCount !== rowCount) {
+	if (targetCount._ajrmMarineRenderedCount !== rowCount) {
 		targetCount.textContent = rowCount;
-		targetCount._aisPlusRenderedCount = rowCount;
+		targetCount._ajrmMarineRenderedCount = rowCount;
 	}
-	tableBody._aisPlusRenderKey = renderKey;
+	tableBody._ajrmMarineRenderKey = renderKey;
 	targetSilence.updateGlobalSilenceControls();
 }

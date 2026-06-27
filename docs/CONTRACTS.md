@@ -14,7 +14,7 @@ Display consumes these versioned projections:
   `vessels.self.plugins.ajrmMarineNotifications`;
 - AJRM Marine Audio runtime status at
   `vessels.self.plugins.ajrmMarineAudio`;
-- CapturePlus replay state at
+- AJRM Marine Logger replay state at
   `vessels.self.plugins.ajrmMarineLogger.playback`.
 
 It also consumes standard Signal K own-navigation, vessel, notification and
@@ -38,7 +38,7 @@ The Display plugin publishes:
 
 ```json
 {
-  "contract": "ais-plus-display-status",
+  "contract": "ajrm-marine-display-status",
   "contractVersion": 1,
   "sessionId": "uuid",
   "sequence": 1,

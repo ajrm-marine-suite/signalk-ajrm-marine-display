@@ -1,8 +1,8 @@
 import {
-	AIS_PLUS_LATEST_UI_STATE_KEY,
-	AIS_PLUS_UI_STATE_EVENT,
+	AJRM_MARINE_LATEST_UI_STATE_KEY,
+	AJRM_MARINE_UI_STATE_EVENT,
 } from "./app-ui-state-publisher.mjs";
-import { aisPlusAuthHeaders } from "./ais-plus-api-access.mjs";
+import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 import {
 	announcementLogPath,
 	clearAnnouncementLogPath,
@@ -88,7 +88,7 @@ export function createAnnouncementLogController({
 	}
 
 	function renderLatestUiState() {
-		return renderFromUiState(windowObject?.[AIS_PLUS_LATEST_UI_STATE_KEY]);
+		return renderFromUiState(windowObject?.[AJRM_MARINE_LATEST_UI_STATE_KEY]);
 	}
 
 	function handleUiState(event) {
@@ -104,7 +104,7 @@ export function createAnnouncementLogController({
 			const response = await fetchFn(path, {
 				credentials: "include",
 				cache: "no-store",
-				headers: aisPlusAuthHeaders(),
+				headers: ajrmMarineAuthHeaders(),
 			});
 			if (!response.ok) return false;
 			const data = await response.json();
@@ -121,14 +121,14 @@ export function createAnnouncementLogController({
 			method: "POST",
 			credentials: "include",
 			cache: "no-store",
-			headers: aisPlusAuthHeaders(),
+			headers: ajrmMarineAuthHeaders(),
 		});
 		await loadAnnouncementLog({ forceFetch: true });
 	}
 
 	function start() {
 		clearButton?.addEventListener("click", clearAnnouncementLog);
-		windowObject?.addEventListener?.(AIS_PLUS_UI_STATE_EVENT, handleUiState);
+		windowObject?.addEventListener?.(AJRM_MARINE_UI_STATE_EVENT, handleUiState);
 		if (!renderLatestUiState()) {
 			loadAnnouncementLog();
 			intervalId = setIntervalFn(loadAnnouncementLog, refreshIntervalMs);
@@ -138,7 +138,7 @@ export function createAnnouncementLogController({
 
 	function stop() {
 		clearFallbackInterval();
-		windowObject?.removeEventListener?.(AIS_PLUS_UI_STATE_EVENT, handleUiState);
+		windowObject?.removeEventListener?.(AJRM_MARINE_UI_STATE_EVENT, handleUiState);
 	}
 
 	const controller = {
@@ -151,9 +151,9 @@ export function createAnnouncementLogController({
 }
 
 function setInnerHtmlIfChanged(element, html) {
-	if (element._aisPlusRenderedHtml === html) return false;
+	if (element._ajrmMarineRenderedHtml === html) return false;
 	element.innerHTML = html;
-	element._aisPlusRenderedHtml = html;
+	element._ajrmMarineRenderedHtml = html;
 	return true;
 }
 

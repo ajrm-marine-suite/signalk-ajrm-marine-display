@@ -9,7 +9,7 @@ export function escapeAttribute(value, escapeHtml) {
 
 export function renderOption(inputName, inputType, value, escapeHtml) {
 	return `
-				<label class="ais-plus-chart-selector-option">
+				<label class="ajrm-marine-chart-selector-option">
 					<input type="${inputType}" name="${inputName}" value="${escapeAttribute(value, escapeHtml)}" />
 					<span>${escapeHtml(value)}</span>
 				</label>
@@ -44,9 +44,9 @@ export function renderPanel({ baseMaps, overlayMaps, escapeHtml }) {
 	const baseOptions = renderBaseMapOptions({ baseMaps, escapeHtml });
 	const overlayOptions = renderOverlayOptions({ overlayMaps, escapeHtml });
 	return `
-		<div class="ais-plus-chart-selector-title">Basemap</div>
+		<div class="ajrm-marine-chart-selector-title">Basemap</div>
 		${baseOptions}
-		<div class="ais-plus-chart-selector-title">Overlays</div>
+		<div class="ajrm-marine-chart-selector-title">Overlays</div>
 		${overlayOptions}
 	`;
 }

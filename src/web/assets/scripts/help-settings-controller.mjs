@@ -1,7 +1,7 @@
 import {
-	AIS_PLUS_LATEST_UI_STATE_KEY,
+	AJRM_MARINE_LATEST_UI_STATE_KEY,
 } from "./app-ui-state-publisher.mjs";
-import { aisPlusAuthHeaders } from "./ais-plus-api-access.mjs";
+import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 import { refreshCollisionProfilesPath } from "./collision-profile-routes.mjs";
 import { autoProfileStatusUiStateProjection } from "./ui-state-projection-reader.mjs";
 import { uiStatePath } from "./ui-state-routes.mjs";
@@ -82,7 +82,7 @@ export function repeatWithHelpSettingsSensitivity(seconds, sensitivity) {
 
 export function autoProfileStatusFromSharedUiState(windowObject) {
 	return autoProfileStatusUiStateProjection(
-		windowObject?.[AIS_PLUS_LATEST_UI_STATE_KEY],
+		windowObject?.[AJRM_MARINE_LATEST_UI_STATE_KEY],
 	);
 }
 
@@ -169,7 +169,7 @@ export function renderHelpSettingsHtml(
             </div>
 
             <h6>CPA and TCPA Limits</h6>
-            <div class="table-responsive ais-plus-help-table-scroll mb-3">
+            <div class="table-responsive ajrm-marine-help-table-scroll mb-3">
               <table class="table table-sm table-striped align-middle small">
                 <thead>
                   <tr>
@@ -192,7 +192,7 @@ async function readJson(fetchFn, url, { requiredLabel } = {}) {
 	const response = await fetchFn(url, {
 		credentials: "include",
 		cache: "no-store",
-		headers: aisPlusAuthHeaders(),
+		headers: ajrmMarineAuthHeaders(),
 	});
 	if (!response.ok) {
 		if (requiredLabel) {

@@ -12,7 +12,7 @@ import {
 } from "../src/web/assets/scripts/chart-startup-diagnostics.mjs";
 
 test("chart startup diagnostics exposes default storage settings", () => {
-	assert.equal(DEFAULT_CHART_DIAGNOSTIC_KEY, "aisPlusChartDiagnostics");
+	assert.equal(DEFAULT_CHART_DIAGNOSTIC_KEY, "ajrmMarineChartDiagnostics");
 	assert.equal(DEFAULT_CHART_DIAGNOSTIC_LIMIT, 100);
 	assert.equal(CHART_STARTUP_DIAGNOSTIC_STEPS.start, "chart-startup:start");
 	assert.equal(CHART_STARTUP_DIAGNOSTIC_STEPS.error, "chart-startup:error");
@@ -33,12 +33,12 @@ test("chart startup diagnostics records bounded entries on the chosen sink", () 
 	recordChartDiagnostic(diagnostics, "two", { value: 2 });
 	recordChartDiagnostic(diagnostics, "three", { value: 3 });
 
-	assert.equal(sink.aisPlusChartDiagnostics.entries.length, 2);
+	assert.equal(sink.ajrmMarineChartDiagnostics.entries.length, 2);
 	assert.deepEqual(
-		sink.aisPlusChartDiagnostics.entries.map((entry) => entry.step),
+		sink.ajrmMarineChartDiagnostics.entries.map((entry) => entry.step),
 		["two", "three"],
 	);
-	assert.deepEqual(sink.aisPlusChartDiagnostics.last, {
+	assert.deepEqual(sink.ajrmMarineChartDiagnostics.last, {
 		ts: "t3",
 		step: "three",
 		details: { value: 3 },
@@ -57,13 +57,13 @@ test("chart startup diagnostics serializes errors without throwing", () => {
 		baseLayerName: "NaturalEarth (offline)",
 	});
 
-	assert.equal(sink.aisPlusChartDiagnostics.entries.length, 1);
-	assert.equal(sink.aisPlusChartDiagnostics.entries[0].error.name, "TypeError");
+	assert.equal(sink.ajrmMarineChartDiagnostics.entries.length, 1);
+	assert.equal(sink.ajrmMarineChartDiagnostics.entries[0].error.name, "TypeError");
 	assert.equal(
-		sink.aisPlusChartDiagnostics.entries[0].error.message,
+		sink.ajrmMarineChartDiagnostics.entries[0].error.message,
 		"broken chart layer",
 	);
-	assert.deepEqual(sink.aisPlusChartDiagnostics.entries[0].details, {
+	assert.deepEqual(sink.ajrmMarineChartDiagnostics.entries[0].details, {
 		baseLayerName: "NaturalEarth (offline)",
 	});
 });

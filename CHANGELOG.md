@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.7
+
+- Rename Display browser namespaces, helper names, and status contracts to AJRM Marine naming.
+
 ## 0.5.6
 
 - Replace the top-right target, filtered, and alarm counts with a compact GPS

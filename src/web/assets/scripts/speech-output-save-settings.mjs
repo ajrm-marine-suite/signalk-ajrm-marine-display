@@ -1,8 +1,8 @@
 import { browserSpeechAvailable } from "./browser-speech-state.mjs";
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 import {
 	encounterSettingsPath,
@@ -90,7 +90,7 @@ export async function saveSpeechOutputSettingsVerified({
 	const saved = await responseJson(
 		await fetchFn(getSpeechOutputSettingsPath(pluginId), {
 			credentials: "include",
-			headers: aisPlusAuthHeaders(),
+			headers: ajrmMarineAuthHeaders(),
 		}),
 		"Speech output verification",
 	);
@@ -112,7 +112,7 @@ export async function saveEncounterSettingsVerified({
 	const saved = await responseJson(
 		await fetchFn(encounterSettingsPath(pluginId), {
 			credentials: "include",
-			headers: aisPlusAuthHeaders(),
+			headers: ajrmMarineAuthHeaders(),
 		}),
 		"Alert settings verification",
 	);

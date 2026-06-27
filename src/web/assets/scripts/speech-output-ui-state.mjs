@@ -1,4 +1,4 @@
-import { aisPlusAuthHeaders } from "./ais-plus-api-access.mjs";
+import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 
 export const SOUND_CHECK_MESSAGE = "Sound Check. Testing 1, 2, 3.";
 
@@ -46,7 +46,7 @@ export function jsonRequestOptions({ method, body }) {
 	return {
 		credentials: "include",
 		method,
-		headers: aisPlusAuthHeaders({ "Content-Type": "application/json" }),
+		headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
 		body: JSON.stringify(body),
 	};
 }

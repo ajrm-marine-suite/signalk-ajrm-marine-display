@@ -18,7 +18,7 @@ export function createCpaLimitRingSet({
 			fill: false,
 			interactive: false,
 			dashArray: "8 8",
-			className: "aisPlusCpaWarningRing",
+			className: "ajrmMarineCpaWarningRing",
 		}),
 		danger: leaflet.circle(latLng, {
 			radius: 1,
@@ -27,7 +27,7 @@ export function createCpaLimitRingSet({
 			opacity: 0.85,
 			fill: false,
 			interactive: false,
-			className: "aisPlusCpaDangerRing",
+			className: "ajrmMarineCpaDangerRing",
 		}),
 	};
 }
@@ -54,15 +54,15 @@ export function updateCpaLimitRing({
 	});
 	const hasLayer = map.hasLayer(ring);
 	if (radius > 0) {
-		if (!sameRingState(ring._aisPlusCpaRingState, { latLng, radius })) {
+		if (!sameRingState(ring._ajrmMarineCpaRingState, { latLng, radius })) {
 			ring.setLatLng(latLng);
 			ring.setRadius(radius);
-			ring._aisPlusCpaRingState = { latLng, radius };
+			ring._ajrmMarineCpaRingState = { latLng, radius };
 		}
 		if (!hasLayer) ring.addTo(map);
 	} else if (hasLayer) {
 		ring.removeFrom(map);
-		ring._aisPlusCpaRingState = { latLng, radius };
+		ring._ajrmMarineCpaRingState = { latLng, radius };
 	}
 	return radius;
 }

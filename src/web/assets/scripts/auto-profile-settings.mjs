@@ -3,9 +3,9 @@ import {
 	autoProfileStatusPath,
 } from "./auto-profile-routes.mjs";
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 import {
 	applyAutoProfileSettingsToControls,
 	applyAutoProfileStatusToControls,
@@ -49,7 +49,7 @@ export function createAutoProfileSettingsController({
 				credentials: "include",
 				method: "POST",
 				body: JSON.stringify(autoProfileSettingsBody({ controls })),
-				headers: aisPlusAuthHeaders({ "Content-Type": "application/json" }),
+				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
 			});
 			if (!response.ok) {
 				await assertAisPlusResponseAllowed(response, "AJRM Marine Auto Profile");

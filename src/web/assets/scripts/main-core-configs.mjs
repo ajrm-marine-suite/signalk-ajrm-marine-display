@@ -1,7 +1,7 @@
 import { PLUGIN_ID } from "./app-constants.mjs";
 
 export function setWindowStationaryMuteThreshold(window, value = 0.35) {
-	window.aisPlusStationaryMuteThreshold = value;
+	window.ajrmMarineStationaryMuteThreshold = value;
 }
 
 export function mainServicesDomControls(dom) {
@@ -72,8 +72,8 @@ export function mainStartupDataConfig({
 		collisionProfileService,
 		selectActiveProfile,
 		getHttpResponse,
-		speechControls: window.aisPlusSpeechControls,
-		mapControls: window.aisPlusMapControls,
+		speechControls: window.ajrmMarineSpeechControls,
+		mapControls: window.ajrmMarineMapControls,
 		setStationaryMuteThreshold: (value) =>
 			setWindowStationaryMuteThreshold(window, value),
 		autoProfileSettings,

@@ -1,13 +1,13 @@
 const LOGIN_STATUS_URLS = ["/skServer/loginStatus", "/loginStatus"];
 const ACCESS_REQUEST_URL = "/signalk/v1/access/requests";
-const ACCESS_TOKEN_STORAGE_KEY = "aisPlus.accessToken";
-const ACCESS_REQUEST_STORAGE_KEY = "aisPlus.accessRequestHref";
-const CLIENT_ID_STORAGE_KEY = "aisPlus.clientId";
+const ACCESS_TOKEN_STORAGE_KEY = "ajrmMarine.accessToken";
+const ACCESS_REQUEST_STORAGE_KEY = "ajrmMarine.accessRequestHref";
+const CLIENT_ID_STORAGE_KEY = "ajrmMarine.clientId";
 
 let accessToken = readStoredValue(ACCESS_TOKEN_STORAGE_KEY);
 let accessRequestTimer = null;
 
-export function aisPlusAuthHeaders(headers = {}) {
+export function ajrmMarineAuthHeaders(headers = {}) {
 	return accessToken
 		? Object.assign({}, headers, { Authorization: `Bearer ${accessToken}` })
 		: headers;
@@ -142,7 +142,7 @@ function getClientId() {
 	const generated = window.crypto?.randomUUID
 		? window.crypto.randomUUID()
 		: `${Date.now()}-${Math.random().toString(16).slice(2)}`;
-	const clientId = `ais-plus-${generated}`;
+	const clientId = `ajrm-marine-${generated}`;
 	writeStoredValue(CLIENT_ID_STORAGE_KEY, clientId);
 	return clientId;
 }

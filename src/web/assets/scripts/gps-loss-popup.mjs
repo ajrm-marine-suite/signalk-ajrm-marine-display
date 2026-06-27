@@ -1,8 +1,8 @@
 import { currentGpsLossEvent } from "./alert-events.mjs";
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 import {
 	gpsLossPausePath,
 	gpsLossPopupHtml,
@@ -49,7 +49,7 @@ export function createGpsLossPopupController({
 				credentials: "include",
 				method: "POST",
 				cache: "no-store",
-				headers: aisPlusAuthHeaders(),
+				headers: ajrmMarineAuthHeaders(),
 			});
 			await assertAisPlusResponseAllowed(response, "AJRM Marine GPS alarm");
 			if (!response.ok) {

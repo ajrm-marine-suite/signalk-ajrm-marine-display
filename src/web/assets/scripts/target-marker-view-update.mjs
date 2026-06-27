@@ -20,24 +20,24 @@ export function updateTargetMarkerView({
 }
 
 export function setMarkerLatLngIfChanged(marker, latLng) {
-	if (sameLatLng(marker._aisPlusLatLng, latLng)) return false;
+	if (sameLatLng(marker._ajrmMarineLatLng, latLng)) return false;
 	marker.setLatLng(latLng);
-	marker._aisPlusLatLng = latLng;
+	marker._ajrmMarineLatLng = latLng;
 	return true;
 }
 
 export function setMarkerIconIfChanged(marker, icon) {
 	const signature = markerIconSignature(icon);
-	if (marker._aisPlusIconSignature === signature) return false;
+	if (marker._ajrmMarineIconSignature === signature) return false;
 	marker.setIcon(icon);
-	marker._aisPlusIconSignature = signature;
+	marker._ajrmMarineIconSignature = signature;
 	return true;
 }
 
 export function setMarkerOpacityIfChanged(marker, opacity) {
-	if (marker._aisPlusOpacity === opacity) return false;
+	if (marker._ajrmMarineOpacity === opacity) return false;
 	marker.setOpacity(opacity);
-	marker._aisPlusOpacity = opacity;
+	marker._ajrmMarineOpacity = opacity;
 	return true;
 }
 

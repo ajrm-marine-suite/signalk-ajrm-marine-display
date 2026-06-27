@@ -67,7 +67,7 @@ function labelCollisionSignature({ layer, id, weight, map }) {
 		weight,
 		markerPosition,
 		view,
-		layer._aisPlusTooltipHtml || "",
+		layer._ajrmMarineTooltipHtml || "",
 	].join("|");
 }
 
@@ -77,10 +77,10 @@ function markerPositionSignature(layer) {
 }
 
 function markerLatLng(layer) {
-	if (Array.isArray(layer?._aisPlusLatLng)) {
+	if (Array.isArray(layer?._ajrmMarineLatLng)) {
 		return {
-			lat: layer._aisPlusLatLng[0],
-			lng: layer._aisPlusLatLng[1],
+			lat: layer._ajrmMarineLatLng[0],
+			lng: layer._ajrmMarineLatLng[1],
 		};
 	}
 	return layer?.getLatLng?.() || null;

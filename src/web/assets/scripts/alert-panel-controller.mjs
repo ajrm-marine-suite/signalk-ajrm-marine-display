@@ -1,6 +1,6 @@
 import {
-	AIS_PLUS_LATEST_UI_STATE_KEY,
-	AIS_PLUS_UI_STATE_EVENT,
+	AJRM_MARINE_LATEST_UI_STATE_KEY,
+	AJRM_MARINE_UI_STATE_EVENT,
 } from "./app-ui-state-publisher.mjs";
 import {
 	panelEventsUiStateProjection,
@@ -51,7 +51,7 @@ export function alertPanelEntriesHtml(entries) {
 	return entries
 		.map(
 			(entry, index) => `
-                <div class="ais-plus-alert-item ${alertPanelEntryClass(entry.severity)}" role="listitem">
+                <div class="ajrm-marine-alert-item ${alertPanelEntryClass(entry.severity)}" role="listitem">
                   <span class="${index === 0 ? "fw-semibold" : ""}">${escapeAlertPanelHtml(entry.message)}</span>
                 </div>
               `,
@@ -172,7 +172,7 @@ export function createAlertPanelController({
 			panel.classList.toggle("d-none", !panelOpen);
 			showButton.classList.toggle("d-none", !hidden || entries.length === 0);
 			windowObject?.document?.body?.classList?.toggle(
-				"ais-plus-alert-panel-open",
+				"ajrm-marine-alert-panel-open",
 				panelOpen,
 			);
 			if (panelOpen !== lastPanelOpen) {
@@ -216,9 +216,9 @@ export function createAlertPanelController({
 		hideButton.addEventListener("click", () => setHidden(true));
 		showButton.addEventListener("click", () => setHidden(false));
 		enabled?.addEventListener("change", render);
-		windowObject?.addEventListener?.(AIS_PLUS_UI_STATE_EVENT, onSharedUiState);
+		windowObject?.addEventListener?.(AJRM_MARINE_UI_STATE_EVENT, onSharedUiState);
 		const hasSharedState = cacheSharedUiStatePanelEntries(
-			windowObject?.[AIS_PLUS_LATEST_UI_STATE_KEY],
+			windowObject?.[AJRM_MARINE_LATEST_UI_STATE_KEY],
 		);
 		modalAlarm?.addEventListener("show.bs.modal", onModalAlarmShow);
 		render();
@@ -230,7 +230,7 @@ export function createAlertPanelController({
 
 	function stop() {
 		clearFallbackInterval();
-		windowObject?.removeEventListener?.(AIS_PLUS_UI_STATE_EVENT, onSharedUiState);
+		windowObject?.removeEventListener?.(AJRM_MARINE_UI_STATE_EVENT, onSharedUiState);
 	}
 
 	const controller = {
@@ -245,16 +245,16 @@ export function createAlertPanelController({
 }
 
 function setInnerHtmlIfChanged(element, html) {
-	if (element._aisPlusRenderedHtml === html) return false;
+	if (element._ajrmMarineRenderedHtml === html) return false;
 	element.innerHTML = html;
-	element._aisPlusRenderedHtml = html;
+	element._ajrmMarineRenderedHtml = html;
 	return true;
 }
 
 function setTextContentIfChanged(element, text) {
-	if (element._aisPlusTextContent === text) return false;
+	if (element._ajrmMarineTextContent === text) return false;
 	element.textContent = text;
-	element._aisPlusTextContent = text;
+	element._ajrmMarineTextContent = text;
 	return true;
 }
 

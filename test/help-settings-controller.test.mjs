@@ -95,7 +95,7 @@ test("help settings load uses shared UI state before fetching UI state route", a
 		content,
 		currentSettingsTab: element(),
 		windowObject: {
-			aisPlusLatestUiState: {
+			ajrmMarineLatestUiState: {
 				autoProfileStatus: {
 					message: "Shared harbour profile",
 					options: { enabled: true },

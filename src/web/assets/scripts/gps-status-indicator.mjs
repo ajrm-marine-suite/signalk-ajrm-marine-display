@@ -14,11 +14,11 @@ export function createGpsStatusIndicator({
 
 	function render(status) {
 		element.classList.remove(
-			"ais-plus-gps-status-ok",
-			"ais-plus-gps-status-alert",
-			"ais-plus-gps-status-unknown",
+			"ajrm-marine-gps-status-ok",
+			"ajrm-marine-gps-status-alert",
+			"ajrm-marine-gps-status-unknown",
 		);
-		element.classList.add(`ais-plus-gps-status-${status.kind}`);
+		element.classList.add(`ajrm-marine-gps-status-${status.kind}`);
 		textElement.textContent = status.label;
 		element.title = status.title;
 	}

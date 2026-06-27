@@ -1,7 +1,7 @@
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 
 export async function getJsonResponse(url, options = {}) {
 	let response;
@@ -10,7 +10,7 @@ export async function getJsonResponse(url, options = {}) {
 		response = await fetch(url, {
 			credentials: "include",
 			cache: options.cache || "default",
-			headers: aisPlusAuthHeaders(),
+			headers: ajrmMarineAuthHeaders(),
 		});
 		if (!response.ok) {
 			await assertAisPlusResponseAllowed(response, "AJRM Marine");

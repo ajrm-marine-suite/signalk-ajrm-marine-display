@@ -14,8 +14,8 @@ export function updateTargetFootprintDisplay({
 		selfMmsi,
 		selectedVesselMmsi,
 	});
-	if (footprintPolygon._aisPlusFootprintState === state.key) return;
-	footprintPolygon._aisPlusFootprintState = state.key;
+	if (footprintPolygon._ajrmMarineFootprintState === state.key) return;
+	footprintPolygon._ajrmMarineFootprintState = state.key;
 	if (
 		!state.show
 	) {
@@ -70,13 +70,13 @@ export function targetFootprintDisplayState({
 }
 
 function displayScaledVesselShapesEnabled() {
-	const controls = globalThis.window?.aisPlusSpeechControls;
+	const controls = globalThis.window?.ajrmMarineSpeechControls;
 	return controls?.displayScaledVesselShapes?.checked !== false;
 }
 
 function vesselGpsFromBowFraction() {
 	const value = Number(
-		globalThis.window?.aisPlusEncounterSettings?.vesselGpsFromBowFraction,
+		globalThis.window?.ajrmMarineEncounterSettings?.vesselGpsFromBowFraction,
 	);
 	if (!Number.isFinite(value)) return 0.75;
 	return Math.min(1, Math.max(0, value));
@@ -84,7 +84,7 @@ function vesselGpsFromBowFraction() {
 
 function classAGpsFromBowFraction() {
 	const value = Number(
-		globalThis.window?.aisPlusEncounterSettings?.classAGpsFromBowFraction,
+		globalThis.window?.ajrmMarineEncounterSettings?.classAGpsFromBowFraction,
 	);
 	if (!Number.isFinite(value)) return 0.85;
 	return Math.min(1, Math.max(0, value));

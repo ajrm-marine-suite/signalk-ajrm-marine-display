@@ -1,5 +1,5 @@
 function iconSvg(paths, label) {
-	return `<svg class="ais-plus-control-icon" viewBox="0 0 16 16" width="1em" height="1em" aria-label="${label}" role="img" fill="currentColor" focusable="false">${paths}</svg>`;
+	return `<svg class="ajrm-marine-control-icon" viewBox="0 0 16 16" width="1em" height="1em" aria-label="${label}" role="img" fill="currentColor" focusable="false">${paths}</svg>`;
 }
 
 export const DISPLAY_CONTROL_ICONS = Object.freeze({

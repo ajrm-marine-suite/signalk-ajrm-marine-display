@@ -8,7 +8,7 @@ export function createSilenceBadgeMarker({
 	}
 	return leaflet.marker([latitude, longitude], {
 		icon: leaflet.divIcon({
-			className: "ais-plus-silence-badge",
+			className: "ajrm-marine-silence-badge",
 			html: "S",
 			iconSize: [18, 18],
 			iconAnchor: [-8, 22],
@@ -25,9 +25,9 @@ export function updateSilenceBadgeMarker({
 	longitude,
 }) {
 	const latLng = [latitude, longitude];
-	if (!sameLatLng(marker._aisPlusLatLng, latLng)) {
+	if (!sameLatLng(marker._ajrmMarineLatLng, latLng)) {
 		marker.setLatLng(latLng);
-		marker._aisPlusLatLng = latLng;
+		marker._ajrmMarineLatLng = latLng;
 	}
 	if (!map.hasLayer(marker)) marker.addTo(map);
 }

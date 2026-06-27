@@ -148,12 +148,12 @@ export function createAppRefreshController({
 export function defaultProjectionFallbackEnabled() {
 	const windowObject = globalThis.window;
 	return (
-		windowObject?.AIS_PLUS_DEBUG === true ||
-		windowObject?.localStorage?.getItem?.("aisPlusDebug") === "true"
+		windowObject?.AJRM_MARINE_DEBUG === true ||
+		windowObject?.localStorage?.getItem?.("ajrmMarineDebug") === "true"
 	);
 }
 
-export function replayStatusFromCapturePlus(status) {
+export function replayStatusFromAjrmMarineLogger(status) {
 	const playback = status?.playback;
 	return replayStatusFromPlaybackValue(playback);
 }
@@ -215,13 +215,13 @@ export function applyReplayStatusControls(controls, replayStatus) {
 		timeText,
 		fileText,
 	});
-	if (resolvedControls.status._aisPlusReplayStatusSignature === signature) {
+	if (resolvedControls.status._ajrmMarineReplayStatusSignature === signature) {
 		return false;
 	}
-	resolvedControls.status._aisPlusReplayStatusSignature = signature;
+	resolvedControls.status._ajrmMarineReplayStatusSignature = signature;
 	resolvedControls.status.classList.toggle("d-none", !active);
-	resolvedControls.status.classList.toggle("ais-plus-replay-status-live", !active);
-	resolvedControls.status.classList.toggle("ais-plus-replay-status-active", active);
+	resolvedControls.status.classList.toggle("ajrm-marine-replay-status-live", !active);
+	resolvedControls.status.classList.toggle("ajrm-marine-replay-status-active", active);
 	if (resolvedControls.mode) {
 		resolvedControls.mode.textContent = modeText;
 	}

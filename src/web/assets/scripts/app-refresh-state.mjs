@@ -118,10 +118,10 @@ export function applyConnectionStatusControls(controls, connectionStatus = {}) {
 		modeText,
 		detailText,
 	});
-	if (resolvedControls.status._aisPlusConnectionStatusSignature === signature) {
+	if (resolvedControls.status._ajrmMarineConnectionStatusSignature === signature) {
 		return false;
 	}
-	resolvedControls.status._aisPlusConnectionStatusSignature = signature;
+	resolvedControls.status._ajrmMarineConnectionStatusSignature = signature;
 	resolvedControls.status.classList.toggle("d-none", !disconnected);
 	if (resolvedControls.mode) {
 		resolvedControls.mode.textContent = modeText;

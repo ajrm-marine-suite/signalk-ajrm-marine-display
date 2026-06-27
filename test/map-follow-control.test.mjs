@@ -58,14 +58,14 @@ test("map follow control starts in following state and can show paused state", (
 
 	assert.equal(controller.getMapFollowSelf(), true);
 	assert.equal(button.title, "Following own vessel");
-	assert.match(button.innerHTML, /ais-plus-control-icon/);
+	assert.match(button.innerHTML, /ajrm-marine-control-icon/);
 	assert.match(button.innerHTML, /Follow own vessel/);
 
 	controller.setMapFollowSelf(false);
 
 	assert.equal(controller.getMapFollowSelf(), false);
 	assert.equal(button.title, "Follow paused. Click to centre own vessel");
-	assert.match(button.innerHTML, /ais-plus-control-icon/);
+	assert.match(button.innerHTML, /ajrm-marine-control-icon/);
 	assert.match(button.innerHTML, /Paused/);
 });
 

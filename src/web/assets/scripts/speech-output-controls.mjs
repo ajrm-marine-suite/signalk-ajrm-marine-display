@@ -1,8 +1,8 @@
 import { speakBrowserAlertsForOutput } from "./speech-output-browser-alerts.mjs";
 import {
-	aisPlusAuthHeaders,
+	ajrmMarineAuthHeaders,
 	assertAisPlusResponseAllowed,
-} from "./ais-plus-api-access.mjs";
+} from "./ajrm-marine-api-access.mjs";
 import { announceSoundState } from "./speech-output-sound-state.mjs";
 import { runSoundCheck } from "./speech-output-sound-check.mjs";
 import { speechOutputDefaultsFromServer } from "./app-initial-settings-state.mjs";
@@ -61,7 +61,7 @@ export function createSpeechOutputController({
 				const response = await fetch(getSpeechOutputSettingsPath(pluginId), {
 					credentials: "include",
 					cache: "no-store",
-					headers: aisPlusAuthHeaders(),
+					headers: ajrmMarineAuthHeaders(),
 				});
 				if (!response?.ok) {
 					if (response) {

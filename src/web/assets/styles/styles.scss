@@ -39,13 +39,13 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 .leaflet-bar .btn,
 .leaflet-bar button,
 button.easy-button-button,
-.ais-plus-chart-selector-button {
+.ajrm-marine-chart-selector-button {
   box-shadow: none;
   filter: none;
   transform: none;
 }
 
-.ais-plus-alert-show.btn:active {
+.ajrm-marine-alert-show.btn:active {
   transform: translate(-50%, 4px);
 }
 
@@ -66,7 +66,7 @@ body,
   background-color: var(--bs-body-bg);
 }
 
-.ais-plus-top-status-stack {
+.ajrm-marine-top-status-stack {
   position: fixed;
   top: 0.75rem;
   left: 50%;
@@ -80,8 +80,8 @@ body,
   pointer-events: none;
 }
 
-.ais-plus-replay-status,
-.ais-plus-connection-status {
+.ajrm-marine-replay-status,
+.ajrm-marine-connection-status {
   display: flex;
   max-width: 100%;
   flex-wrap: wrap;
@@ -95,30 +95,30 @@ body,
   pointer-events: auto;
 }
 
-.ais-plus-replay-status {
+.ajrm-marine-replay-status {
   border: 1px solid var(--bs-warning-border-subtle);
   color: var(--bs-warning-text-emphasis);
   background: var(--bs-warning-bg-subtle);
 }
 
-.ais-plus-replay-status.d-none,
-.ais-plus-connection-status.d-none {
+.ajrm-marine-replay-status.d-none,
+.ajrm-marine-connection-status.d-none {
   display: none;
 }
 
-.ais-plus-replay-status-live {
+.ajrm-marine-replay-status-live {
   border-color: var(--bs-border-color);
   color: var(--bs-body-color);
   background: var(--bs-body-bg);
 }
 
-.ais-plus-replay-status-active {
+.ajrm-marine-replay-status-active {
   border-color: var(--bs-warning-border-subtle);
   color: var(--bs-warning-text-emphasis);
   background: var(--bs-warning-bg-subtle);
 }
 
-.ais-plus-connection-status {
+.ajrm-marine-connection-status {
   border: 1px solid var(--bs-danger-border-subtle);
   color: var(--bs-danger-text-emphasis);
   background: var(--bs-danger-bg-subtle);
@@ -191,11 +191,11 @@ button.easy-button-button .button-state {
   line-height: 45px;
 }
 
-.ais-plus-chart-selector {
+.ajrm-marine-chart-selector {
   position: relative;
 }
 
-.ais-plus-chart-selector-button {
+.ajrm-marine-chart-selector-button {
   width: 30px;
   height: 30px;
   padding: 0;
@@ -206,12 +206,12 @@ button.easy-button-button .button-state {
   text-align: center;
 }
 
-.ais-plus-chart-selector-button:hover,
-.ais-plus-chart-selector-button:focus {
+.ajrm-marine-chart-selector-button:hover,
+.ajrm-marine-chart-selector-button:focus {
   background-color: var(--bs-tertiary-bg);
 }
 
-.ais-plus-chart-selector-panel {
+.ajrm-marine-chart-selector-panel {
   position: absolute;
   top: 0;
   left: 36px;
@@ -225,7 +225,7 @@ button.easy-button-button .button-state {
   font-size: 13px;
 }
 
-.ais-plus-chart-selector-title {
+.ajrm-marine-chart-selector-title {
   margin: 4px 0;
   color: var(--bs-secondary-color);
   font-size: 11px;
@@ -233,7 +233,7 @@ button.easy-button-button .button-state {
   text-transform: uppercase;
 }
 
-.ais-plus-chart-selector-option {
+.ajrm-marine-chart-selector-option {
   display: flex;
   gap: 8px;
   align-items: center;
@@ -242,34 +242,34 @@ button.easy-button-button .button-state {
   white-space: nowrap;
 }
 
-.ais-plus-control-icon {
+.ajrm-marine-control-icon {
   display: inline-block;
   height: 1em;
   vertical-align: -0.125em;
   width: 1em;
 }
 
-button.easy-button-button .ais-plus-control-icon,
-.ais-plus-chart-selector-button .ais-plus-control-icon {
+button.easy-button-button .ajrm-marine-control-icon,
+.ajrm-marine-chart-selector-button .ajrm-marine-control-icon {
   height: 1.05em;
   width: 1.05em;
 }
 
-.ais-plus-help-control-list {
+.ajrm-marine-help-control-list {
   display: grid;
   gap: 0.65rem;
   list-style: none;
   padding-left: 0;
 }
 
-.ais-plus-help-control-list li {
+.ajrm-marine-help-control-list li {
   display: grid;
   grid-template-columns: 2rem minmax(0, 1fr);
   gap: 0.65rem;
   align-items: start;
 }
 
-.ais-plus-help-control-icon {
+.ajrm-marine-help-control-icon {
   display: inline-flex;
   width: 2rem;
   height: 2rem;
@@ -347,7 +347,7 @@ button.easy-button-button .ais-plus-control-icon,
   display: none;
 }
 
-.ais-plus-gps-status {
+.ajrm-marine-gps-status {
   position: absolute;
   top: .75rem;
   right: .75rem;
@@ -367,7 +367,7 @@ button.easy-button-button .ais-plus-control-icon,
   box-shadow: 0 .15rem .65rem rgb(0 0 0 / .18);
 }
 
-.ais-plus-gps-status-led {
+.ajrm-marine-gps-status-led {
   width: .7rem;
   height: .7rem;
   border-radius: 50%;
@@ -377,14 +377,14 @@ button.easy-button-button .ais-plus-control-icon,
     0 0 .4rem rgb(138 146 153 / .7);
 }
 
-.ais-plus-gps-status-ok .ais-plus-gps-status-led {
+.ajrm-marine-gps-status-ok .ajrm-marine-gps-status-led {
   background: #16a34a;
   box-shadow:
     inset 0 0 .15rem rgb(255 255 255 / .8),
     0 0 .45rem rgb(22 163 74 / .85);
 }
 
-.ais-plus-gps-status-alert .ais-plus-gps-status-led {
+.ajrm-marine-gps-status-alert .ajrm-marine-gps-status-led {
   background: #dc2626;
   box-shadow:
     inset 0 0 .15rem rgb(255 255 255 / .8),

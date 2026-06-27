@@ -88,14 +88,14 @@ function fakeLeaflet() {
 		}
 
 		querySelectorAll(selector) {
-			if (selector === 'input[name="ais-plus-basemap"]') {
+			if (selector === 'input[name="ajrm-marine-basemap"]') {
 				return (this.inputs || []).filter(
-					(input) => input.name === "ais-plus-basemap",
+					(input) => input.name === "ajrm-marine-basemap",
 				);
 			}
-			if (selector === 'input[name="ais-plus-overlay"]') {
+			if (selector === 'input[name="ajrm-marine-overlay"]') {
 				return (this.inputs || []).filter(
-					(input) => input.name === "ais-plus-overlay",
+					(input) => input.name === "ajrm-marine-overlay",
 				);
 			}
 			return [];
@@ -239,7 +239,7 @@ test("handlePanelChange routes basemap and overlay inputs", () => {
 				calls.push(`overlay:${value}:${checked}`),
 		});
 		handlePanelChange({
-			event: { target: { name: "ais-plus-basemap", value: "Ignored" } },
+			event: { target: { name: "ajrm-marine-basemap", value: "Ignored" } },
 			onSelectBaseLayer: (value) => calls.push(`base:${value}`),
 			onSetOverlayLayer: (value, checked) =>
 				calls.push(`overlay:${value}:${checked}`),
@@ -392,7 +392,7 @@ test("updateCheckedInputs applies a shared checked-state predicate", () => {
 test("renderPanel includes base maps and overlays with escaped labels", () => {
 	assert.match(
 		renderOption(CHART_BASEMAP_INPUT_NAME, "radio", "NaturalEarth", (value) => value),
-		/name="ais-plus-basemap"/,
+		/name="ajrm-marine-basemap"/,
 	);
 	assert.match(
 		renderOptions({
@@ -401,7 +401,7 @@ test("renderPanel includes base maps and overlays with escaped labels", () => {
 			inputType: "checkbox",
 			escapeHtml: (value) => value,
 		}),
-		/type="checkbox" name="ais-plus-overlay"/,
+		/type="checkbox" name="ajrm-marine-overlay"/,
 	);
 	assert.match(
 		renderBaseMapOptions({
@@ -427,8 +427,8 @@ test("renderPanel includes base maps and overlays with escaped labels", () => {
 	assert.match(html, /NaturalEarth \(offline\)/);
 	assert.match(html, /OpenSeaMap/);
 	assert.match(html, /Auto Charts/);
-	assert.match(html, /name="ais-plus-basemap"/);
-	assert.match(html, /name="ais-plus-overlay"/);
+	assert.match(html, /name="ajrm-marine-basemap"/);
+	assert.match(html, /name="ajrm-marine-overlay"/);
 });
 
 test("configureChartSelectorButton sets accessible button attributes", () => {
@@ -479,7 +479,7 @@ test("chart selector DOM part helpers construct and attach the panel", () => {
 	assert.equal(container.className, CHART_SELECTOR_CONTAINER_CLASS);
 	assert.equal(button.title, CHART_SELECTOR_BUTTON_LABEL);
 	assert.equal(panel.hidden, true);
-	assert.equal(container._aisPlusChartPanel, panel);
+	assert.equal(container._ajrmMarineChartPanel, panel);
 	assert.equal(container.disableClickPropagation, true);
 	assert.equal(container.disableScrollPropagation, true);
 	assert.deepEqual(container.children, [button, panel]);
@@ -511,7 +511,7 @@ test("createChartSelectorControl wires Leaflet DOM events and input updates", ()
 		const button = created.find((element) =>
 			element.className.includes(CHART_SELECTOR_BUTTON_CLASS.split(" ")[0]),
 		);
-		const panel = container._aisPlusChartPanel;
+		const panel = container._ajrmMarineChartPanel;
 
 		assert.equal(container.className, CHART_SELECTOR_CONTAINER_CLASS);
 		assert.equal(container.disableClickPropagation, true);
@@ -548,8 +548,8 @@ test("createChartSelectorControl wires Leaflet DOM events and input updates", ()
 		]);
 
 		selector.update();
-		const baseInputs = panel.querySelectorAll('input[name="ais-plus-basemap"]');
-		const overlayInputs = panel.querySelectorAll('input[name="ais-plus-overlay"]');
+		const baseInputs = panel.querySelectorAll('input[name="ajrm-marine-basemap"]');
+		const overlayInputs = panel.querySelectorAll('input[name="ajrm-marine-overlay"]');
 		assert.deepEqual(
 			baseInputs.map((input) => input.checked),
 			[false, true],
@@ -586,7 +586,7 @@ test("chartSelectorControlDefinition describes the Leaflet selector control", ()
 
 	assert.equal(container.className, CHART_SELECTOR_CONTAINER_CLASS);
 	assert.ok(listeners.get(button).click);
-	assert.ok(listeners.get(container._aisPlusChartPanel).change);
+	assert.ok(listeners.get(container._ajrmMarineChartPanel).change);
 	assert.ok(listeners.get(map).click);
 });
 
@@ -621,10 +621,10 @@ test("chartSelectorControlApi exposes the control and update hook", () => {
 	let updated = false;
 	const panel = {
 		querySelectorAll(selector) {
-			if (selector === 'input[name="ais-plus-basemap"]') {
+			if (selector === 'input[name="ajrm-marine-basemap"]') {
 				return [{ value: "Empty", checked: false }];
 			}
-			if (selector === 'input[name="ais-plus-overlay"]') {
+			if (selector === 'input[name="ajrm-marine-overlay"]') {
 				return [{ value: "OpenSeaMap", checked: false }];
 			}
 			return [];
@@ -632,7 +632,7 @@ test("chartSelectorControlApi exposes the control and update hook", () => {
 	};
 	const control = {
 		getContainer() {
-			return { _aisPlusChartPanel: panel };
+			return { _ajrmMarineChartPanel: panel };
 		},
 	};
 	const api = chartSelectorControlApi({
@@ -654,7 +654,7 @@ test("chartSelectorPanelForControl returns the stored panel or null", () => {
 	assert.equal(
 		chartSelectorPanelForControl({
 			getContainer() {
-				return { _aisPlusChartPanel: panel };
+				return { _ajrmMarineChartPanel: panel };
 			},
 		}),
 		panel,

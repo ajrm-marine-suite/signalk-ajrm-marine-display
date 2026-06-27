@@ -101,5 +101,5 @@ async function readInitialSpeechOutputSettings({ pluginId, getHttpResponse }) {
 
 function setEncounterSettingsSnapshot(encounterSettings) {
 	if (!globalThis.window) return;
-	globalThis.window.aisPlusEncounterSettings = encounterSettings || {};
+	globalThis.window.ajrmMarineEncounterSettings = encounterSettings || {};
 }

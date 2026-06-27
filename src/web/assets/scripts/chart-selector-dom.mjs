@@ -54,7 +54,7 @@ export function createChartSelectorPanel({
 export function attachChartSelectorContainerBehaviour({ L, container, panel }) {
 	L.DomEvent.disableClickPropagation(container);
 	L.DomEvent.disableScrollPropagation(container);
-	container._aisPlusChartPanel = panel;
+	container._ajrmMarineChartPanel = panel;
 	return container;
 }
 

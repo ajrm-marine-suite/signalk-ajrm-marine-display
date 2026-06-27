@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.7` renames Display's browser namespaces and status contracts to
+AJRM Marine naming.
+
 Version `0.5.6` replaces the top-right target counters with a compact GPS
 status lamp backed by AJRM Marine GPS Integrity.
 
@@ -108,7 +111,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.6 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.7 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

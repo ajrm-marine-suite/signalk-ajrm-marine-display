@@ -7,7 +7,7 @@ import defaultCollisionProfiles from "../defaultCollisionProfiles.json";
 import hornMp3Url from "../horn.mp3";
 import pmtilesUrl from "../ne_10m_land.pmtiles?url&no-inline";
 import { escapeHtml } from "./alert-events.mjs";
-import { resumeAisPlusAccessRequestPolling } from "./ais-plus-api-access.mjs";
+import { resumeAisPlusAccessRequestPolling } from "./ajrm-marine-api-access.mjs";
 import {
 	DEFAULT_MAP_ZOOM,
 	PLUGIN_ID,

@@ -4,7 +4,7 @@ export function speechOutputServiceConfig({
 	feedback,
 }) {
 	return {
-		controls: window.aisPlusSpeechControls,
+		controls: window.ajrmMarineSpeechControls,
 		pluginId,
 		showAlert: feedback.showAlert,
 	};
@@ -22,7 +22,7 @@ export function alertPopupServiceConfig({
 	return {
 		modal: modals.alarm,
 		container: elements.alarmDiv,
-		controls: window.aisPlusSpeechControls,
+		controls: window.ajrmMarineSpeechControls,
 		getEvents: () => serverAlertEvents.getEvents(),
 		getTarget: (mmsi) => targets.get(mmsi),
 		escapeHtml,

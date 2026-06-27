@@ -1,4 +1,4 @@
-import { assertAisPlusResponseAllowed } from "./ais-plus-api-access.mjs";
+import { assertAisPlusResponseAllowed } from "./ajrm-marine-api-access.mjs";
 import {
 	announcementLogPath,
 	announcementLogRequestOptions,
@@ -12,14 +12,14 @@ import {
 	speechOutputSettingsRequestOptions,
 } from "./speech-output-ui-state.mjs";
 
-async function aisPlusRequest({ fetchFn, path, options, label }) {
+async function ajrmMarineRequest({ fetchFn, path, options, label }) {
 	const response = await fetchFn(path, options);
 	await assertAisPlusResponseAllowed(response, label);
 	return response;
 }
 
 export function postSpeechOutputSettings({ fetchFn, pluginId, controls }) {
-	return aisPlusRequest({
+	return ajrmMarineRequest({
 		fetchFn,
 		path: speechOutputSettingsPath(pluginId),
 		options: speechOutputSettingsRequestOptions(controls),
@@ -28,7 +28,7 @@ export function postSpeechOutputSettings({ fetchFn, pluginId, controls }) {
 }
 
 export function postAnnouncementLog({ fetchFn, pluginId, body }) {
-	return aisPlusRequest({
+	return ajrmMarineRequest({
 		fetchFn,
 		path: announcementLogPath(pluginId),
 		options: announcementLogRequestOptions(body),
@@ -37,7 +37,7 @@ export function postAnnouncementLog({ fetchFn, pluginId, body }) {
 }
 
 export function postEncounterSettings({ fetchFn, pluginId, controls }) {
-	return aisPlusRequest({
+	return ajrmMarineRequest({
 		fetchFn,
 		path: encounterSettingsPath(pluginId),
 		options: encounterSettingsRequestOptions(controls),
@@ -46,7 +46,7 @@ export function postEncounterSettings({ fetchFn, pluginId, controls }) {
 }
 
 export async function sendPiSoundCheck({ fetchFn, pluginId, message }) {
-	const response = await aisPlusRequest({
+	const response = await ajrmMarineRequest({
 		fetchFn,
 		path: soundCheckPath(pluginId),
 		options: soundCheckRequestOptions(message),
@@ -59,7 +59,7 @@ export async function sendPiSoundCheck({ fetchFn, pluginId, message }) {
 }
 
 export async function sendSoundStateAnnouncement({ fetchFn, pluginId, muted }) {
-	const response = await aisPlusRequest({
+	const response = await ajrmMarineRequest({
 		fetchFn,
 		path: soundStateAnnouncementPath(pluginId),
 		options: soundStateAnnouncementRequestOptions({ muted }),

@@ -41,7 +41,7 @@ function getRotationArrow(target, boxSize, strokeWidth) {
 	const haloWidth = Math.max(strokeWidth + 5, 7);
 	const arrowWidth = Math.max(strokeWidth + 2, 4);
 	return `
-        <g class="ais-plus-rotation-arrow" fill="none" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">
+        <g class="ajrm-marine-rotation-arrow" fill="none" stroke-linecap="round" stroke-linejoin="round" pointer-events="none">
             <path d="${path}" stroke="#ffffff" stroke-width="${haloWidth}" stroke-opacity="0.95" />
             <polygon points="${head}" fill="#ffffff" stroke="#ffffff" stroke-width="${haloWidth * 0.45}" stroke-opacity="0.95" />
             <path d="${path}" stroke="#111111" stroke-width="${arrowWidth}" />

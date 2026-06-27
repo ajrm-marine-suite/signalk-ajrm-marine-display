@@ -86,7 +86,7 @@ test("plugin publishes enabled Display status", () => {
   plugin.start({});
   const value = messages[0].updates[0].values[0];
   assert.equal(value.path, "plugins.ajrmMarineDisplay");
-  assert.equal(value.value.contract, "ais-plus-display-status");
+  assert.equal(value.value.contract, "ajrm-marine-display-status");
   assert.equal(value.value.contractVersion, 1);
   assert.equal(value.value.enabled, true);
   assert.equal(value.value.sequence, 1);
@@ -117,7 +117,7 @@ test("plugin publishes disabled Display status when configured off", () => {
 test("Signal K API exposes Traffic Core targets under ajrmMarineDisplay", () => {
   const { plugin } = harness({
     "plugins.ajrmMarineTraffic.targets": {
-      contract: "ais-plus-engine-targets",
+      contract: "ajrm-marine-engine-targets",
       targets: [
         {
           mmsi: "235000001",
@@ -144,7 +144,7 @@ test("Signal K API formats target distances using Signal K display units metadat
   const { plugin } = harness(
     {
       "plugins.ajrmMarineTraffic.targets": {
-        contract: "ais-plus-engine-targets",
+        contract: "ajrm-marine-engine-targets",
         targets: [
           {
             mmsi: "235000001",

@@ -74,7 +74,7 @@ module.exports = function ajrmMarineDisplay(app) {
   plugin.start = (pluginOptions = {}) => {
     options = normalizeOptions(pluginOptions);
     status = {
-      contract: "ais-plus-display-status",
+      contract: "ajrm-marine-display-status",
       contractVersion: 1,
       sessionId: randomUUID(),
       sequence: 1,
