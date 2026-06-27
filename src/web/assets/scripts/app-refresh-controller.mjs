@@ -6,7 +6,7 @@ import {
 	uiStateConnectionStatus,
 } from "./app-refresh-state.mjs";
 import { createRefreshDataFetcher } from "./app-refresh-data-fetcher.mjs";
-import { applyEngineTargetProjection } from "./engine-target-projection.mjs";
+import { applyTrafficTargetProjection } from "./traffic-target-projection.mjs";
 import { applyDisplayTargetGeometry } from "./display-target-geometry.mjs";
 import { publishUiStateToWindow } from "./app-ui-state-publisher.mjs";
 import { uiStatePath } from "./ui-state-routes.mjs";
@@ -77,13 +77,13 @@ export function createAppRefreshController({
 			});
 			setSelfTarget(targets.get(getSelfMmsi()));
 
-			const engineTargets = await getHttpResponse(getTargetsPath(pluginId), {
+			const trafficTargets = await getHttpResponse(getTargetsPath(pluginId), {
 				throwErrors: true,
 				cache: "no-store",
 			});
-			applyEngineTargetProjection({
+			applyTrafficTargetProjection({
 				targets,
-				projection: engineTargets,
+				projection: trafficTargets,
 			});
 
 			const uiState = await readUiState();
@@ -93,7 +93,7 @@ export function createAppRefreshController({
 				uiState,
 				allowFallback: allowProjectionFallback,
 			});
-			targetSilence.applyInitialMuteData(engineTargets || initialPluginTargets);
+			targetSilence.applyInitialMuteData(trafficTargets || initialPluginTargets);
 			updateUI({
 				uiState,
 				allowServerFallbackRefresh: allowProjectionFallback,

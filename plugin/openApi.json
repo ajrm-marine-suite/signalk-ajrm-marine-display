@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.5.7",
-    "description": "Display status and chart-webapp projections backed by Traffic Core and Notifications Plus."
+    "version": "0.5.8",
+    "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
     {
@@ -23,7 +23,7 @@
     },
     "/getTargets": {
       "get": {
-        "summary": "Get Traffic Core targets projected for the Display webapp",
+        "summary": "Get AJRM Marine Traffic targets projected for the Display webapp",
         "responses": {
           "200": {
             "description": "Projected targets keyed by MMSI"
@@ -33,7 +33,7 @@
     },
     "/uiState": {
       "get": {
-        "summary": "Get Display UI state projected from Traffic Core, Notifications Plus and Audio",
+        "summary": "Get Display UI state projected from AJRM Marine Traffic, Notifications Plus and Audio",
         "responses": {
           "200": {
             "description": "Current Display UI state"

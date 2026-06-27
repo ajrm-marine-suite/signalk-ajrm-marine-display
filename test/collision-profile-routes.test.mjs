@@ -12,7 +12,7 @@ test("Display reads profiles through its compatibility API", () => {
 	);
 });
 
-test("Display saves profile sensitivity through Traffic Core profile settings command", () => {
+test("Display saves profile sensitivity through AJRM Marine Traffic profile settings command", () => {
 	assert.equal(
 		setCollisionProfilesPath("signalk-ajrm-marine-display"),
 		"/plugins/signalk-ajrm-marine-traffic/commands/profiles",

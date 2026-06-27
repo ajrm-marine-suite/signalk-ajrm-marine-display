@@ -100,7 +100,7 @@ test("plugin publishes enabled Display status", () => {
   assert.equal(value.value.donor, undefined);
   assert.match(
     statuses[0],
-    new RegExp(`^Enabled v${packageInfo.version.replaceAll(".", "\\.")}; Traffic Core display$`),
+    new RegExp(`^Enabled v${packageInfo.version.replaceAll(".", "\\.")}; AJRM Marine Traffic display$`),
   );
 });
 
@@ -114,10 +114,10 @@ test("plugin publishes disabled Display status when configured off", () => {
   );
 });
 
-test("Signal K API exposes Traffic Core targets under ajrmMarineDisplay", () => {
+test("Signal K API exposes AJRM Marine Traffic targets under ajrmMarineDisplay", () => {
   const { plugin } = harness({
     "plugins.ajrmMarineTraffic.targets": {
-      contract: "ajrm-marine-engine-targets",
+      contract: "ajrm-marine-traffic-targets",
       targets: [
         {
           mmsi: "235000001",
@@ -144,7 +144,7 @@ test("Signal K API formats target distances using Signal K display units metadat
   const { plugin } = harness(
     {
       "plugins.ajrmMarineTraffic.targets": {
-        contract: "ajrm-marine-engine-targets",
+        contract: "ajrm-marine-traffic-targets",
         targets: [
           {
             mmsi: "235000001",
@@ -175,7 +175,7 @@ test("Signal K API formats target distances using Signal K display units metadat
   assert.equal(body["235000001"].cpaFormatted, "820 ft");
 });
 
-test("Display profiles include Traffic Core sensitivity settings", () => {
+test("Display profiles include AJRM Marine Traffic sensitivity settings", () => {
   const { plugin } = harness({
     "plugins.ajrmMarineTraffic.targets": { profile: "coastal" },
     "plugins.ajrmMarineTraffic.profiles": {

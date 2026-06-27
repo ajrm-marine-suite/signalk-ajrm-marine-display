@@ -86,7 +86,7 @@ module.exports = function ajrmMarineDisplay(app) {
     publish(status);
     app.setPluginStatus(
       status.enabled
-        ? `Enabled v${packageInfo.version}; Traffic Core display`
+        ? `Enabled v${packageInfo.version}; AJRM Marine Traffic display`
         : `Disabled by configuration v${packageInfo.version}`,
     );
   };
@@ -110,10 +110,10 @@ module.exports = function ajrmMarineDisplay(app) {
       res.json({ ok: true, plugin: PLUGIN_ID, status }),
     );
     router.get(route("/getTargets"), (_req, res) =>
-      res.json(displayTargets(engineTargets(), { distanceUnit: preferredDistanceUnit() })),
+      res.json(displayTargets(trafficTargets(), { distanceUnit: preferredDistanceUnit() })),
     );
     router.get(route("/getCollisionProfiles"), (_req, res) =>
-      res.json(profiles(defaultProfiles, currentProfile(), engineProfiles())),
+      res.json(profiles(defaultProfiles, currentProfile(), trafficProfiles())),
     );
     router.get(route("/uiState"), (_req, res) => res.json(currentUiState()));
     router.get(route("/panelEvents"), (_req, res) =>
@@ -132,7 +132,7 @@ module.exports = function ajrmMarineDisplay(app) {
       res.json(currentUiState().autoProfileStatus),
     );
     router.get(route("/autoProfileSettings"), (_req, res) =>
-      res.json(engineAutoProfile().settings || { enabled: false }),
+      res.json(trafficAutoProfile().settings || { enabled: false }),
     );
     router.get(route("/getSpeechOutputSettings"), (_req, res) =>
       res.json(currentUiState().speechOutput),
@@ -149,7 +149,7 @@ module.exports = function ajrmMarineDisplay(app) {
       try {
         res.set?.("Cache-Control", "no-store");
         const prefix =
-          engineAutoProfile().settings?.harbourRegionNamePrefix || "Harbour:";
+          trafficAutoProfile().settings?.harbourRegionNamePrefix || "Harbour:";
         const regions = await loadHarbourRegions({
           resourcesApi: app.resourcesApi,
           prefix,
@@ -163,34 +163,34 @@ module.exports = function ajrmMarineDisplay(app) {
 
   function currentUiState() {
     return uiState({
-      engineProjection: engineTargets(),
-      capabilities: engineCapabilities(),
+      trafficProjection: trafficTargets(),
+      capabilities: trafficCapabilities(),
       brokerProjection: brokerProjection(),
       audioStatus: valueOf(app.getSelfPath?.("plugins.ajrmMarineAudio")) || {},
-      audioPolicy: engineAudioPolicy(),
-      autoProfile: engineAutoProfile(),
+      audioPolicy: trafficAudioPolicy(),
+      autoProfile: trafficAutoProfile(),
       self: selfVessel(),
       refreshIntervalMs: options.defaults.refreshIntervalMs,
     });
   }
 
-  function engineTargets() {
+  function trafficTargets() {
     return valueOf(app.getSelfPath?.("plugins.ajrmMarineTraffic.targets")) || {};
   }
 
-  function engineCapabilities() {
+  function trafficCapabilities() {
     return valueOf(app.getSelfPath?.("plugins.ajrmMarineTraffic.capabilities")) || {};
   }
 
-  function engineProfiles() {
+  function trafficProfiles() {
     return valueOf(app.getSelfPath?.("plugins.ajrmMarineTraffic.profiles")) || {};
   }
 
-  function engineAutoProfile() {
+  function trafficAutoProfile() {
     return valueOf(app.getSelfPath?.("plugins.ajrmMarineTraffic.autoProfile")) || {};
   }
 
-  function engineAudioPolicy() {
+  function trafficAudioPolicy() {
     return valueOf(app.getSelfPath?.("plugins.ajrmMarineTraffic.audioPolicy")) || {};
   }
 
@@ -199,7 +199,7 @@ module.exports = function ajrmMarineDisplay(app) {
   }
 
   function currentProfile() {
-    return engineTargets().profile || engineCapabilities().profile || "harbor";
+    return trafficTargets().profile || trafficCapabilities().profile || "harbor";
   }
 
   function selfVessel() {

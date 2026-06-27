@@ -27,7 +27,7 @@ For versioned projections, Display:
 - accepts only increasing `sequence` values within one session;
 - ignores unknown additive fields;
 - keeps cached target and chart presentation during temporary disconnection;
-- labels reduced operation visibly when Traffic Core, Notifications Plus or Audio
+- labels reduced operation visibly when AJRM Marine Traffic, Notifications Plus or Audio
   projections are unavailable.
 
 ## Display status
@@ -64,6 +64,6 @@ range-ring geometry, viewport fitting and chart selection. It must not
 calculate safety state, collision thresholds, notification meaning, priority,
 lifecycle, speech eligibility or audio ordering.
 
-Traffic Core commands are invoked only when Traffic Core advertises
+AJRM Marine Traffic commands are invoked only when AJRM Marine Traffic advertises
 `commandsEnabled: true`. Provider-authored actions are rendered without
 interpreting notification prose.

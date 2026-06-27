@@ -10,7 +10,7 @@ const {
   uiState,
 } = require("../plugin/lib/compatibility");
 
-test("Traffic Core targets project into the Display webapp shape", () => {
+test("AJRM Marine Traffic targets project into the Display webapp shape", () => {
   const targets = displayTargets({
     generatedAt: "2026-06-20T12:00:00.000Z",
     targets: [
@@ -134,9 +134,9 @@ test("announcement feed deduplicates an audio event after it enters history", ()
   );
 });
 
-test("UI state combines Traffic Core health, broker alerts and Audio status", () => {
+test("UI state combines AJRM Marine Traffic health, broker alerts and Audio status", () => {
   const result = uiState({
-    engineProjection: {
+    trafficProjection: {
       profile: "coastal",
       generatedAt: "2026-06-20T12:00:00.000Z",
       source: {
@@ -174,7 +174,7 @@ test("UI state combines Traffic Core health, broker alerts and Audio status", ()
 
 test("UI state projects immediate audio delivery into the announcement log", () => {
   const result = uiState({
-    engineProjection: {},
+    trafficProjection: {},
     brokerProjection: {
       lastAudioEvent: {
         eventId: "audio-now",

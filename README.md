@@ -2,7 +2,7 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
-Version `0.5.7` renames Display's browser namespaces and status contracts to
+Version `0.5.8` renames Display's browser namespaces and status contracts to
 AJRM Marine naming.
 
 Version `0.5.6` replaces the top-right target counters with a compact GPS
@@ -69,9 +69,9 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Target table, sorting, selection and detailed vessel information.
 - Bottom alert panel and optional alert popups.
 - Profile selection, profile sensitivity sliders, and target silence controls
-  backed by Traffic Core.
-- Auto Profile status and enable/disable control backed by Traffic Core.
-- Global mute and stationary automute controls backed by Traffic Core Audio Policy.
+  backed by AJRM Marine Traffic.
+- Auto Profile status and enable/disable control backed by AJRM Marine Traffic.
+- Global mute and stationary automute controls backed by AJRM Marine Traffic Audio Policy.
 - Harbour Limits loaded directly from Signal K region resources.
 - Immediate announcement-feed updates from Notifications Plus audio delivery,
   deduplicated when the same event later enters history.
@@ -82,15 +82,15 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 
 - Collision-risk calculation and severity assignment.
 - Alert wording or lifecycle ownership.
-- Profile threshold editing; this belongs to the Traffic Core administration webapp.
+- Profile threshold editing; this belongs to the AJRM Marine Traffic administration webapp.
 - Sound generation; AJRM Marine Audio owns playback.
-- Traffic Core health/configuration; this belongs to the Traffic Core webapp.
+- AJRM Marine Traffic health/configuration; this belongs to the AJRM Marine Traffic webapp.
 
 ## Reduced mode
 
-The Display remains usable without Traffic Core. Standard Signal K subscriptions
+The Display remains usable without AJRM Marine Traffic. Standard Signal K subscriptions
 and API data continue to provide own-vessel navigation, vessel positions,
-identity and chart resources. Targets cannot be assigned Traffic Core safety
+identity and chart resources. Targets cannot be assigned AJRM Marine Traffic safety
 state in that mode and must be treated as unassessed.
 
 If Notifications Plus or Audio is unavailable, chart and target operation
@@ -111,7 +111,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.7 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.8 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

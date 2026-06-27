@@ -58,7 +58,7 @@ export function createCollisionProfileService({
 		if (!response.ok) {
 			await assertAisPlusResponseAllowed(response, "AJRM Marine profiles");
 			throw new Error(
-				`Error selecting Traffic Core profile. Response status: ${response.status} from ${response.url}`,
+				`Error selecting Traffic profile. Response status: ${response.status} from ${response.url}`,
 			);
 		}
 		const body = await response.json().catch(() => ({}));

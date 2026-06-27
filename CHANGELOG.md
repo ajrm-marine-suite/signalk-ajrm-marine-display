@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.5.8
+
+- Rename Display legacy traffic-core and engine internals to AJRM Marine Traffic terminology and consume the updated traffic projection contract names.
+
 ## 0.5.7
 
 - Rename Display browser namespaces, helper names, and status contracts to AJRM Marine naming.

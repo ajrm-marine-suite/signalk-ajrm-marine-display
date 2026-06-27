@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import test from "node:test";
-import { applyEngineTargetProjection } from "../src/web/assets/scripts/engine-target-projection.mjs";
+import { applyTrafficTargetProjection } from "../src/web/assets/scripts/traffic-target-projection.mjs";
 
-test("Traffic Core projection overlays authoritative fields onto standard Signal K targets", () => {
+test("AJRM Marine Traffic projection overlays authoritative fields onto standard Signal K targets", () => {
 	const target = {
 		mmsi: "235000001",
 		name: "Standard name",
@@ -10,7 +10,7 @@ test("Traffic Core projection overlays authoritative fields onto standard Signal
 		longitude: -5.5,
 	};
 	const targets = new Map([["235000001", target]]);
-	const applied = applyEngineTargetProjection({
+	const applied = applyTrafficTargetProjection({
 		targets,
 		projection: {
 			235000001: {
@@ -28,7 +28,7 @@ test("Traffic Core projection overlays authoritative fields onto standard Signal
 	assert.equal(target.name, "Standard name");
 });
 
-test("Traffic Core projection preserves database-filled vessel dimensions when absent", () => {
+test("AJRM Marine Traffic projection preserves database-filled vessel dimensions when absent", () => {
 	const target = {
 		mmsi: "235900005",
 		name: "HARBOUR TUG",
@@ -38,7 +38,7 @@ test("Traffic Core projection preserves database-filled vessel dimensions when a
 		vesselFootprintSourceFormatted: "Vessel database",
 	};
 	const targets = new Map([["235900005", target]]);
-	const applied = applyEngineTargetProjection({
+	const applied = applyTrafficTargetProjection({
 		targets,
 		projection: {
 			235900005: {

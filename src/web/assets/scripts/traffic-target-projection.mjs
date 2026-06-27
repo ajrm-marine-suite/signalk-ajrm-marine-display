@@ -1,4 +1,4 @@
-export function applyEngineTargetProjection({ targets, projection }) {
+export function applyTrafficTargetProjection({ targets, projection }) {
 	if (!projection || typeof projection !== "object") return 0;
 	let applied = 0;
 	for (const [mmsi, projected] of Object.entries(projection)) {

@@ -6,10 +6,10 @@ function valueOf(value) {
     : value;
 }
 
-function displayTargets(engineProjection, options = {}) {
+function displayTargets(trafficProjection, options = {}) {
   const distanceUnit = normalizeDistanceUnit(options.distanceUnit);
   return Object.fromEntries(
-    (Array.isArray(engineProjection?.targets) ? engineProjection.targets : []).map(
+    (Array.isArray(trafficProjection?.targets) ? trafficProjection.targets : []).map(
       (target) => {
         const mmsi = String(target?.mmsi || target?.id?.split(":").at(-1) || "");
         const state = String(target?.encounter?.state || "normal");
@@ -44,7 +44,7 @@ function displayTargets(engineProjection, options = {}) {
             order: finite(target?.encounter?.uiOrder) ?? Number.MAX_SAFE_INTEGER,
             isValid: validPosition(target?.position),
             lastSeenDate:
-              target?.freshness?.updatedAt || engineProjection?.generatedAt || null,
+              target?.freshness?.updatedAt || trafficProjection?.generatedAt || null,
             lastSeen: Number.isFinite(Number(target?.freshness?.ageMs))
               ? Math.round(Number(target.freshness.ageMs) / 1000)
               : null,
@@ -64,8 +64,8 @@ function displayTargets(engineProjection, options = {}) {
             sizeFormatted: `${finite(target?.dimensions?.length)?.toFixed(1) || "---"} m x ${finite(target?.dimensions?.beam)?.toFixed(1) || "---"} m`,
             vesselFootprintSourceFormatted:
               target?.dimensions?.reference === "reported" ? "AIS reported" : "Site estimated",
-            engineState: state,
-            engineCorrelationId: target?.encounter?.correlationId || "",
+            trafficState: state,
+            trafficCorrelationId: target?.encounter?.correlationId || "",
           },
         ];
       },
@@ -150,7 +150,7 @@ function announcementEvents(brokerProjection) {
 }
 
 function uiState({
-  engineProjection,
+  trafficProjection,
   capabilities,
   brokerProjection,
   audioStatus,
@@ -163,18 +163,18 @@ function uiState({
   const panels = panelEvents(brokerProjection);
   const serverTime =
     brokerProjection?.serverTime ||
-    engineProjection?.generatedAt ||
+    trafficProjection?.generatedAt ||
     new Date().toISOString();
   const ownPosition = valueOf(self?.navigation?.position);
-  const source = engineProjection?.source || {};
+  const source = trafficProjection?.source || {};
   const announcements = announcementEvents(brokerProjection);
   return {
     serverTime,
     currentProfile:
-      engineProjection?.profile || capabilities?.profile || "harbor",
+      trafficProjection?.profile || capabilities?.profile || "harbor",
     speechOutput: {
       currentProfile:
-        engineProjection?.profile || capabilities?.profile || "harbor",
+        trafficProjection?.profile || capabilities?.profile || "harbor",
       muted: audioPolicy?.muted === true || audioStatus?.muted === true,
       automuteStationary: audioPolicy?.automuteStationary === true,
       automuteStationarySpeed:
@@ -188,10 +188,10 @@ function uiState({
     autoProfileStatus: {
       enabled: autoProfile?.enabled === true,
       currentProfile:
-        engineProjection?.profile || capabilities?.profile || "harbor",
+        trafficProjection?.profile || capabilities?.profile || "harbor",
       message:
         autoProfile?.status ||
-        "Traffic Core Auto Profile state is unavailable.",
+        "AJRM Marine Traffic Auto Profile state is unavailable.",
       options: autoProfile?.settings || { enabled: false },
       insideRegionId: autoProfile?.insideRegionId || null,
       insideRegionName: autoProfile?.insideRegionName || null,
@@ -273,25 +273,25 @@ function uiState({
   };
 }
 
-function profiles(defaultProfiles, currentProfile, engineProfiles = {}) {
+function profiles(defaultProfiles, currentProfile, trafficProfiles = {}) {
   const result = structuredClone(defaultProfiles);
   for (const profile of ["anchor", "harbor", "coastal", "offshore"]) {
     result[profile] = {
       ...result[profile],
       cpaSensitivity:
-        engineProfiles?.[profile]?.cpaSensitivity ??
+        trafficProfiles?.[profile]?.cpaSensitivity ??
         result[profile].cpaSensitivity,
       tcpaLookahead:
-        engineProfiles?.[profile]?.tcpaLookahead ??
+        trafficProfiles?.[profile]?.tcpaLookahead ??
         result[profile].tcpaLookahead,
       repeatSensitivity:
-        engineProfiles?.[profile]?.repeatSensitivity ??
+        trafficProfiles?.[profile]?.repeatSensitivity ??
         result[profile].repeatSensitivity,
     };
   }
   result.current =
     currentProfile ||
-    engineProfiles?.current ||
+    trafficProfiles?.current ||
     defaultProfiles.current ||
     "harbor";
   return result;

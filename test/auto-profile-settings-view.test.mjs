@@ -31,7 +31,7 @@ function controls() {
 	};
 }
 
-test("Auto Profile controls accept Traffic Core command response shape", () => {
+test("Auto Profile controls accept AJRM Marine Traffic command response shape", () => {
 	const ui = controls();
 	const response = {
 		ok: true,
@@ -46,7 +46,7 @@ test("Auto Profile controls accept Traffic Core command response shape", () => {
 	assert.equal(ui.enabled.checked, true);
 });
 
-test("Auto Profile status accepts Traffic Core projection fields", () => {
+test("Auto Profile status accepts AJRM Marine Traffic projection fields", () => {
 	const ui = controls();
 	const calls = [];
 	applyAutoProfileStatusToControls({

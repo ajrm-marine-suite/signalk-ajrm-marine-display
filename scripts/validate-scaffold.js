@@ -31,9 +31,9 @@ assert.match(
 );
 assert.match(sourceIndex, /AJRM Marine Display Help/);
 assert.match(sourceIndex, /id="displayAudioModeLabel"[\s\S]*Sounds/);
-assert.match(refreshController, /applyEngineTargetProjection/);
+assert.match(refreshController, /applyTrafficTargetProjection/);
 assert.doesNotMatch(refreshController, /updateDerivedData/);
 assert.match(readme, /AJRM Marine architecture/i);
-assert.match(readme, /without Traffic Core/i);
+assert.match(readme, /without AJRM Marine Traffic/i);
 
 console.log("AJRM Marine Display v2 package shape is valid.");
