@@ -37,6 +37,12 @@ export function createTarget(mmsi) {
 	};
 }
 
+export function vesselTargetId(vessel, fallbackId) {
+	const rawId = signalKValue(vessel?.mmsi) ?? signalKValue(vessel?.uuid) ?? fallbackId;
+	const text = String(rawId ?? "").trim();
+	return text || "self";
+}
+
 export function signalKValue(value) {
 	if (
 		value &&
@@ -120,9 +126,10 @@ function applySensorAisReference(target) {
 	}
 }
 
-export function applySnapshotToTarget(target, vessel) {
-	target.mmsi = String(vessel.mmsi);
-	target.name = signalKText(vessel.name) || `<${vessel.mmsi}>`;
+export function applySnapshotToTarget(target, vessel, fallbackId) {
+	const targetId = vesselTargetId(vessel, fallbackId);
+	target.mmsi = targetId;
+	target.name = signalKText(vessel.name) || `<${targetId}>`;
 	target.callsign = signalKText(vessel.communication?.callsignVhf) || "---";
 	target.imo = signalKText(vessel.registrations?.imo);
 	target.sog = signalKNumber(vessel.navigation?.speedOverGround);
@@ -132,7 +139,9 @@ export function applySnapshotToTarget(target, vessel) {
 	const position = signalKValue(vessel.navigation?.position);
 	target.latitude = position?.latitude;
 	target.longitude = position?.longitude;
-	target.lastSeenDate = new Date(vessel.navigation?.position?.timestamp);
+	target.lastSeenDate = vessel.navigation?.position?.timestamp
+		? new Date(vessel.navigation.position.timestamp)
+		: new Date();
 	const shipType = signalKType(vessel.design?.aisShipType);
 	const atonType = signalKType(vessel.atonType);
 	target.typeId = shipType.id ?? atonType.id;

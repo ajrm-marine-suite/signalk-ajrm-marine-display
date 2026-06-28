@@ -1,6 +1,7 @@
 import {
 	applySnapshotToTarget,
 	createTarget,
+	vesselTargetId,
 } from "../../../shared/target-model.mjs";
 
 export function ingestRawVesselData({
@@ -14,9 +15,11 @@ export function ingestRawVesselData({
 
 	for (const vesselId in vessels) {
 		const vessel = vessels[vesselId];
+		const targetId = vesselTargetId(vessel, vesselId);
 		const target = applySnapshotToTarget(
-			targets.get(vessel.mmsi) ?? createTarget(vessel.mmsi),
+			targets.get(targetId) ?? createTarget(targetId),
 			vessel,
+			vesselId,
 		);
 
 		const lastSeen = Math.round((Date.now() - target.lastSeenDate) / 1000);

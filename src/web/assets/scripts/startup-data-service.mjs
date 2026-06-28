@@ -21,6 +21,6 @@ export async function loadStartupData({ pluginId, getHttpResponse }) {
 	return {
 		charts,
 		initialPluginTargets,
-		selfMmsi: selfData?.mmsi || "self",
+		selfMmsi: selfData?.mmsi || selfData?.uuid || "self",
 	};
 }

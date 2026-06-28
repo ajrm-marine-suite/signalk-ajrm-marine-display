@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.10
+
+- Use MMSI, Signal K UUID, or the vessel collection key as the target identity,
+  so own-vessel simulators without an MMSI can still be followed and centred.
+
 ## 0.5.9
 
 - Default first-run maps to OpenSeaMap seamarks on and Auto Charts off, so the
