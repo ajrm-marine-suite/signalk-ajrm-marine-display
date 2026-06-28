@@ -1,4 +1,6 @@
 const DEFAULT_STATUS_URL = "/plugins/signalk-ajrm-marine-gps-integrity/status";
+const DEFAULT_FALLBACK_STATUS_URL = "/signalk/v1/api/vessels/self";
+const DEFAULT_FALLBACK_MAX_AGE_MS = 30_000;
 
 export function createGpsStatusIndicator({
 	element,
@@ -6,8 +8,10 @@ export function createGpsStatusIndicator({
 	fetchFn = globalThis.fetch,
 	windowObject = globalThis.window,
 	statusUrl = DEFAULT_STATUS_URL,
+	fallbackStatusUrl = DEFAULT_FALLBACK_STATUS_URL,
 	intervalMs = 3000,
 	timeoutMs = 2500,
+	fallbackMaxAgeMs = DEFAULT_FALLBACK_MAX_AGE_MS,
 }) {
 	let stopped = false;
 	let timer = null;
@@ -27,16 +31,28 @@ export function createGpsStatusIndicator({
 		const controller = new AbortController();
 		const timeout = windowObject.setTimeout(() => controller.abort(), timeoutMs);
 		try {
-			const response = await fetchFn(`${statusUrl}?ts=${Date.now()}`, {
-				credentials: "include",
-				cache: "no-store",
-				headers: { Accept: "application/json" },
-				signal: controller.signal,
+			const primary = await fetchJson({
+				fetchFn,
+				url: statusUrl,
+				controller,
 			});
-			if (!response.ok) {
-				throw new Error(`HTTP ${response.status}`);
+			if (primary.ok) {
+				render(classifyGpsStatus(primary.data));
+				return;
 			}
-			render(classifyGpsStatus(await response.json()));
+
+			const fallback = await fetchJson({
+				fetchFn,
+				url: fallbackStatusUrl,
+				controller,
+			});
+			if (!fallback.ok) {
+				throw new Error(fallback.error || "GPS status unavailable");
+			}
+			render(classifySignalKGpsStatus(fallback.data, {
+				now: Date.now(),
+				maxAgeMs: fallbackMaxAgeMs,
+			}));
 		} catch (_err) {
 			render({
 				kind: "unknown",
@@ -45,6 +61,23 @@ export function createGpsStatusIndicator({
 			});
 		} finally {
 			windowObject.clearTimeout(timeout);
+		}
+	}
+
+	async function fetchJson({ fetchFn, url, controller }) {
+		try {
+			const response = await fetchFn(`${url}?ts=${Date.now()}`, {
+				credentials: "include",
+				cache: "no-store",
+				headers: { Accept: "application/json" },
+				signal: controller.signal,
+			});
+			if (!response.ok) {
+				return { ok: false, error: `HTTP ${response.status}` };
+			}
+			return { ok: true, data: await response.json() };
+		} catch (error) {
+			return { ok: false, error: error?.message || String(error) };
 		}
 	}
 
@@ -68,6 +101,43 @@ export function createGpsStatusIndicator({
 				windowObject.clearTimeout(timer);
 			}
 		},
+	};
+}
+
+export function classifySignalKGpsStatus(data, {
+	now = Date.now(),
+	maxAgeMs = DEFAULT_FALLBACK_MAX_AGE_MS,
+} = {}) {
+	const position = signalKValue(data?.navigation?.position);
+	if (!isFinitePosition(position)) {
+		return {
+			kind: "alert",
+			label: "GPS LOST",
+			title: "GPS position is missing or invalid",
+		};
+	}
+
+	const timestamp = Date.parse(data?.navigation?.position?.timestamp || "");
+	if (Number.isFinite(timestamp) && now - timestamp > maxAgeMs) {
+		return {
+			kind: "alert",
+			label: "GPS STALE",
+			title: "GPS position is stale",
+		};
+	}
+
+	const quality = signalKValue(data?.navigation?.gnss?.methodQuality);
+	const satellites = Number(signalKValue(data?.navigation?.gnss?.satellites));
+	const titleParts = ["GPS received OK"];
+	if (quality) titleParts.push(String(quality));
+	if (Number.isFinite(satellites)) {
+		titleParts.push(`${satellites} satellites`);
+	}
+
+	return {
+		kind: "ok",
+		label: "GPS OK",
+		title: titleParts.join(" - "),
 	};
 }
 
@@ -104,4 +174,22 @@ export function classifyGpsStatus(data) {
 		label: "GPS ?",
 		title: "GPS status unknown",
 	};
+}
+
+function signalKValue(value) {
+	if (
+		value &&
+		typeof value === "object" &&
+		Object.hasOwn(value, "value")
+	) {
+		return signalKValue(value.value);
+	}
+	return value;
+}
+
+function isFinitePosition(position) {
+	return (
+		Number.isFinite(Number(position?.latitude)) &&
+		Number.isFinite(Number(position?.longitude))
+	);
 }

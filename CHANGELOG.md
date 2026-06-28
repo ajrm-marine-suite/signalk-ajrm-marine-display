@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.11
+
+- Let the GPS status lamp fall back to fresh standard Signal K own-vessel
+  position/GNSS data when AJRM Marine GPS Integrity is not installed.
+
 ## 0.5.10
 
 - Use MMSI, Signal K UUID, or the vessel collection key as the target identity,
