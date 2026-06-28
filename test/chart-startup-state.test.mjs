@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
 	DEFAULT_BASE_LAYER,
+	defaultOverlayName,
 	fallbackBaseLayerName,
 	hasNamedLayer,
 	resolveChartStartupState,
@@ -45,6 +46,11 @@ test("restoredOverlayName restores only stored normal overlays", () => {
 	assert.equal(restoredOverlayName({ overlayMaps, storedOverlay: null }), "");
 });
 
+test("defaultOverlayName prefers OpenSeaMap when available", () => {
+	assert.equal(defaultOverlayName({ overlayMaps }), "OpenSeaMap");
+	assert.equal(defaultOverlayName({ overlayMaps: { "Auto Charts": {} } }), "");
+});
+
 test("resolveChartStartupState restores a valid stored basemap and overlay", () => {
 	assert.deepEqual(
 		resolveChartStartupState({
@@ -84,7 +90,22 @@ test("resolveChartStartupState avoids OpenStreetMap by default", () => {
 	);
 });
 
-test("resolveChartStartupState disables Auto Charts only for explicit false", () => {
+test("resolveChartStartupState defaults OpenSeaMap on and Auto Charts off", () => {
+	assert.deepEqual(
+		resolveChartStartupState({
+			storedAutoCharts: null,
+			baseMaps,
+			overlayMaps,
+		}),
+		{
+			baseLayerName: "NaturalEarth (offline)",
+			overlayName: "OpenSeaMap",
+			autoChartsEnabled: false,
+		},
+	);
+});
+
+test("resolveChartStartupState enables Auto Charts only for explicit true", () => {
 	assert.equal(
 		resolveChartStartupState({
 			storedAutoCharts: "false",
@@ -99,6 +120,14 @@ test("resolveChartStartupState disables Auto Charts only for explicit false", ()
 			baseMaps,
 			overlayMaps,
 		}).autoChartsEnabled,
+		false,
+	);
+	assert.equal(
+		resolveChartStartupState({
+			storedAutoCharts: "true",
+			baseMaps,
+			overlayMaps,
+		}).autoChartsEnabled,
 		true,
 	);
 });
@@ -110,6 +139,6 @@ test("resolveChartStartupState does not restore Auto Charts as a normal overlay"
 			baseMaps,
 			overlayMaps,
 		}).overlayName,
-		"",
+		"OpenSeaMap",
 	);
 });

@@ -1,5 +1,8 @@
 import { NATURAL_EARTH_BASE_MAP_NAME } from "./chart-base-map-definitions.mjs";
-import { AUTO_CHARTS_OVERLAY_NAME } from "./chart-layer-overlay-actions.mjs";
+import {
+	AUTO_CHARTS_OVERLAY_NAME,
+	OPEN_SEA_MAP_OVERLAY_NAME,
+} from "./chart-layer-overlay-actions.mjs";
 
 export const DEFAULT_BASE_LAYER = NATURAL_EARTH_BASE_MAP_NAME;
 
@@ -20,6 +23,12 @@ export function restoredOverlayName({ overlayMaps, storedOverlay }) {
 		: "";
 }
 
+export function defaultOverlayName({ overlayMaps }) {
+	return hasNamedLayer(overlayMaps, OPEN_SEA_MAP_OVERLAY_NAME)
+		? OPEN_SEA_MAP_OVERLAY_NAME
+		: "";
+}
+
 export function resolveChartStartupState({
 	storedBaseLayer,
 	storedOverlay,
@@ -35,7 +44,9 @@ export function resolveChartStartupState({
 
 	return {
 		baseLayerName,
-		overlayName: restoredOverlayName({ overlayMaps, storedOverlay }),
-		autoChartsEnabled: storedAutoCharts !== "false",
+		overlayName:
+			restoredOverlayName({ overlayMaps, storedOverlay }) ||
+			defaultOverlayName({ overlayMaps }),
+		autoChartsEnabled: storedAutoCharts === "true",
 	};
 }

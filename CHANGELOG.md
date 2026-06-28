@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.9
+
+- Default first-run maps to OpenSeaMap seamarks on and Auto Charts off, so the
+  Display is useful before local chart resources are installed.
+
 ## 0.5.8
 
 - Rename Display legacy traffic-core and engine internals to AJRM Marine Traffic terminology and consume the updated traffic projection contract names.

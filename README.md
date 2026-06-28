@@ -2,6 +2,10 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.9` defaults first-run maps to OpenSeaMap seamarks on and Auto
+Charts off, so new installs work sensibly before local chart resources are
+installed.
+
 Version `0.5.8` renames Display's browser namespaces and status contracts to
 AJRM Marine naming.
 
@@ -111,7 +115,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.8 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.9 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
