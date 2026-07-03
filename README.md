@@ -122,7 +122,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.11 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.12 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
@@ -138,9 +138,14 @@ npm test
 ## Attribution
 
 AJRM Marine Display is authored and maintained by Anthony McDonald, with assistance from William McAusland. The chart interface was extracted from
-the AJRM Marine chart work and retains its MIT licensing and
-acknowledgements. It builds on the Signal K project and the work of Signal K
+the AJRM Marine chart work. MIT-licensed third-party or previously extracted components retain their original notices and acknowledgements. It builds on the Signal K project and the work of Signal K
 plugin authors.
+
+## License and commercial use
+
+This software is licensed under the GNU Affero General Public License v3.0 or later (AGPL-3.0-or-later). You may use, study, share, and modify it under that licence. If you modify it and make it available to users over a network, the corresponding source code must also be made available under the AGPL.
+
+Commercial licensing is available by arrangement for organisations that want different terms.
 
 ## Safety
 
