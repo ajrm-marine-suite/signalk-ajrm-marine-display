@@ -53,11 +53,13 @@ export function formatHelpSettingsSpeed(knots) {
 	return value > 0 ? `${Number(value.toFixed(1))} kn` : "Off";
 }
 
-export function formatHelpSettingsDistanceNm(nm) {
-	const value = finiteHelpSettingsNumber(nm);
+const METERS_PER_NM = 1852;
+
+export function formatHelpSettingsDistanceMeters(meters) {
+	const value = finiteHelpSettingsNumber(meters);
 	if (value <= 0) return "Off";
-	if (value < 1) return `${Math.round(value * 1852)} m`;
-	return `${Number(value.toFixed(2))} NM`;
+	if (value < METERS_PER_NM) return `${Math.round(value)} m`;
+	return `${Number((value / METERS_PER_NM).toFixed(2))} NM`;
 }
 
 export function formatHelpSettingsMeters(meters) {
@@ -128,7 +130,7 @@ export function renderHelpSettingsHtml(
                     <td>${escapeHelpSettingsHtml(profileLabels[profileKey] || profileKey)}</td>
                     <td>${escapeHelpSettingsHtml(sizeLabels[size])}</td>
                     <td>${escapeHelpSettingsHtml(alarmLabels[alarmType])}</td>
-                    <td>${escapeHelpSettingsHtml(formatHelpSettingsDistanceNm(finiteHelpSettingsNumber(criteria.cpa) * cpaSensitivity))}</td>
+                    <td>${escapeHelpSettingsHtml(formatHelpSettingsDistanceMeters(finiteHelpSettingsNumber(criteria.cpa) * cpaSensitivity))}</td>
                     <td>${escapeHelpSettingsHtml(formatHelpSettingsMinutes(finiteHelpSettingsNumber(criteria.tcpa) * tcpaLookahead))}</td>
                     <td>${escapeHelpSettingsHtml(repeatText)}</td>
                     <td>${escapeHelpSettingsHtml(formatHelpSettingsSpeed(criteria.speed))}</td>

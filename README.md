@@ -2,8 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
-Version `0.5.14` stores Traffic profile CPA thresholds in metres and keeps the
-browser controls displaying suitable marine units, such as metres or NM.
+Version `0.5.15` keeps all Traffic profile CPA thresholds in metres, including
+the Help/Settings CPA table, while browser controls may display larger values as
+NM for readability.
 
 Version `0.5.11` lets the GPS status lamp work in standalone/reduced mode by
 falling back to fresh standard Signal K own-vessel position data when AJRM
@@ -125,7 +126,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.14 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.15 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

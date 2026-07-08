@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.15
+
+- Fix the Help/Settings CPA table to treat profile CPA thresholds as metres,
+  matching the Traffic profile contract, instead of formatting old nautical-mile
+  shaped values.
+
 ## 0.5.14
 
 - Store and send Traffic profile CPA thresholds as metres while continuing to

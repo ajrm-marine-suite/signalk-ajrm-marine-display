@@ -4,7 +4,7 @@ import test from "node:test";
 import {
 	createHelpSettingsController,
 	escapeHelpSettingsHtml,
-	formatHelpSettingsDistanceNm,
+	formatHelpSettingsDistanceMeters,
 	formatHelpSettingsDuration,
 	formatHelpSettingsSpeed,
 	helpSettingsRepeatIntervalsPath,
@@ -38,14 +38,14 @@ function profilesFixture() {
 			tcpaLookahead: 2,
 			repeatSensitivity: 2,
 			warning: {
-				cpa: 0.05,
+				cpa: 50,
 				tcpa: 120,
 				speed: 0.5,
 				bySize: {
-					small: { cpa: 0.1, tcpa: 180, speed: 1.2 },
+					small: { cpa: 100, tcpa: 180, speed: 1.2 },
 				},
 			},
-			danger: { cpa: 0.02, tcpa: 60, speed: 3 },
+			danger: { cpa: 40, tcpa: 60, speed: 3 },
 		},
 		vesselSize: {
 			smallMaxLengthMeters: 15,
@@ -59,8 +59,8 @@ test("help settings helpers format and escape display values", () => {
 	assert.equal(escapeHelpSettingsHtml("<AIS & GPS>"), "&lt;AIS &amp; GPS&gt;");
 	assert.equal(formatHelpSettingsDuration(45), "45 sec");
 	assert.equal(formatHelpSettingsDuration(180), "3 min");
-	assert.equal(formatHelpSettingsDistanceNm(0.05), "93 m");
-	assert.equal(formatHelpSettingsDistanceNm(1.25), "1.25 NM");
+	assert.equal(formatHelpSettingsDistanceMeters(93), "93 m");
+	assert.equal(formatHelpSettingsDistanceMeters(1.25 * 1852), "1.25 NM");
 	assert.equal(formatHelpSettingsSpeed(1.234), "1.2 kn");
 	assert.equal(
 		helpSettingsRepeatIntervalsPath("signalk-ajrm-marine-display", 123),
@@ -78,7 +78,7 @@ test("help settings renderer shows active profile, limits and auto-profile statu
 	assert.match(html, /Coastal &lt;selected&gt;/);
 	assert.match(html, /Auto Profile Switch[\s\S]*Off/);
 	assert.match(html, /Small up to[\s\S]*15 m/);
-	assert.match(html, /370 m/);
+	assert.match(html, /200 m/);
 	assert.match(html, /6 min/);
 	assert.match(html, /Advisory 1 min/);
 	assert.match(html, /Alarm 30 sec; emergency 15 sec/);
