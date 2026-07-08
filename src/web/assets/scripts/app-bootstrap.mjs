@@ -6,7 +6,7 @@ export async function bootstrapApp({
 	getHttpResponse,
 	speechControls,
 	mapControls,
-	setStationaryMuteThreshold,
+	setStationaryAutomuteSpeed,
 	autoProfileSettings,
 	speechOutput,
 	loadStartupData,
@@ -19,7 +19,7 @@ export async function bootstrapApp({
 		getHttpResponse,
 		speechControls,
 		mapControls,
-		setStationaryMuteThreshold,
+		setStationaryAutomuteSpeed,
 	});
 	await autoProfileSettings.loadSettings();
 	speechOutput.updateMuteStatus();

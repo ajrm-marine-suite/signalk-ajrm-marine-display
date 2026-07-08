@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.17
+
+- Rename Display's internal stationary mute threshold setting to stationary
+  automute speed, matching the Traffic policy semantics.
+
 ## 0.5.16
 
 - Keep the Replay status visible whenever Logger explicitly reports playback

@@ -30,7 +30,7 @@ export function createConfiguredAppServices({
 	setCurrentProfile,
 	getTargetMapRenderer,
 	getRefreshController,
-	setStationaryMuteThreshold,
+	setStationaryAutomuteSpeed,
 	factories = {},
 }) {
 	const {
@@ -58,7 +58,7 @@ export function createConfiguredAppServices({
 		mapControls,
 		autoProfileControls,
 		sizeControls,
-		setStationaryMuteThreshold,
+		setStationaryAutomuteSpeed,
 	});
 
 	return createAppServicesRuntime({

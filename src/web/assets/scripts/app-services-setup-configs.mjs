@@ -14,9 +14,9 @@ export function initializeAppServiceWindowState({
 	mapControls,
 	autoProfileControls,
 	sizeControls,
-	setStationaryMuteThreshold,
+	setStationaryAutomuteSpeed,
 }) {
-	setStationaryMuteThreshold(0.35);
+	setStationaryAutomuteSpeed(0.35);
 	exposeAppWindowGlobals({
 		window,
 		offcanvas,

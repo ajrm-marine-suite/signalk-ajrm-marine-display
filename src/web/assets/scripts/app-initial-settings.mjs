@@ -17,7 +17,7 @@ export async function loadInitialAppSettings({
 	pluginId,
 	getHttpResponse,
 	speechControls,
-	setStationaryMuteThreshold,
+	setStationaryAutomuteSpeed,
 }) {
 	speechControls.browser.checked = storedTrue(
 		localStorage,
@@ -50,7 +50,7 @@ export async function loadInitialAppSettings({
 		speechControls.stream.checked = settings.stream;
 		speechControls.muted.checked = settings.muted;
 		speechControls.automute.checked = settings.automute;
-		setStationaryMuteThreshold(settings.automuteStationarySpeed);
+		setStationaryAutomuteSpeed(settings.automuteStationarySpeed);
 	} catch (_err) {
 		// Speech output settings are optional; keep defaults if unavailable.
 	}

@@ -7,7 +7,7 @@ export {
 	mainServicesConfig,
 	mainServicesDomControls,
 	mainStartupDataConfig,
-	setWindowStationaryMuteThreshold,
+	setWindowStationaryAutomuteSpeed,
 } from "./main-core-configs.mjs";
 
 export function createMainDom({ createDom }) {

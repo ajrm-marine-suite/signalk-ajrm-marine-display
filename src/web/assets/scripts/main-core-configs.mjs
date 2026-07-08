@@ -1,7 +1,7 @@
 import { PLUGIN_ID } from "./app-constants.mjs";
 
-export function setWindowStationaryMuteThreshold(window, value = 0.35) {
-	window.ajrmMarineStationaryMuteThreshold = value;
+export function setWindowStationaryAutomuteSpeed(window, value = 0.35) {
+	window.ajrmMarineStationaryAutomuteSpeed = value;
 }
 
 export function mainServicesDomControls(dom) {
@@ -54,8 +54,8 @@ export function mainServicesConfig({
 		setCurrentProfile: state.setCurrentProfile,
 		getTargetMapRenderer,
 		getRefreshController,
-		setStationaryMuteThreshold: (value) =>
-			setWindowStationaryMuteThreshold(window, value),
+		setStationaryAutomuteSpeed: (value) =>
+			setWindowStationaryAutomuteSpeed(window, value),
 	};
 }
 
@@ -74,8 +74,8 @@ export function mainStartupDataConfig({
 		getHttpResponse,
 		speechControls: window.ajrmMarineSpeechControls,
 		mapControls: window.ajrmMarineMapControls,
-		setStationaryMuteThreshold: (value) =>
-			setWindowStationaryMuteThreshold(window, value),
+		setStationaryAutomuteSpeed: (value) =>
+			setWindowStationaryAutomuteSpeed(window, value),
 		autoProfileSettings,
 		speechOutput,
 	};

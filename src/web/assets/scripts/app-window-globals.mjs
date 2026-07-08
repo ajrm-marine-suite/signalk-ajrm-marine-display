@@ -1,4 +1,4 @@
-export const DEFAULT_STATIONARY_MUTE_THRESHOLD = 0.35;
+export const DEFAULT_STATIONARY_AUTOMUTE_SPEED = 0.35;
 
 export function exposeAppWindowGlobals({
 	window,
@@ -7,9 +7,9 @@ export function exposeAppWindowGlobals({
 	mapControls,
 	autoProfileControls,
 	sizeControls,
-	stationaryMuteThreshold = DEFAULT_STATIONARY_MUTE_THRESHOLD,
+	stationaryAutomuteSpeed = DEFAULT_STATIONARY_AUTOMUTE_SPEED,
 }) {
-	window.ajrmMarineStationaryMuteThreshold = stationaryMuteThreshold;
+	window.ajrmMarineStationaryAutomuteSpeed = stationaryAutomuteSpeed;
 	window.ajrmMarineProfilesOffcanvas = offcanvas.profiles;
 	window.ajrmMarineSpeechControls = speechControls;
 	window.ajrmMarineMapControls = mapControls;

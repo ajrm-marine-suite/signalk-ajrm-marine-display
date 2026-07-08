@@ -22,7 +22,7 @@ import {
 	createMainDom,
 	createMainServices,
 	loadAndApplyMainStartupData,
-	setWindowStationaryMuteThreshold,
+	setWindowStationaryAutomuteSpeed,
 } from "./main-core-setup.mjs";
 import { createMainMapDisplayAndChartControls } from "./main-map-display-chart-setup.mjs";
 import { createMainMapChartRuntime } from "./main-map-chart-setup.mjs";
@@ -54,7 +54,7 @@ const { targets } = targetCollections;
 let refreshController;
 let targetMapRenderer;
 
-setWindowStationaryMuteThreshold(window);
+setWindowStationaryAutomuteSpeed(window);
 resumeAisPlusAccessRequestPolling();
 
 const {
