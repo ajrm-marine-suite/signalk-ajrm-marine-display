@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.5.19",
+    "version": "0.5.20",
     "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
@@ -37,6 +37,16 @@
         "responses": {
           "200": {
             "description": "Current Display UI state"
+          }
+        }
+      }
+    },
+    "/refreshDiagnostics": {
+      "post": {
+        "summary": "Append a browser slow-refresh diagnostic sample to the Display diagnostics log",
+        "responses": {
+          "200": {
+            "description": "Diagnostic sample accepted"
           }
         }
       }

@@ -2,6 +2,10 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.20` writes slow-refresh diagnostics to the Signal K data-dir file
+`ajrm-marine-display-refresh-debug.ndjson` instead of relying on Chrome console
+logs.
+
 Version `0.5.19` exposes refresh diagnostics through
 `window.AJRMMarineDisplayDebug` for browser-console debugging.
 

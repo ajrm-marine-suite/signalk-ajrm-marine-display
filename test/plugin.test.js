@@ -1,11 +1,14 @@
 "use strict";
 
 const assert = require("node:assert/strict");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const test = require("node:test");
 const createPlugin = require("../plugin/index.js");
 const packageInfo = require("../package.json");
 
-function harness(paths = {}, resources = {}, metadata = {}) {
+function harness(paths = {}, resources = {}, metadata = {}, appExtras = {}) {
   const messages = [];
   const statuses = [];
   const app = {
@@ -16,6 +19,7 @@ function harness(paths = {}, resources = {}, metadata = {}) {
     resourcesApi: {
       listResources: async () => resources,
     },
+    ...appExtras,
   };
   return { plugin: createPlugin(app), messages, statuses };
 }
@@ -26,6 +30,7 @@ function routeHarness() {
     routes,
     router: {
       get: (path, handler) => routes.set(`GET ${path}`, handler),
+      post: (path, handler) => routes.set(`POST ${path}`, handler),
     },
   };
 }
@@ -79,6 +84,51 @@ test("Signal K compatibility API returns Harbour region geometry", async () => {
   assert.deepEqual(body, {
     regions: [{ id: "oban", name: "Harbour: Oban", geometry }],
   });
+});
+
+test("Signal K compatibility API appends refresh diagnostics to data-dir log", async () => {
+  const dataDir = await fs.promises.mkdtemp(
+    path.join(os.tmpdir(), "ajrm-display-test-"),
+  );
+  const { plugin } = harness({}, {}, {}, { getDataDirPath: () => dataDir });
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+  let body;
+
+  await routes.get("POST /ajrmMarineDisplay/refreshDiagnostics")(
+    {
+      body: {
+        userAgent: "node-test",
+        sample: {
+          totalMs: 954,
+          phases: { "fetch-vessels": 188, "render-ui": 500 },
+          counts: { targets: 13, boatMarkers: 13 },
+          summary: "total=954ms",
+        },
+      },
+      socket: { remoteAddress: "127.0.0.1" },
+    },
+    {
+      json(value) {
+        body = value;
+      },
+      status() {
+        return this;
+      },
+    },
+  );
+
+  assert.equal(body.ok, true);
+  assert.equal(
+    body.path,
+    path.join(dataDir, "ajrm-marine-display-refresh-debug.ndjson"),
+  );
+  const [line] = (await fs.promises.readFile(body.path, "utf8")).trim().split("\n");
+  const entry = JSON.parse(line);
+  assert.equal(entry.contract, "ajrm-marine-display-refresh-diagnostic-log");
+  assert.equal(entry.userAgent, "node-test");
+  assert.equal(entry.sample.totalMs, 954);
+  assert.equal(entry.sample.counts.targets, 13);
 });
 
 test("plugin publishes enabled Display status", () => {

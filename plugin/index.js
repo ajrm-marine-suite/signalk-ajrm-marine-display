@@ -1,6 +1,9 @@
 "use strict";
 
 const { randomUUID } = require("node:crypto");
+const fs = require("node:fs");
+const os = require("node:os");
+const path = require("node:path");
 const packageInfo = require("../package.json");
 const openApi = require("./openApi.json");
 const defaultProfiles = require("./defaultDisplayProfiles.json");
@@ -16,6 +19,8 @@ const { loadHarbourRegions } = require("./lib/harbour-regions");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
+const REFRESH_DIAGNOSTICS_LOG_FILE = "ajrm-marine-display-refresh-debug.ndjson";
+const MAX_REFRESH_DIAGNOSTICS_LOG_BYTES = 1024 * 1024;
 const DISTANCE_METADATA_PATHS = [
   "navigation.closestApproach.distance",
   "navigation.courseGreatCircle.distance",
@@ -159,6 +164,14 @@ module.exports = function ajrmMarineDisplay(app) {
         res.status(500).json({ error: error.message });
       }
     });
+    router.post?.(route("/refreshDiagnostics"), async (req, res) => {
+      try {
+        const result = await appendRefreshDiagnostic(req);
+        res.json(result);
+      } catch (error) {
+        res.status(500).json({ error: error.message });
+      }
+    });
   }
 
   function currentUiState() {
@@ -235,7 +248,73 @@ module.exports = function ajrmMarineDisplay(app) {
       updates: [{ values: [{ path: STATUS_PATH, value }] }],
     });
   }
+
+  async function appendRefreshDiagnostic(req) {
+    const filePath = refreshDiagnosticsLogPath();
+    await rotateRefreshDiagnosticsLog(filePath);
+    await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
+    await fs.promises.appendFile(
+      filePath,
+      `${JSON.stringify(refreshDiagnosticEntry(req))}\n`,
+    );
+    return { ok: true, path: filePath };
+  }
+
+  function refreshDiagnosticsLogPath() {
+    const dataDirectory =
+      typeof app.getDataDirPath === "function" ? app.getDataDirPath() : null;
+    return path.join(dataDirectory || os.tmpdir(), REFRESH_DIAGNOSTICS_LOG_FILE);
+  }
 };
+
+async function rotateRefreshDiagnosticsLog(filePath) {
+  const stats = await fs.promises.stat(filePath).catch(() => null);
+  if (!stats || stats.size < MAX_REFRESH_DIAGNOSTICS_LOG_BYTES) return;
+  await fs.promises.rename(filePath, `${filePath}.1`).catch(async () => {
+    await fs.promises.rm(filePath, { force: true }).catch(() => {});
+  });
+}
+
+function refreshDiagnosticEntry(req) {
+  const body = req?.body && typeof req.body === "object" ? req.body : {};
+  const sample = body.sample && typeof body.sample === "object" ? body.sample : {};
+  return shrinkRefreshDiagnosticEntry({
+    contract: "ajrm-marine-display-refresh-diagnostic-log",
+    contractVersion: 1,
+    receivedAt: new Date().toISOString(),
+    userAgent: stringOrEmpty(body.userAgent).slice(0, 300),
+    remoteAddress: stringOrEmpty(req?.ip || req?.socket?.remoteAddress).slice(0, 80),
+    sample,
+  });
+}
+
+function shrinkRefreshDiagnosticEntry(entry) {
+  const line = JSON.stringify(entry);
+  if (Buffer.byteLength(line) <= 64 * 1024) return entry;
+  const sample = entry.sample || {};
+  return {
+    ...entry,
+    sample: {
+      startedAt: sample.startedAt,
+      finishedAt: sample.finishedAt,
+      totalMs: sample.totalMs,
+      summary: sample.summary,
+      slowestPhases: sample.slowestPhases,
+      counts: sample.counts,
+      replayActive: sample.replayActive,
+      replayPaused: sample.replayPaused,
+      removedMissing: sample.removedMissing,
+      agedOut: sample.agedOut,
+      allowProjectionFallback: sample.allowProjectionFallback,
+      error: sample.error,
+      truncated: true,
+    },
+  };
+}
+
+function stringOrEmpty(value) {
+  return typeof value === "string" ? value : "";
+}
 
 function normalizeOptions(value) {
   return {

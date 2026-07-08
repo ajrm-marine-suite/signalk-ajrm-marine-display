@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.20
+
+- Write slow-refresh diagnostics to a Signal K data-dir NDJSON log instead of
+  repeatedly logging full objects to Chrome DevTools.
+- Throttle browser diagnostic reports to reduce debug overhead while Display is
+  already slow.
+
 ## 0.5.19
 
 - Expose Display refresh diagnostics through a stable
