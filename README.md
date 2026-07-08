@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.16` keeps the Replay status visible whenever Logger explicitly
+reports playback active, even if the current replay timestamp is missing.
+
 Version `0.5.15` keeps all Traffic profile CPA thresholds in metres, including
 the Help/Settings CPA table, while browser controls may display larger values as
 NM for readability.

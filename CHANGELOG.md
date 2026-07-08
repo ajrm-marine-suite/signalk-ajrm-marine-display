@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.16
+
+- Keep the Replay status visible whenever Logger explicitly reports playback
+  active, even if the current replay timestamp is missing or unparsable.
+
 ## 0.5.15
 
 - Fix the Help/Settings CPA table to treat profile CPA thresholds as metres,

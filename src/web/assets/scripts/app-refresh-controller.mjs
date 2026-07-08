@@ -193,7 +193,7 @@ function replayStatusFromPlaybackValue(playback) {
 	const current = playback.current || playback.capturedAt || null;
 	const replayTimeMs = Date.parse(current);
 	return {
-		active: Number.isFinite(replayTimeMs),
+		active: true,
 		current,
 		fileName: playback.fileName || null,
 		paused: playback.paused === true || playback.playing === false,
