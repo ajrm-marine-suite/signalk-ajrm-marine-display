@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.19
+
+- Expose Display refresh diagnostics through a stable
+  `window.AJRMMarineDisplayDebug` browser-console object.
+
 ## 0.5.18
 
 - Add opt-in browser refresh diagnostics for Display slowdowns, including

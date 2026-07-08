@@ -57,11 +57,40 @@ export function createDisplayRefreshDebug({
 	}
 
 	if (windowRef) {
-		windowRef.ajrmMarineDisplayRefreshStats = snapshot;
-		windowRef.ajrmMarineDisplayDebug = snapshot;
+		const api = {
+			enable() {
+				windowRef.localStorage?.setItem?.("ajrmMarineDisplayDebug", "true");
+				windowRef.AJRM_MARINE_DISPLAY_DEBUG = true;
+				return snapshot();
+			},
+			disable() {
+				windowRef.localStorage?.removeItem?.("ajrmMarineDisplayDebug");
+				windowRef.AJRM_MARINE_DISPLAY_DEBUG = false;
+				return snapshot();
+			},
+			last() {
+				return history.at(-1) || null;
+			},
+			snapshot,
+		};
+		exposeWindowDebugValue(windowRef, "AJRMMarineDisplayDebug", api);
+		exposeWindowDebugValue(windowRef, "ajrmMarineDisplayRefreshStats", snapshot);
+		exposeWindowDebugValue(windowRef, "ajrmMarineDisplayDebug", snapshot);
 	}
 
 	return { enabled, start, snapshot };
+}
+
+function exposeWindowDebugValue(windowRef, name, value) {
+	try {
+		Object.defineProperty(windowRef, name, {
+			value,
+			configurable: true,
+			writable: true,
+		});
+	} catch (_error) {
+		windowRef[name] = value;
+	}
 }
 
 function measurePhase({ sample, name, fn, now }) {

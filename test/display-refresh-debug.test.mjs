@@ -33,5 +33,8 @@ test("Display refresh debug records sync and async phase timings", async () => {
 	assert.equal(finished.totalMs, 6);
 	assert.deepEqual(finished.phases, { sync: 2, async: 4 });
 	assert.equal(windowRef.ajrmMarineDisplayDebug().last.counts.targets, 3);
+	assert.equal(windowRef.ajrmMarineDisplayRefreshStats().last.counts.targets, 3);
+	assert.equal(windowRef.AJRMMarineDisplayDebug.last().counts.targets, 3);
+	assert.equal(windowRef.AJRMMarineDisplayDebug.snapshot().last.counts.targets, 3);
 	assert.equal(warnings.length, 1);
 });

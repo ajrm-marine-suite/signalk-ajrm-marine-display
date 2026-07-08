@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.19` exposes refresh diagnostics through
+`window.AJRMMarineDisplayDebug` for browser-console debugging.
+
 Version `0.5.18` adds opt-in browser refresh diagnostics for investigating
 Display slowdowns after simulator runs.
 
