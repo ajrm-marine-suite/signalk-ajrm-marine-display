@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.21
+
+- Move browser refresh diagnostics behind a Display plugin config option and
+  report slow samples through Signal K `app.debug()` logging.
+
 ## 0.5.20
 
 - Write slow-refresh diagnostics to a Signal K data-dir NDJSON log instead of

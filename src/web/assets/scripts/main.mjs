@@ -36,6 +36,8 @@ import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 
 const displayRuntimeStatus = await readDisplayRuntimeStatus();
+window.AJRM_MARINE_DISPLAY_DEBUG =
+	displayRuntimeStatus?.diagnostics?.browserRefreshDiagnostics === true;
 if (displayRuntimeStatus?.enabled === false) {
 	document.body.innerHTML = `
 		<main class="container py-5">

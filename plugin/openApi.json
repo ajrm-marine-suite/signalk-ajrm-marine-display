@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.5.20",
+    "version": "0.5.21",
     "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
@@ -43,7 +43,7 @@
     },
     "/refreshDiagnostics": {
       "post": {
-        "summary": "Append a browser slow-refresh diagnostic sample to the Display diagnostics log",
+        "summary": "Report a browser slow-refresh diagnostic sample through Signal K plugin debug logging",
         "responses": {
           "200": {
             "description": "Diagnostic sample accepted"

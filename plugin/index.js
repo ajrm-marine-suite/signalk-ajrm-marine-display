@@ -1,9 +1,6 @@
 "use strict";
 
 const { randomUUID } = require("node:crypto");
-const fs = require("node:fs");
-const os = require("node:os");
-const path = require("node:path");
 const packageInfo = require("../package.json");
 const openApi = require("./openApi.json");
 const defaultProfiles = require("./defaultDisplayProfiles.json");
@@ -19,8 +16,6 @@ const { loadHarbourRegions } = require("./lib/harbour-regions");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
-const REFRESH_DIAGNOSTICS_LOG_FILE = "ajrm-marine-display-refresh-debug.ndjson";
-const MAX_REFRESH_DIAGNOSTICS_LOG_BYTES = 1024 * 1024;
 const DISTANCE_METADATA_PATHS = [
   "navigation.closestApproach.distance",
   "navigation.courseGreatCircle.distance",
@@ -73,6 +68,13 @@ module.exports = function ajrmMarineDisplay(app) {
         minimum: 2,
         maximum: 18,
       },
+      browserRefreshDiagnostics: {
+        type: "boolean",
+        title: "Enable browser refresh diagnostics",
+        description:
+          "When Signal K plugin debug logging is enabled, record slow Display browser refresh timings through the plugin debug log.",
+        default: false,
+      },
     },
   };
 
@@ -86,6 +88,7 @@ module.exports = function ajrmMarineDisplay(app) {
       enabled: options.enabled,
       version: packageInfo.version,
       defaults: options.defaults,
+      diagnostics: options.diagnostics,
       updatedAt: new Date().toISOString(),
     };
     publish(status);
@@ -166,8 +169,8 @@ module.exports = function ajrmMarineDisplay(app) {
     });
     router.post?.(route("/refreshDiagnostics"), async (req, res) => {
       try {
-        const result = await appendRefreshDiagnostic(req);
-        res.json(result);
+        logRefreshDiagnostic(req);
+        res.json({ ok: true });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
@@ -249,72 +252,29 @@ module.exports = function ajrmMarineDisplay(app) {
     });
   }
 
-  async function appendRefreshDiagnostic(req) {
-    const filePath = refreshDiagnosticsLogPath();
-    await rotateRefreshDiagnosticsLog(filePath);
-    await fs.promises.mkdir(path.dirname(filePath), { recursive: true });
-    await fs.promises.appendFile(
-      filePath,
-      `${JSON.stringify(refreshDiagnosticEntry(req))}\n`,
-    );
-    return { ok: true, path: filePath };
+  function logRefreshDiagnostic(req) {
+    const entry = refreshDiagnosticEntry(req);
+    debug("display.refresh.slow", {
+      totalMs: entry.sample.totalMs,
+      summary: entry.sample.summary,
+      targets: entry.sample.counts?.targets,
+      markers: entry.sample.counts?.boatMarkers,
+      layers: entry.sample.counts?.layerCount,
+      replayActive: entry.sample.replayActive,
+      replayPaused: entry.sample.replayPaused,
+      slowest: slowestPhaseText(entry.sample.slowestPhases),
+      userAgent: entry.userAgent,
+    });
   }
 
-  function refreshDiagnosticsLogPath() {
-    const dataDirectory =
-      typeof app.getDataDirPath === "function" ? app.getDataDirPath() : null;
-    return path.join(dataDirectory || os.tmpdir(), REFRESH_DIAGNOSTICS_LOG_FILE);
+  function debug(event, fields) {
+    app.debug?.(
+      `[${PLUGIN_ID}] event=${event} ${Object.entries(fields)
+        .map(([key, value]) => `${key}=${stringOrEmpty(value)}`)
+        .join(" ")}`,
+    );
   }
 };
-
-async function rotateRefreshDiagnosticsLog(filePath) {
-  const stats = await fs.promises.stat(filePath).catch(() => null);
-  if (!stats || stats.size < MAX_REFRESH_DIAGNOSTICS_LOG_BYTES) return;
-  await fs.promises.rename(filePath, `${filePath}.1`).catch(async () => {
-    await fs.promises.rm(filePath, { force: true }).catch(() => {});
-  });
-}
-
-function refreshDiagnosticEntry(req) {
-  const body = req?.body && typeof req.body === "object" ? req.body : {};
-  const sample = body.sample && typeof body.sample === "object" ? body.sample : {};
-  return shrinkRefreshDiagnosticEntry({
-    contract: "ajrm-marine-display-refresh-diagnostic-log",
-    contractVersion: 1,
-    receivedAt: new Date().toISOString(),
-    userAgent: stringOrEmpty(body.userAgent).slice(0, 300),
-    remoteAddress: stringOrEmpty(req?.ip || req?.socket?.remoteAddress).slice(0, 80),
-    sample,
-  });
-}
-
-function shrinkRefreshDiagnosticEntry(entry) {
-  const line = JSON.stringify(entry);
-  if (Buffer.byteLength(line) <= 64 * 1024) return entry;
-  const sample = entry.sample || {};
-  return {
-    ...entry,
-    sample: {
-      startedAt: sample.startedAt,
-      finishedAt: sample.finishedAt,
-      totalMs: sample.totalMs,
-      summary: sample.summary,
-      slowestPhases: sample.slowestPhases,
-      counts: sample.counts,
-      replayActive: sample.replayActive,
-      replayPaused: sample.replayPaused,
-      removedMissing: sample.removedMissing,
-      agedOut: sample.agedOut,
-      allowProjectionFallback: sample.allowProjectionFallback,
-      error: sample.error,
-      truncated: true,
-    },
-  };
-}
-
-function stringOrEmpty(value) {
-  return typeof value === "string" ? value : "";
-}
 
 function normalizeOptions(value) {
   return {
@@ -325,6 +285,9 @@ function normalizeOptions(value) {
       longitude: clamp(value.defaultLongitude, -180, 180, -5.45),
       zoom: Math.round(clamp(value.defaultZoom, 2, 18, 10)),
     },
+    diagnostics: {
+      browserRefreshDiagnostics: value.browserRefreshDiagnostics === true,
+    },
   };
 }
 
@@ -333,4 +296,27 @@ function clamp(value, minimum, maximum, fallback) {
   return Number.isFinite(number)
     ? Math.min(maximum, Math.max(minimum, number))
     : fallback;
+}
+
+function refreshDiagnosticEntry(req) {
+  const body = req?.body && typeof req.body === "object" ? req.body : {};
+  const sample = body.sample && typeof body.sample === "object" ? body.sample : {};
+  return {
+    contract: "ajrm-marine-display-refresh-diagnostic",
+    contractVersion: 1,
+    receivedAt: new Date().toISOString(),
+    userAgent: stringOrEmpty(body.userAgent).slice(0, 300),
+    sample,
+  };
+}
+
+function slowestPhaseText(phases) {
+  return Array.isArray(phases)
+    ? phases.map((phase) => `${phase.name}:${phase.ms}`).join(",")
+    : "";
+}
+
+function stringOrEmpty(value) {
+  if (value === null || value === undefined) return "";
+  return String(value).replaceAll(/\s+/g, "_").slice(0, 300);
 }

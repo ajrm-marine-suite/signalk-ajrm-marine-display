@@ -1,9 +1,6 @@
 "use strict";
 
 const assert = require("node:assert/strict");
-const fs = require("node:fs");
-const os = require("node:os");
-const path = require("node:path");
 const test = require("node:test");
 const createPlugin = require("../plugin/index.js");
 const packageInfo = require("../package.json");
@@ -11,9 +8,11 @@ const packageInfo = require("../package.json");
 function harness(paths = {}, resources = {}, metadata = {}, appExtras = {}) {
   const messages = [];
   const statuses = [];
+  const debugMessages = [];
   const app = {
     handleMessage: (_id, message) => messages.push(message),
     setPluginStatus: (status) => statuses.push(status),
+    debug: (message) => debugMessages.push(message),
     getSelfPath: (path) => paths[path],
     getMetadata: (path) => metadata[path],
     resourcesApi: {
@@ -21,7 +20,7 @@ function harness(paths = {}, resources = {}, metadata = {}, appExtras = {}) {
     },
     ...appExtras,
   };
-  return { plugin: createPlugin(app), messages, statuses };
+  return { plugin: createPlugin(app), messages, statuses, debugMessages };
 }
 
 function routeHarness() {
@@ -86,11 +85,8 @@ test("Signal K compatibility API returns Harbour region geometry", async () => {
   });
 });
 
-test("Signal K compatibility API appends refresh diagnostics to data-dir log", async () => {
-  const dataDir = await fs.promises.mkdtemp(
-    path.join(os.tmpdir(), "ajrm-display-test-"),
-  );
-  const { plugin } = harness({}, {}, {}, { getDataDirPath: () => dataDir });
+test("Signal K compatibility API writes refresh diagnostics through app.debug", async () => {
+  const { plugin, debugMessages } = harness();
   const { router, routes } = routeHarness();
   plugin.signalKApiRoutes(router);
   let body;
@@ -106,7 +102,6 @@ test("Signal K compatibility API appends refresh diagnostics to data-dir log", a
           summary: "total=954ms",
         },
       },
-      socket: { remoteAddress: "127.0.0.1" },
     },
     {
       json(value) {
@@ -119,16 +114,11 @@ test("Signal K compatibility API appends refresh diagnostics to data-dir log", a
   );
 
   assert.equal(body.ok, true);
-  assert.equal(
-    body.path,
-    path.join(dataDir, "ajrm-marine-display-refresh-debug.ndjson"),
-  );
-  const [line] = (await fs.promises.readFile(body.path, "utf8")).trim().split("\n");
-  const entry = JSON.parse(line);
-  assert.equal(entry.contract, "ajrm-marine-display-refresh-diagnostic-log");
-  assert.equal(entry.userAgent, "node-test");
-  assert.equal(entry.sample.totalMs, 954);
-  assert.equal(entry.sample.counts.targets, 13);
+  assert.equal(debugMessages.length, 1);
+  assert.match(debugMessages[0], /event=display\.refresh\.slow/);
+  assert.match(debugMessages[0], /totalMs=954/);
+  assert.match(debugMessages[0], /targets=13/);
+  assert.match(debugMessages[0], /userAgent=node-test/);
 });
 
 test("plugin publishes enabled Display status", () => {
@@ -147,11 +137,21 @@ test("plugin publishes enabled Display status", () => {
     longitude: -5.45,
     zoom: 10,
   });
+  assert.deepEqual(value.value.diagnostics, {
+    browserRefreshDiagnostics: false,
+  });
   assert.equal(value.value.donor, undefined);
   assert.match(
     statuses[0],
     new RegExp(`^Enabled v${packageInfo.version.replaceAll(".", "\\.")}; AJRM Marine Traffic display$`),
   );
+});
+
+test("plugin publishes browser refresh diagnostic setting when enabled", () => {
+  const { plugin, messages } = harness();
+  plugin.start({ browserRefreshDiagnostics: true });
+  const value = messages[0].updates[0].values[0].value;
+  assert.equal(value.diagnostics.browserRefreshDiagnostics, true);
 });
 
 test("plugin publishes disabled Display status when configured off", () => {
