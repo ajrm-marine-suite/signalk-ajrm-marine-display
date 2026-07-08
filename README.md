@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.18` adds opt-in browser refresh diagnostics for investigating
+Display slowdowns after simulator runs.
+
 Version `0.5.16` keeps the Replay status visible whenever Logger explicitly
 reports playback active, even if the current replay timestamp is missing.
 

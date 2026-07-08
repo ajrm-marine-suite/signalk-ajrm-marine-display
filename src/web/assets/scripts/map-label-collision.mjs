@@ -48,7 +48,14 @@ export function createMapLabelCollisionController({
 		dirty = true;
 	}
 
-	return { add, remove, update };
+	function debugSnapshot() {
+		return {
+			labels: ingestedSignatures.size,
+			dirty,
+		};
+	}
+
+	return { add, debugSnapshot, remove, update };
 }
 
 function createLabelgunController({ hideLabel, showLabel }) {

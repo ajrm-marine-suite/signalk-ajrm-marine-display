@@ -35,6 +35,7 @@ export function createConfiguredRefreshController({
 		removeMissingTargets: targetMapRenderer.removeMissingTargets,
 		resetTargetCounts: targetMapRenderer.resetTargetCounts,
 		getAlarmTargetCount: targetMapRenderer.getAlarmTargetCount,
+		getDebugSnapshot: targetMapRenderer.debugSnapshot,
 		maximumTargetRange,
 		targetMaxAge,
 		ageOutEnabled,

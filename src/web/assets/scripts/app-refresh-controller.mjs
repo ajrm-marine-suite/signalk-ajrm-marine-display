@@ -6,6 +6,7 @@ import {
 	uiStateConnectionStatus,
 } from "./app-refresh-state.mjs";
 import { createRefreshDataFetcher } from "./app-refresh-data-fetcher.mjs";
+import { createDisplayRefreshDebug } from "./display-refresh-debug.mjs";
 import { applyTrafficTargetProjection } from "./traffic-target-projection.mjs";
 import { applyDisplayTargetGeometry } from "./display-target-geometry.mjs";
 import { publishUiStateToWindow } from "./app-ui-state-publisher.mjs";
@@ -28,6 +29,7 @@ export function createAppRefreshController({
 	removeMissingTargets = () => {},
 	resetTargetCounts,
 	getAlarmTargetCount,
+	getDebugSnapshot = () => ({}),
 	targetMaxAge,
 	ageOutEnabled,
 	showAlarmsInterval,
@@ -35,6 +37,7 @@ export function createAppRefreshController({
 	connectionStatusControls,
 	publishUiState = publishUiStateToWindow,
 	projectionFallbackEnabled = defaultProjectionFallbackEnabled,
+	refreshDebug = createDisplayRefreshDebug(),
 }) {
 	let lastAlarmTime;
 	let lastSuccessfulConnectionAt = null;
@@ -42,9 +45,10 @@ export function createAppRefreshController({
 
 	async function refresh() {
 		const startTime = new Date();
+		const debug = refreshDebug.start();
 		let vessels;
 		try {
-			vessels = await fetchRefreshVessels();
+			vessels = await debug.phase("fetch-vessels", () => fetchRefreshVessels());
 			lastSuccessfulConnectionAt = startTime;
 			applyConnectionStatusControls(connectionStatusControls, {
 				connected: true,
@@ -57,69 +61,126 @@ export function createAppRefreshController({
 				lastSuccessfulConnectionAt,
 			});
 			console.error("Error in refresh:", error);
+			debug.finish({
+				error: error.message || String(error),
+				counts: {
+					targets: targets.size,
+					vessels: 0,
+					...getDebugSnapshot(),
+				},
+			});
 			return;
 		}
 
 		try {
-			const replayStatus = replayStatusFromSignalKVessels(vessels);
-			applyReplayStatusControls(replayStatusControls, replayStatus);
-			resetTargetCounts();
-			const { removedMmsis } = ingestRawVesselData({
-				vessels,
-				targets,
-				targetMaxAge,
-				removeMissing: replayStatus.active === true,
+			const replayStatus = debug.phase("replay-status", () => {
+				const status = replayStatusFromSignalKVessels(vessels);
+				applyReplayStatusControls(replayStatusControls, status);
+				return status;
 			});
-			if (removedMmsis.length > 0) removeMissingTargets(removedMmsis);
-			applyDisplayTargetGeometry({
-				targets,
-				selfMmsi: getSelfMmsi(),
+			debug.phase("reset-counts", () => resetTargetCounts());
+			const { removedMmsis } = debug.phase("ingest-vessels", () =>
+				ingestRawVesselData({
+					vessels,
+					targets,
+					targetMaxAge,
+					removeMissing: replayStatus.active === true,
+				}),
+			);
+			if (removedMmsis.length > 0) {
+				debug.phase("remove-missing-targets", () =>
+					removeMissingTargets(removedMmsis),
+				);
+			}
+			debug.phase("display-geometry", () => {
+				applyDisplayTargetGeometry({
+					targets,
+					selfMmsi: getSelfMmsi(),
+				});
 			});
 			setSelfTarget(targets.get(getSelfMmsi()));
 
-			const trafficTargets = await getHttpResponse(getTargetsPath(pluginId), {
-				throwErrors: true,
-				cache: "no-store",
-			});
-			applyTrafficTargetProjection({
-				targets,
-				projection: trafficTargets,
+			const trafficTargets = await debug.phase("fetch-display-targets", () =>
+				getHttpResponse(getTargetsPath(pluginId), {
+					throwErrors: true,
+					cache: "no-store",
+				}),
+			);
+			debug.phase("traffic-projection", () => {
+				applyTrafficTargetProjection({
+					targets,
+					projection: trafficTargets,
+				});
 			});
 
-			const uiState = await readUiState();
+			const uiState = await debug.phase("fetch-ui-state", () => readUiState());
 			const allowProjectionFallback = projectionFallbackEnabled();
-			publishUiState(uiState);
-			await serverAlertEvents.refresh({
-				uiState,
-				allowFallback: allowProjectionFallback,
-			});
-			targetSilence.applyInitialMuteData(trafficTargets || initialPluginTargets);
-			updateUI({
-				uiState,
-				allowServerFallbackRefresh: allowProjectionFallback,
-			});
-			applyUiStateConnectionStatus(uiState);
+			debug.phase("publish-ui-state", () => publishUiState(uiState));
+			await debug.phase("server-alert-events", () =>
+				serverAlertEvents.refresh({
+					uiState,
+					allowFallback: allowProjectionFallback,
+				}),
+			);
+			debug.phase("target-silence", () =>
+				targetSilence.applyInitialMuteData(trafficTargets || initialPluginTargets),
+			);
+			debug.phase("render-ui", () =>
+				updateUI({
+					uiState,
+					allowServerFallbackRefresh: allowProjectionFallback,
+				}),
+			);
+			debug.phase("connection-status", () =>
+				applyUiStateConnectionStatus(uiState),
+			);
 
+			let agedOut = null;
 			if (ageOutEnabled) {
-				ageOutOldTargets();
+				agedOut = debug.phase("age-out-targets", () => ageOutOldTargets());
 			}
 
 			const now = Date.now();
-			if (
-				shouldShowAlarmPopup({
-					alarmCount: getAlarmTargetCount(),
-					lastAlarmTime,
-					now,
-					showAlarmsInterval,
-				})
-			) {
-				lastAlarmTime = now;
-				alertPopup.show();
-			}
+			debug.phase("alarm-popup", () => {
+				if (
+					shouldShowAlarmPopup({
+						alarmCount: getAlarmTargetCount(),
+						lastAlarmTime,
+						now,
+						showAlarmsInterval,
+					})
+				) {
+					lastAlarmTime = now;
+					alertPopup.show();
+				}
+			});
 
-			applyRefreshAttribution({ map, startTime });
+			debug.phase("attribution", () =>
+				applyRefreshAttribution({ map, startTime }),
+			);
+			debug.finish({
+				replayActive: replayStatus.active === true,
+				replayPaused: replayStatus.paused === true,
+				removedMissing: removedMmsis.length,
+				agedOut,
+				allowProjectionFallback,
+				counts: {
+					vessels: Object.keys(vessels || {}).length,
+					trafficTargets: Object.keys(trafficTargets || {}).length,
+					targets: targets.size,
+					...getDebugSnapshot(),
+				},
+			});
 		} catch (error) {
 			console.error("Error in refresh:", error);
+			debug.finish({
+				error: error.message || String(error),
+				counts: {
+					vessels: Object.keys(vessels || {}).length,
+					targets: targets.size,
+					...getDebugSnapshot(),
+				},
+			});
 		}
 	}
 

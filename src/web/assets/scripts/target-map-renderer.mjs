@@ -143,8 +143,21 @@ export function createTargetMapRenderer({
 		});
 	}
 
+	function debugSnapshot() {
+		return {
+			targets: targets.size,
+			boatMarkers: boatMarkers.size,
+			projectedCourseLines: boatProjectedCourseLines.size,
+			overlays: targetOverlays.debugSnapshot?.() || {},
+			labelCollision: labelCollision.debugSnapshot?.() || {},
+			selectedVesselMmsi: getSelectedVesselMmsi() || null,
+			alarmTargetCount: getAlarmTargetCount(),
+		};
+	}
+
 	return {
 		ageOutOldTargets,
+		debugSnapshot,
 		drawRangeRings,
 		getAlarmTargetCount,
 		resetTargetCounts,

@@ -10,6 +10,7 @@ export function ageOutTargets({
 	labelCollision,
 	onSelectedTargetAgedOut,
 }) {
+	let removed = 0;
 	targets.forEach((target, mmsi) => {
 		if (mmsi === selfMmsi || target.lastSeen <= targetMaxAge) return;
 
@@ -27,7 +28,9 @@ export function ageOutTargets({
 			labelCollision,
 		});
 		targets.delete(mmsi);
+		removed++;
 	});
+	return removed;
 }
 
 export function removeTargetArtifacts({

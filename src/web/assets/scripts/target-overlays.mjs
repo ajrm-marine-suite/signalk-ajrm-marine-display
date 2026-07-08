@@ -111,6 +111,12 @@ export function createTargetOverlayController({
 	}
 
 	return {
+		debugSnapshot() {
+			return {
+				cpaLimitRings: cpaLimitRings.size,
+				silenceBadges: silenceBadgeMarkers.size,
+			};
+		},
 		removeCpaLimitRings,
 		removeSilenceBadge,
 		updateCpaLimitRings,

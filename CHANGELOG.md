@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.18
+
+- Add opt-in browser refresh diagnostics for Display slowdowns, including
+  per-refresh phase timings and retained target, marker, overlay, and label
+  counts for simulator debugging.
+
 ## 0.5.17
 
 - Rename Display's internal stationary mute threshold setting to stationary
