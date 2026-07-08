@@ -9,15 +9,15 @@ export function distanceDisplayState(distance) {
 			unitsText: "",
 		};
 	}
-	if (value < 1) {
+	if (value < METERS_PER_NM) {
 		return {
-			text: Math.round(value * METERS_PER_NM),
+			text: Math.round(value),
 			unitsHidden: false,
 			unitsText: " m",
 		};
 	}
 	return {
-		text: Number(value.toFixed(2)),
+		text: Number((value / METERS_PER_NM).toFixed(2)),
 		unitsHidden: false,
 		unitsText: " NM",
 	};

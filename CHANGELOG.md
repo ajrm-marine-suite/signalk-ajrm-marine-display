@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.5.14
+
+- Store and send Traffic profile CPA thresholds as metres while continuing to
+  display larger profile distances in NM in the browser controls.
+- Update Display's default profile thresholds to match Traffic's metre-based
+  profile contract.
+
 ## 0.5.11
 
 - Let the GPS status lamp fall back to fresh standard Signal K own-vessel

@@ -10,9 +10,21 @@
 			"tcpa": 3600,
 			"speed": 0,
 			"bySize": {
-				"small": { "cpa": 0, "tcpa": 3600, "speed": 0 },
-				"medium": { "cpa": 0, "tcpa": 3600, "speed": 0 },
-				"large": { "cpa": 0, "tcpa": 3600, "speed": 0 }
+				"small": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				},
+				"medium": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				},
+				"large": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				}
 			}
 		},
 		"danger": {
@@ -20,9 +32,21 @@
 			"tcpa": 3600,
 			"speed": 0,
 			"bySize": {
-				"small": { "cpa": 0, "tcpa": 3600, "speed": 0 },
-				"medium": { "cpa": 0, "tcpa": 3600, "speed": 0 },
-				"large": { "cpa": 0, "tcpa": 3600, "speed": 0 }
+				"small": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				},
+				"medium": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				},
+				"large": {
+					"cpa": 0,
+					"tcpa": 3600,
+					"speed": 0
+				}
 			}
 		}
 	},
@@ -32,23 +56,47 @@
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
 		"warning": {
-			"cpa": 0.053996,
+			"cpa": 100,
 			"tcpa": 240,
 			"speed": 0.5,
 			"bySize": {
-				"small": { "cpa": 0.026998, "tcpa": 180, "speed": 0.5 },
-				"medium": { "cpa": 0.053996, "tcpa": 240, "speed": 0.5 },
-				"large": { "cpa": 0.107991, "tcpa": 360, "speed": 0.5 }
+				"small": {
+					"cpa": 50,
+					"tcpa": 180,
+					"speed": 0.5
+				},
+				"medium": {
+					"cpa": 100,
+					"tcpa": 240,
+					"speed": 0.5
+				},
+				"large": {
+					"cpa": 200,
+					"tcpa": 360,
+					"speed": 0.5
+				}
 			}
 		},
 		"danger": {
-			"cpa": 0.026998,
+			"cpa": 50,
 			"tcpa": 120,
 			"speed": 3,
 			"bySize": {
-				"small": { "cpa": 0.013499, "tcpa": 60, "speed": 3 },
-				"medium": { "cpa": 0.026998, "tcpa": 120, "speed": 3 },
-				"large": { "cpa": 0.053996, "tcpa": 180, "speed": 3 }
+				"small": {
+					"cpa": 25,
+					"tcpa": 60,
+					"speed": 3
+				},
+				"medium": {
+					"cpa": 50,
+					"tcpa": 120,
+					"speed": 3
+				},
+				"large": {
+					"cpa": 100,
+					"tcpa": 180,
+					"speed": 3
+				}
 			}
 		}
 	},
@@ -58,23 +106,47 @@
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
 		"warning": {
-			"cpa": 0.8,
+			"cpa": 1481.6,
 			"tcpa": 900,
 			"speed": 0,
 			"bySize": {
-				"small": { "cpa": 0.4, "tcpa": 600, "speed": 0 },
-				"medium": { "cpa": 0.8, "tcpa": 900, "speed": 0 },
-				"large": { "cpa": 1.5, "tcpa": 1200, "speed": 0 }
+				"small": {
+					"cpa": 740.8,
+					"tcpa": 600,
+					"speed": 0
+				},
+				"medium": {
+					"cpa": 1481.6,
+					"tcpa": 900,
+					"speed": 0
+				},
+				"large": {
+					"cpa": 2778,
+					"tcpa": 1200,
+					"speed": 0
+				}
 			}
 		},
 		"danger": {
-			"cpa": 0.4,
+			"cpa": 740.8,
 			"tcpa": 480,
 			"speed": 0.5,
 			"bySize": {
-				"small": { "cpa": 0.15, "tcpa": 300, "speed": 0.5 },
-				"medium": { "cpa": 0.4, "tcpa": 480, "speed": 0.5 },
-				"large": { "cpa": 0.8, "tcpa": 720, "speed": 0.5 }
+				"small": {
+					"cpa": 277.8,
+					"tcpa": 300,
+					"speed": 0.5
+				},
+				"medium": {
+					"cpa": 740.8,
+					"tcpa": 480,
+					"speed": 0.5
+				},
+				"large": {
+					"cpa": 1481.6,
+					"tcpa": 720,
+					"speed": 0.5
+				}
 			}
 		}
 	},
@@ -84,23 +156,47 @@
 		"tcpaLookahead": 1,
 		"repeatSensitivity": 1,
 		"warning": {
-			"cpa": 1.25,
+			"cpa": 2315,
 			"tcpa": 1200,
 			"speed": 0,
 			"bySize": {
-				"small": { "cpa": 0.5, "tcpa": 720, "speed": 0 },
-				"medium": { "cpa": 1.25, "tcpa": 1200, "speed": 0 },
-				"large": { "cpa": 3, "tcpa": 1800, "speed": 0 }
+				"small": {
+					"cpa": 926,
+					"tcpa": 720,
+					"speed": 0
+				},
+				"medium": {
+					"cpa": 2315,
+					"tcpa": 1200,
+					"speed": 0
+				},
+				"large": {
+					"cpa": 5556,
+					"tcpa": 1800,
+					"speed": 0
+				}
 			}
 		},
 		"danger": {
-			"cpa": 0.6,
+			"cpa": 1111.2,
 			"tcpa": 600,
 			"speed": 0,
 			"bySize": {
-				"small": { "cpa": 0.2, "tcpa": 360, "speed": 0 },
-				"medium": { "cpa": 0.6, "tcpa": 600, "speed": 0 },
-				"large": { "cpa": 1.5, "tcpa": 900, "speed": 0 }
+				"small": {
+					"cpa": 370.4,
+					"tcpa": 360,
+					"speed": 0
+				},
+				"medium": {
+					"cpa": 1111.2,
+					"tcpa": 600,
+					"speed": 0
+				},
+				"large": {
+					"cpa": 2778,
+					"tcpa": 900,
+					"speed": 0
+				}
 			}
 		}
 	},

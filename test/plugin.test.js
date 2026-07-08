@@ -199,5 +199,5 @@ test("Display profiles include AJRM Marine Traffic sensitivity settings", () => 
   assert.equal(body.coastal.cpaSensitivity, 1.4);
   assert.equal(body.coastal.tcpaLookahead, 0.8);
   assert.equal(body.coastal.repeatSensitivity, 1.2);
-  assert.equal(body.coastal.warning.bySize.large.cpa, 1.5);
+  assert.equal(body.coastal.warning.bySize.large.cpa, 2778);
 });

@@ -9,31 +9,28 @@ const LAST_QUARTER_NM_TICK =
 	FIRST_QUARTER_NM_TICK + Math.round((5 - 1) / QUARTER_NM_STEP);
 export const MAX_DISTANCE_TICK = LAST_QUARTER_NM_TICK + 5;
 
-function nmFromMeters(meters) {
-	return Number((meters / METERS_PER_NM).toFixed(6));
-}
-
 export function distanceToTick(distance) {
 	const value = Number(distance);
 	if (!Number.isFinite(value) || value <= 0) return 0;
-	if (value < 1) {
+	if (value < METERS_PER_NM) {
 		return Math.max(
 			1,
 			Math.min(
 				LAST_METER_DISTANCE_TICK,
-				Math.round((value * METERS_PER_NM) / METER_DISTANCE_STEP),
+				Math.round(value / METER_DISTANCE_STEP),
 			),
 		);
 	}
-	if (value <= 5) {
+	const nm = value / METERS_PER_NM;
+	if (nm <= 5) {
 		return (
 			FIRST_QUARTER_NM_TICK +
-			Math.round((value - 1) / QUARTER_NM_STEP)
+			Math.round((nm - 1) / QUARTER_NM_STEP)
 		);
 	}
 	return Math.min(
 		MAX_DISTANCE_TICK,
-		LAST_QUARTER_NM_TICK + Math.round(value - 5),
+		LAST_QUARTER_NM_TICK + Math.round(nm - 5),
 	);
 }
 
@@ -41,17 +38,18 @@ export function tickToDistance(tick) {
 	const value = Number(tick);
 	if (!Number.isFinite(value) || value <= 0) return 0;
 	if (value <= LAST_METER_DISTANCE_TICK) {
-		return nmFromMeters(value * METER_DISTANCE_STEP);
+		return value * METER_DISTANCE_STEP;
 	}
 	if (value <= LAST_QUARTER_NM_TICK) {
-		return Number(
+		const nm = Number(
 			(
 				1 +
 				(value - FIRST_QUARTER_NM_TICK) * QUARTER_NM_STEP
 			).toFixed(2),
 		);
+		return Number((nm * METERS_PER_NM).toFixed(6));
 	}
-	return 5 + (value - LAST_QUARTER_NM_TICK);
+	return (5 + (value - LAST_QUARTER_NM_TICK)) * METERS_PER_NM;
 }
 
 export function timeToTick(time) {
