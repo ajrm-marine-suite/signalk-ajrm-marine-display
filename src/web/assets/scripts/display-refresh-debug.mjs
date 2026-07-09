@@ -12,7 +12,7 @@ export function createDisplayRefreshDebug({
 	postDiagnostic = createRefreshDiagnosticPoster({ windowRef, consoleRef }),
 } = {}) {
 	const history = [];
-	let lastSlowReportAt = Number.NEGATIVE_INFINITY;
+	let lastReportAt = Number.NEGATIVE_INFINITY;
 
 	function now() {
 		return performanceRef?.now?.() ?? Date.now();
@@ -49,9 +49,9 @@ export function createDisplayRefreshDebug({
 					consoleRef,
 					windowRef,
 					postDiagnostic,
-					getLastSlowReportAt: () => lastSlowReportAt,
-					setLastSlowReportAt: (value) => {
-						lastSlowReportAt = value;
+					getLastReportAt: () => lastReportAt,
+					setLastReportAt: (value) => {
+						lastReportAt = value;
 					},
 				});
 			},
@@ -132,14 +132,16 @@ function finishSample({
 	enabled,
 	windowRef,
 	postDiagnostic,
-	getLastSlowReportAt,
-	setLastSlowReportAt,
+	getLastReportAt,
+	setLastReportAt,
 }) {
 	const totalMs = Math.round(now() - sample.startMs);
 	const finishedAtMs = now();
+	const slow = totalMs >= slowRefreshMs;
 	const finished = {
 		...sample,
 		...extra,
+		diagnosticReason: slow ? "slow" : "periodic",
 		totalMs,
 		finishedAt: new Date().toISOString(),
 	};
@@ -151,10 +153,9 @@ function finishSample({
 	if (windowRef) windowRef.ajrmMarineDisplayLastRefresh = finished;
 	if (
 		enabled &&
-		totalMs >= slowRefreshMs &&
-		finishedAtMs - (getLastSlowReportAt?.() || 0) >= reportIntervalMs
+		finishedAtMs - (getLastReportAt?.() || 0) >= reportIntervalMs
 	) {
-		setLastSlowReportAt?.(finishedAtMs);
+		setLastReportAt?.(finishedAtMs);
 		postDiagnostic?.(finished);
 	}
 	return finished;

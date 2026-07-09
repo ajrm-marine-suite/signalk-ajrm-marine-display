@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.22` emits periodic browser refresh diagnostic samples through
+Signal K plugin debug logging when diagnostics are enabled.
+
 Version `0.5.21` enables slow browser refresh diagnostics from Display's Signal
 K plugin config and writes samples through Signal K plugin debug logging.
 

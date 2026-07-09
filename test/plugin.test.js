@@ -96,6 +96,7 @@ test("Signal K compatibility API writes refresh diagnostics through app.debug", 
       body: {
         userAgent: "node-test",
         sample: {
+          diagnosticReason: "slow",
           totalMs: 954,
           phases: { "fetch-vessels": 188, "render-ui": 500 },
           counts: { targets: 13, boatMarkers: 13 },
@@ -116,9 +117,40 @@ test("Signal K compatibility API writes refresh diagnostics through app.debug", 
   assert.equal(body.ok, true);
   assert.equal(debugMessages.length, 1);
   assert.match(debugMessages[0], /event=display\.refresh\.slow/);
+  assert.match(debugMessages[0], /reason=slow/);
   assert.match(debugMessages[0], /totalMs=954/);
   assert.match(debugMessages[0], /targets=13/);
   assert.match(debugMessages[0], /userAgent=node-test/);
+});
+
+test("Signal K compatibility API writes periodic refresh samples through app.debug", async () => {
+  const { plugin, debugMessages } = harness();
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+
+  await routes.get("POST /ajrmMarineDisplay/refreshDiagnostics")(
+    {
+      body: {
+        userAgent: "node-test",
+        sample: {
+          diagnosticReason: "periodic",
+          totalMs: 48,
+          counts: { targets: 2, boatMarkers: 1 },
+          summary: "total=48ms",
+        },
+      },
+    },
+    {
+      json() {},
+      status() {
+        return this;
+      },
+    },
+  );
+
+  assert.match(debugMessages[0], /event=display\.refresh\.sample/);
+  assert.match(debugMessages[0], /reason=periodic/);
+  assert.match(debugMessages[0], /totalMs=48/);
 });
 
 test("plugin publishes enabled Display status", () => {

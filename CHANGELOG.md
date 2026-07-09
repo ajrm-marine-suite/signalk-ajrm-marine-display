@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.22
+
+- Emit periodic Display browser refresh diagnostic samples through Signal K
+  debug logging whenever browser refresh diagnostics are enabled, not only for
+  refreshes above the slow threshold.
+
 ## 0.5.21
 
 - Move browser refresh diagnostics behind a Display plugin config option and

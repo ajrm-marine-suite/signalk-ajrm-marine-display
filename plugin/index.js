@@ -254,7 +254,9 @@ module.exports = function ajrmMarineDisplay(app) {
 
   function logRefreshDiagnostic(req) {
     const entry = refreshDiagnosticEntry(req);
-    debug("display.refresh.slow", {
+    const slow = entry.sample.diagnosticReason === "slow";
+    debug(slow ? "display.refresh.slow" : "display.refresh.sample", {
+      reason: entry.sample.diagnosticReason,
       totalMs: entry.sample.totalMs,
       summary: entry.sample.summary,
       targets: entry.sample.counts?.targets,

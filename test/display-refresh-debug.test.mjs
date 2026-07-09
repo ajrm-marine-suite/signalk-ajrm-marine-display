@@ -40,10 +40,11 @@ test("Display refresh debug records sync and async phase timings", async () => {
 	assert.equal(windowRef.AJRMMarineDisplayDebug.last().counts.targets, 3);
 	assert.equal(windowRef.AJRMMarineDisplayDebug.snapshot().last.counts.targets, 3);
 	assert.equal(diagnostics.length, 1);
+	assert.equal(diagnostics[0].diagnosticReason, "slow");
 	assert.match(diagnostics[0].summary, /total=6ms/);
 });
 
-test("Display refresh debug throttles slow diagnostic posts", () => {
+test("Display refresh debug throttles periodic diagnostic posts", () => {
 	let now = 0;
 	const diagnostics = [];
 	const debug = createDisplayRefreshDebug({
@@ -64,7 +65,34 @@ test("Display refresh debug throttles slow diagnostic posts", () => {
 	}
 
 	assert.equal(diagnostics.length, 2);
+	assert.equal(diagnostics[0].diagnosticReason, "slow");
 	assert.match(diagnostics[0].summary, /targets=1; markers=1/);
+});
+
+test("Display refresh debug posts periodic samples below slow threshold", () => {
+	let now = 0;
+	const diagnostics = [];
+	const debug = createDisplayRefreshDebug({
+		windowRef: {
+			AJRM_MARINE_DISPLAY_DEBUG: true,
+			localStorage: { getItem: () => "" },
+		},
+		performanceRef: { now: () => now },
+		postDiagnostic: (sample) => diagnostics.push(sample),
+		slowRefreshMs: 750,
+		reportIntervalMs: 100,
+	});
+
+	const first = debug.start();
+	now += 25;
+	first.finish({ counts: { targets: 2 } });
+	const second = debug.start();
+	now += 25;
+	second.finish({ counts: { targets: 2 } });
+
+	assert.equal(diagnostics.length, 1);
+	assert.equal(diagnostics[0].diagnosticReason, "periodic");
+	assert.equal(diagnostics[0].totalMs, 25);
 });
 
 test("Display refresh diagnostic poster writes to server endpoint", async () => {
