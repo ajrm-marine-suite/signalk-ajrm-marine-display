@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.28
+
+- Fix Display CPA limit rings to use metre profile thresholds directly instead
+  of multiplying them by metres-per-nautical-mile. This prevents huge Leaflet
+  circles and Safari/Chrome slowdowns when simulator targets are active.
+
 ## 0.5.27
 
 - Add a range-rings debug control to isolate SVG overlay work from the rest of

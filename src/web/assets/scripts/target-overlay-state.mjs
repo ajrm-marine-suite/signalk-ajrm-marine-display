@@ -12,11 +12,9 @@ export function shouldShowTargetOverlay({ target, selfMmsi }) {
 export function cpaLimitRingRadiusMeters({
 	criteria,
 	cpaSensitivity,
-	metersPerNm,
 }) {
 	return (
 		Number(criteria?.cpa || 0) *
-		Math.max(0, Number(cpaSensitivity) || 0) *
-		metersPerNm
+		Math.max(0, Number(cpaSensitivity) || 0)
 	);
 }

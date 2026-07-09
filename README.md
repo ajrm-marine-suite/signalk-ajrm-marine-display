@@ -2,6 +2,10 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.28` fixes CPA limit ring radii so metre profile thresholds are not
+multiplied by metres-per-nautical-mile, avoiding huge map overlays when
+simulator targets are active.
+
 Version `0.5.27` adds a range-rings debug control to isolate SVG overlay work
 from the rest of the Leaflet overlay pane during browser frame-stall diagnostics.
 
