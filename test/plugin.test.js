@@ -153,6 +153,42 @@ test("Signal K compatibility API writes periodic refresh samples through app.deb
   assert.match(debugMessages[0], /totalMs=48/);
 });
 
+test("Signal K compatibility API writes browser performance diagnostics through app.debug", async () => {
+  const { plugin, debugMessages } = harness();
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+
+  await routes.get("POST /ajrmMarineDisplay/refreshDiagnostics")(
+    {
+      body: {
+        userAgent: "node-test",
+        sample: {
+          diagnosticType: "browser-performance",
+          diagnosticReason: "frame-gap",
+          totalMs: 382,
+          eventLoopLagMs: 0,
+          frameGapMs: 382,
+          maxEventLoopLagMs: 74,
+          maxFrameGapMs: 382,
+          visibilityState: "visible",
+          summary: "reason=frame-gap; frameGap=382ms",
+        },
+      },
+    },
+    {
+      json() {},
+      status() {
+        return this;
+      },
+    },
+  );
+
+  assert.match(debugMessages[0], /event=display\.browser\.frame-gap/);
+  assert.match(debugMessages[0], /frameGapMs=382/);
+  assert.match(debugMessages[0], /maxEventLoopLagMs=74/);
+  assert.match(debugMessages[0], /visibilityState=visible/);
+});
+
 test("plugin publishes enabled Display status", () => {
   const { plugin, messages, statuses } = harness();
   plugin.start({});

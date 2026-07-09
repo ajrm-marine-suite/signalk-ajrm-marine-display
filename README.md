@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.24` adds browser main-thread and frame-gap diagnostics to help pin
+down simulator-time UI stalls.
+
 Version `0.5.23` prevents overlapping browser refresh cycles and includes
 skipped-overlap counts in refresh diagnostics.
 

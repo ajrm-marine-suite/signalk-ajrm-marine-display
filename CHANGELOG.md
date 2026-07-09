@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.24
+
+- Add browser main-thread event-loop lag and animation-frame gap diagnostics
+  through Signal K debug logging when Display browser refresh diagnostics are
+  enabled.
+
 ## 0.5.23
 
 - Prevent overlapping browser refresh cycles when a previous refresh takes

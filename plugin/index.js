@@ -254,6 +254,10 @@ module.exports = function ajrmMarineDisplay(app) {
 
   function logRefreshDiagnostic(req) {
     const entry = refreshDiagnosticEntry(req);
+    if (entry.sample.diagnosticType === "browser-performance") {
+      logBrowserPerformanceDiagnostic(entry);
+      return;
+    }
     const slow = entry.sample.diagnosticReason === "slow";
     debug(slow ? "display.refresh.slow" : "display.refresh.sample", {
       reason: entry.sample.diagnosticReason,
@@ -266,6 +270,21 @@ module.exports = function ajrmMarineDisplay(app) {
       replayPaused: entry.sample.replayPaused,
       skippedRefreshes: entry.sample.skippedRefreshes,
       slowest: slowestPhaseText(entry.sample.slowestPhases),
+      userAgent: entry.userAgent,
+    });
+  }
+
+  function logBrowserPerformanceDiagnostic(entry) {
+    const reason = stringOrEmpty(entry.sample.diagnosticReason) || "sample";
+    debug(`display.browser.${reason}`, {
+      reason,
+      totalMs: entry.sample.totalMs,
+      eventLoopLagMs: entry.sample.eventLoopLagMs,
+      frameGapMs: entry.sample.frameGapMs,
+      maxEventLoopLagMs: entry.sample.maxEventLoopLagMs,
+      maxFrameGapMs: entry.sample.maxFrameGapMs,
+      visibilityState: entry.sample.visibilityState,
+      summary: entry.sample.summary,
       userAgent: entry.userAgent,
     });
   }

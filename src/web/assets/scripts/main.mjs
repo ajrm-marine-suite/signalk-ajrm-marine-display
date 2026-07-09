@@ -17,6 +17,8 @@ import { createAppRuntimeState } from "./app-runtime-state.mjs";
 import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
+import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
+import { createRefreshDiagnosticPoster } from "./display-refresh-debug.mjs";
 import { createGpsStatusIndicator } from "./gps-status-indicator.mjs";
 import {
 	createMainDom,
@@ -38,6 +40,13 @@ import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 const displayRuntimeStatus = await readDisplayRuntimeStatus();
 window.AJRM_MARINE_DISPLAY_DEBUG =
 	displayRuntimeStatus?.diagnostics?.browserRefreshDiagnostics === true;
+if (window.AJRM_MARINE_DISPLAY_DEBUG) {
+	startBrowserPerformanceDebug({
+		windowRef: window,
+		performanceRef: performance,
+		postDiagnostic: createRefreshDiagnosticPoster({ windowRef: window }),
+	});
+}
 if (displayRuntimeStatus?.enabled === false) {
 	document.body.innerHTML = `
 		<main class="container py-5">
