@@ -189,6 +189,34 @@ test("Signal K compatibility API writes browser performance diagnostics through 
   assert.match(debugMessages[0], /visibilityState=visible/);
 });
 
+test("Signal K compatibility API exposes runtime Display debug controls", async () => {
+  const { plugin, debugMessages } = harness();
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+  const responses = [];
+
+  await routes.get("GET /ajrmMarineDisplay/debugControls")(
+    {},
+    { json(value) { responses.push(value); } },
+  );
+  await routes.get("POST /ajrmMarineDisplay/debugControls")(
+    { body: { footprints: false, labels: false } },
+    { json(value) { responses.push(value); } },
+  );
+  await routes.get("GET /ajrmMarineDisplay/debugControls")(
+    {},
+    { json(value) { responses.push(value); } },
+  );
+
+  assert.equal(responses[0].controls.footprints, true);
+  assert.equal(responses[1].controls.footprints, false);
+  assert.equal(responses[1].controls.labels, false);
+  assert.equal(responses[1].controls.markerUpdates, true);
+  assert.equal(responses[2].controls.footprints, false);
+  assert.match(debugMessages[0], /event=display\.debug\.controls/);
+  assert.match(debugMessages[0], /footprints=false/);
+});
+
 test("plugin publishes enabled Display status", () => {
   const { plugin, messages, statuses } = harness();
   plugin.start({});

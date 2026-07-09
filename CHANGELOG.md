@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.25
+
+- Add transient Signal K debug controls for toggling Display target rendering
+  features while browser diagnostics are enabled.
+
 ## 0.5.24
 
 - Add browser main-thread event-loop lag and animation-frame gap diagnostics

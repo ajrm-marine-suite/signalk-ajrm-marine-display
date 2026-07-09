@@ -1,5 +1,6 @@
 import { refreshMapViewForSelfTarget } from "./target-map-view-refresh.mjs";
 import { renderRendererTargetCounts } from "./target-map-renderer-actions.mjs";
+import { displayDebugControls } from "./display-debug-controls.mjs";
 
 export function updateRendererUi({
 	selfTarget,
@@ -27,6 +28,7 @@ export function updateRendererUi({
 	refreshMapView = refreshMapViewForSelfTarget,
 	renderTargetCounts = renderRendererTargetCounts,
 }) {
+	const debugControls = displayDebugControls();
 	refreshMapView({
 		selfTarget,
 		map,
@@ -36,6 +38,7 @@ export function updateRendererUi({
 		drawRangeRings,
 		autoCharts,
 		updateHarbourDisplay,
+		debugControls,
 	});
 
 	const autoProfileStatusApplied =
@@ -54,8 +57,10 @@ export function updateRendererUi({
 		}
 	});
 
-	if (!disableMapPanTo) {
+	if (!disableMapPanTo && debugControls.labels) {
 		labelCollision.update();
+	}
+	if (!disableMapPanTo && debugControls.targetTable) {
 		updateTableOfTargets();
 	}
 	const browserSpeechHasFreshServerState =

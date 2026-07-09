@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.5.24",
+    "version": "0.5.25",
     "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
@@ -47,6 +47,24 @@
         "responses": {
           "200": {
             "description": "Diagnostic sample accepted"
+          }
+        }
+      }
+    },
+    "/debugControls": {
+      "get": {
+        "summary": "Get transient browser rendering debug controls",
+        "responses": {
+          "200": {
+            "description": "Current transient debug controls"
+          }
+        }
+      },
+      "post": {
+        "summary": "Update transient browser rendering debug controls",
+        "responses": {
+          "200": {
+            "description": "Debug controls updated"
           }
         }
       }

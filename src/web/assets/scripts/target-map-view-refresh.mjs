@@ -7,6 +7,7 @@ export function refreshMapViewForSelfTarget({
 	drawRangeRings,
 	autoCharts,
 	updateHarbourDisplay,
+	debugControls = {},
 	fallbackCenter = [55.8, -5.2],
 	fallbackZoom = 12,
 }) {
@@ -25,14 +26,14 @@ export function refreshMapViewForSelfTarget({
 		if (disableMapPanTo) return;
 
 		drawRangeRings();
-		autoCharts.update();
-		updateHarbourDisplay();
+		if (debugControls.autoCharts !== false) autoCharts.update();
+		if (debugControls.harbourLayer !== false) updateHarbourDisplay();
 		return;
 	}
 
 	if (disableMapPanTo && map._loaded) return;
 
 	if (!map._loaded) map.setView(fallbackCenter, fallbackZoom);
-	autoCharts.update();
-	updateHarbourDisplay();
+	if (debugControls.autoCharts !== false) autoCharts.update();
+	if (debugControls.harbourLayer !== false) updateHarbourDisplay();
 }

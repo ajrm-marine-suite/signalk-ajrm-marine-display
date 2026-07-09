@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.25` adds transient Signal K debug controls for toggling Display
+target rendering features during browser diagnostics.
+
 Version `0.5.24` adds browser main-thread and frame-gap diagnostics to help pin
 down simulator-time UI stalls.
 

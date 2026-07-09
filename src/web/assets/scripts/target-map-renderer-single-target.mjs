@@ -1,5 +1,6 @@
 import { updateTargetCourseLine } from "./target-course-line-update.mjs";
 import { updateTargetFootprintDisplay } from "./target-footprint-display.mjs";
+import { displayDebugControls } from "./display-debug-controls.mjs";
 import { createTargetMarkerBundle } from "./target-marker-bundle.mjs";
 import { updateTargetMarkerView } from "./target-marker-view-update.mjs";
 import { applyNonSelfTargetMarkerPresentation } from "./non-self-target-marker-presentation.mjs";
@@ -50,6 +51,7 @@ export function updateRendererSingleTarget({
 	const selfMmsi = getSelfMmsi();
 	const selectedVesselMmsi = getSelectedVesselMmsi();
 	const currentCollisionProfiles = collisionProfiles ?? getCollisionProfiles();
+	const debugControls = displayDebugControls();
 	const selfIconSettings = target.mmsi === selfMmsi
 		? getSelfIconSettings(getSelfIconVariant)
 		: {};
@@ -106,20 +108,23 @@ export function updateRendererSingleTarget({
 		createIcon: () => getIcon(iconArgs),
 	});
 
-	updateMarkerView({
-		boatMarker,
-		target,
-		icon,
-		selectionMarkers,
-		selectedVesselMmsi,
-		targetOverlays,
-	});
+	if (debugControls.markerUpdates) {
+		updateMarkerView({
+			boatMarker,
+			target,
+			icon,
+			selectionMarkers,
+			selectedVesselMmsi,
+			targetOverlays,
+		});
+	}
 	if (!deferMapOverlays) {
 		updateTargetFootprintDisplay({
 			footprintPolygon: boatMarker.footprintPolygon,
 			target,
 			selfMmsi,
 			selectedVesselMmsi,
+			enabled: debugControls.footprints,
 		});
 	}
 
@@ -128,12 +133,12 @@ export function updateRendererSingleTarget({
 	countState.add(applyMarkerPresentation({
 		target,
 		selfMmsi,
-		boatMarker,
-		labelCollision,
-		deferLabelCollision,
+			boatMarker,
+			labelCollision,
+			deferLabelCollision: deferLabelCollision || !debugControls.labels,
 	}));
 
-	if (!deferMapOverlays) {
+	if (!deferMapOverlays && debugControls.courseLines) {
 		updateCourseLine({
 			target,
 			selfMmsi,

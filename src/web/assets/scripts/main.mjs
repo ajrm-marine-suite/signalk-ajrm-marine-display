@@ -18,6 +18,7 @@ import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
 import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
+import { startDisplayDebugControlPolling } from "./display-debug-controls.mjs";
 import { createRefreshDiagnosticPoster } from "./display-refresh-debug.mjs";
 import { createGpsStatusIndicator } from "./gps-status-indicator.mjs";
 import {
@@ -46,6 +47,7 @@ if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 		performanceRef: performance,
 		postDiagnostic: createRefreshDiagnosticPoster({ windowRef: window }),
 	});
+	startDisplayDebugControlPolling({ windowRef: window, fetchFn: fetch });
 }
 if (displayRuntimeStatus?.enabled === false) {
 	document.body.innerHTML = `

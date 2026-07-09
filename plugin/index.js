@@ -21,11 +21,21 @@ const DISTANCE_METADATA_PATHS = [
   "navigation.courseGreatCircle.distance",
   "navigation.courseRhumbline.distance",
 ];
+const DEFAULT_DEBUG_CONTROLS = Object.freeze({
+  markerUpdates: true,
+  courseLines: true,
+  footprints: true,
+  labels: true,
+  targetTable: true,
+  autoCharts: true,
+  harbourLayer: true,
+});
 
 module.exports = function ajrmMarineDisplay(app) {
   const plugin = {};
   let options = normalizeOptions({});
   let status = null;
+  let debugControls = normalizeDebugControls({});
 
   plugin.id = PLUGIN_ID;
   plugin.name = "AJRM Marine Display";
@@ -139,6 +149,17 @@ module.exports = function ajrmMarineDisplay(app) {
     router.get(route("/autoProfileStatus"), (_req, res) =>
       res.json(currentUiState().autoProfileStatus),
     );
+    router.get(route("/debugControls"), (_req, res) =>
+      res.json({ ok: true, controls: debugControls }),
+    );
+    router.post?.(route("/debugControls"), async (req, res) => {
+      debugControls = normalizeDebugControls({
+        ...debugControls,
+        ...(req.body || {}),
+      });
+      debug("display.debug.controls", debugControls);
+      res.json({ ok: true, controls: debugControls });
+    });
     router.get(route("/autoProfileSettings"), (_req, res) =>
       res.json(trafficAutoProfile().settings || { enabled: false }),
     );
@@ -311,6 +332,15 @@ function normalizeOptions(value) {
       browserRefreshDiagnostics: value.browserRefreshDiagnostics === true,
     },
   };
+}
+
+function normalizeDebugControls(value = {}) {
+  return Object.fromEntries(
+    Object.entries(DEFAULT_DEBUG_CONTROLS).map(([key, fallback]) => [
+      key,
+      value[key] !== undefined ? value[key] === true : fallback,
+    ]),
+  );
 }
 
 function clamp(value, minimum, maximum, fallback) {
