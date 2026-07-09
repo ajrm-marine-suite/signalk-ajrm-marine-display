@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 
 import {
+	applyDisplayDebugMapControls,
 	displayDebugControls,
 	normalizeDisplayDebugControls,
 	setDisplayDebugControls,
@@ -17,6 +18,13 @@ test("Display debug controls default every render feature on", () => {
 		targetTable: true,
 		autoCharts: true,
 		harbourLayer: true,
+		mapContainer: true,
+		tilePane: true,
+		overlayPane: true,
+		shadowPane: true,
+		markerPane: true,
+		tooltipPane: true,
+		popupPane: true,
 	});
 });
 
@@ -56,4 +64,71 @@ test("Display debug control polling applies server controls", async () => {
 	assert.equal(displayDebugControls().targetTable, false);
 	assert.equal(windowRef.AJRM_MARINE_DISPLAY_DEBUG_CONTROLS.labels, false);
 	monitor.stop();
+});
+
+test("Display debug control polling notifies a control applier", async () => {
+	let appliedControls;
+	const windowRef = {
+		setTimeout() {
+			return 1;
+		},
+		clearTimeout() {},
+	};
+	const monitor = startDisplayDebugControlPolling({
+		windowRef,
+		fetchFn: async () => ({
+			ok: true,
+			json: async () => ({ controls: { tilePane: false } }),
+		}),
+		onControls: (controls) => {
+			appliedControls = controls;
+		},
+	});
+
+	await Promise.resolve();
+	await Promise.resolve();
+
+	assert.equal(appliedControls.tilePane, false);
+	monitor.stop();
+});
+
+test("Display debug map controls hide selected Leaflet panes", () => {
+	const elements = Object.fromEntries(
+		[
+			"container",
+			"tilePane",
+			"overlayPane",
+			"shadowPane",
+			"markerPane",
+			"tooltipPane",
+			"popupPane",
+		].map((name) => [name, { name, style: {} }]),
+	);
+	const map = {
+		getContainer: () => elements.container,
+		getPane: (name) => elements[name],
+	};
+
+	applyDisplayDebugMapControls({
+		map,
+		controls: normalizeDisplayDebugControls({
+			mapContainer: false,
+			tilePane: false,
+			markerPane: false,
+		}),
+	});
+
+	assert.equal(elements.container.style.visibility, "hidden");
+	assert.equal(elements.tilePane.style.visibility, "hidden");
+	assert.equal(elements.markerPane.style.visibility, "hidden");
+	assert.equal(elements.overlayPane.style.visibility, "");
+
+	applyDisplayDebugMapControls({
+		map,
+		controls: normalizeDisplayDebugControls({}),
+	});
+
+	assert.equal(elements.container.style.visibility, "");
+	assert.equal(elements.tilePane.style.visibility, "");
+	assert.equal(elements.markerPane.style.visibility, "");
 });

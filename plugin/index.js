@@ -29,6 +29,13 @@ const DEFAULT_DEBUG_CONTROLS = Object.freeze({
   targetTable: true,
   autoCharts: true,
   harbourLayer: true,
+  mapContainer: true,
+  tilePane: true,
+  overlayPane: true,
+  shadowPane: true,
+  markerPane: true,
+  tooltipPane: true,
+  popupPane: true,
 });
 
 module.exports = function ajrmMarineDisplay(app) {

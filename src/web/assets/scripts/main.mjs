@@ -18,7 +18,10 @@ import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
 import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
-import { startDisplayDebugControlPolling } from "./display-debug-controls.mjs";
+import {
+	applyDisplayDebugMapControls,
+	startDisplayDebugControlPolling,
+} from "./display-debug-controls.mjs";
 import { createRefreshDiagnosticPoster } from "./display-refresh-debug.mjs";
 import { createGpsStatusIndicator } from "./gps-status-indicator.mjs";
 import {
@@ -47,7 +50,6 @@ if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 		performanceRef: performance,
 		postDiagnostic: createRefreshDiagnosticPoster({ windowRef: window }),
 	});
-	startDisplayDebugControlPolling({ windowRef: window, fetchFn: fetch });
 }
 if (displayRuntimeStatus?.enabled === false) {
 	document.body.innerHTML = `
@@ -151,6 +153,14 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 		loadCharts,
 		storage: window.localStorage,
 	});
+if (window.AJRM_MARINE_DISPLAY_DEBUG) {
+	startDisplayDebugControlPolling({
+		windowRef: window,
+		fetchFn: fetch,
+		onControls: (controls) => applyDisplayDebugMapControls({ map, controls }),
+	});
+	applyDisplayDebugMapControls({ map });
+}
 const targetSupport = createMainTargetSupport({
 	L,
 	map,

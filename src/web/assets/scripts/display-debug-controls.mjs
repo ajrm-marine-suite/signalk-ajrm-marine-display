@@ -9,6 +9,13 @@ const DEFAULT_CONTROLS = Object.freeze({
 	targetTable: true,
 	autoCharts: true,
 	harbourLayer: true,
+	mapContainer: true,
+	tilePane: true,
+	overlayPane: true,
+	shadowPane: true,
+	markerPane: true,
+	tooltipPane: true,
+	popupPane: true,
 });
 
 let currentControls = { ...DEFAULT_CONTROLS };
@@ -36,6 +43,7 @@ export function startDisplayDebugControlPolling({
 	fetchFn = globalThis.fetch,
 	intervalMs = DEFAULT_POLL_INTERVAL_MS,
 	controlsPath = CONTROLS_PATH,
+	onControls,
 } = {}) {
 	if (!windowRef || typeof fetchFn !== "function") return null;
 	let stopped = false;
@@ -52,6 +60,7 @@ export function startDisplayDebugControlPolling({
 			const body = await response.json();
 			const controls = setDisplayDebugControls(body.controls || body);
 			windowRef.AJRM_MARINE_DISPLAY_DEBUG_CONTROLS = controls;
+			if (typeof onControls === "function") onControls(controls);
 		} catch (_error) {
 			// Diagnostics must never make the Display less usable.
 		}
@@ -74,4 +83,24 @@ export function startDisplayDebugControlPolling({
 			if (timer != null) windowRef.clearTimeout?.(timer);
 		},
 	};
+}
+
+export function applyDisplayDebugMapControls({
+	map,
+	controls = displayDebugControls(),
+} = {}) {
+	if (!map) return controls;
+	setElementVisible(map.getContainer?.(), controls.mapContainer);
+	setElementVisible(map.getPane?.("tilePane"), controls.tilePane);
+	setElementVisible(map.getPane?.("overlayPane"), controls.overlayPane);
+	setElementVisible(map.getPane?.("shadowPane"), controls.shadowPane);
+	setElementVisible(map.getPane?.("markerPane"), controls.markerPane);
+	setElementVisible(map.getPane?.("tooltipPane"), controls.tooltipPane);
+	setElementVisible(map.getPane?.("popupPane"), controls.popupPane);
+	return controls;
+}
+
+function setElementVisible(element, visible) {
+	if (!element?.style) return;
+	element.style.visibility = visible === false ? "hidden" : "";
 }

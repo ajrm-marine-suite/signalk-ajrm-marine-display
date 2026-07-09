@@ -2,6 +2,10 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.26` extends transient Signal K debug controls so the map container
+and individual Leaflet panes can be hidden while investigating browser frame
+stalls.
+
 Version `0.5.25` adds transient Signal K debug controls for toggling Display
 target rendering features during browser diagnostics.
 

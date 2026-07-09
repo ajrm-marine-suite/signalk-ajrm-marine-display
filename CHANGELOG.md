@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.26
+
+- Extend transient Display debug controls to hide the map container and
+  individual Leaflet panes while investigating browser frame stalls.
+
 ## 0.5.25
 
 - Add transient Signal K debug controls for toggling Display target rendering
