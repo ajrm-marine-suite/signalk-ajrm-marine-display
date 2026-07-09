@@ -264,6 +264,7 @@ module.exports = function ajrmMarineDisplay(app) {
       layers: entry.sample.counts?.layerCount,
       replayActive: entry.sample.replayActive,
       replayPaused: entry.sample.replayPaused,
+      skippedRefreshes: entry.sample.skippedRefreshes,
       slowest: slowestPhaseText(entry.sample.slowestPhases),
       userAgent: entry.userAgent,
     });

@@ -114,6 +114,7 @@ test("refresh debug sample records simulator-relevant counts and phases", async 
 	await controller.refresh();
 
 	assert.equal(samples.length, 1);
+	assert.equal(samples[0].skippedRefreshes, 0);
 	assert.equal(samples[0].counts.vessels, 1);
 	assert.equal(samples[0].counts.targets, 1);
 	assert.equal(samples[0].counts.boatMarkers, 1);
@@ -121,4 +122,56 @@ test("refresh debug sample records simulator-relevant counts and phases", async 
 	assert.equal(samples[0].replayActive, false);
 	assert.equal(samples[0].phases["fetch-vessels"], 1);
 	assert.equal(samples[0].phases["render-ui"], 1);
+});
+
+test("refresh debug sample records skipped overlapping refreshes", async () => {
+	const samples = [];
+	const controller = createAppRefreshController({
+		map: {
+			attributionControl: { setPrefix() {} },
+			eachLayer() {},
+		},
+		getHttpResponse: async (url) => {
+			if (url === "/signalk/v1/api/vessels") return {};
+			if (url === "/signalk/v1/api/atons") return {};
+			if (url.startsWith("/signalk/v1/api/ajrmMarineDisplay/getTargets")) return {};
+			if (url === "/signalk/v1/api/ajrmMarineDisplay/uiState") return {};
+			throw new Error(`Unexpected URL ${url}`);
+		},
+		targets: new Map(),
+		getSelfMmsi: () => "self",
+		setSelfTarget() {},
+		targetSilence: { applyInitialMuteData() {} },
+		serverAlertEvents: { refresh: async () => {} },
+		alertPopup: { show() {} },
+		initialPluginTargets: {},
+		updateUI() {},
+		ageOutOldTargets: () => 0,
+		removeMissingTargets() {},
+		resetTargetCounts() {},
+		getAlarmTargetCount: () => 0,
+		targetMaxAge: 1800,
+		ageOutEnabled: true,
+		showAlarmsInterval: 60000,
+		replayStatusControls: {},
+		connectionStatusControls: {},
+		publishUiState() {},
+		projectionFallbackEnabled: () => false,
+		refreshDebug: {
+			start() {
+				return {
+					phase(_name, fn) {
+						return fn();
+					},
+					finish(sample) {
+						samples.push(sample);
+					},
+				};
+			},
+		},
+	});
+
+	await controller.refresh({ skippedRefreshes: 3 });
+
+	assert.equal(samples[0].skippedRefreshes, 3);
 });

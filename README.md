@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.23` prevents overlapping browser refresh cycles and includes
+skipped-overlap counts in refresh diagnostics.
+
 Version `0.5.22` emits periodic browser refresh diagnostic samples through
 Signal K plugin debug logging when diagnostics are enabled.
 

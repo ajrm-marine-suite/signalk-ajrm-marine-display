@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.5.23
+
+- Prevent overlapping browser refresh cycles when a previous refresh takes
+  longer than the configured interval.
+- Include skipped-overlap counts in Display refresh diagnostics.
+
 ## 0.5.22
 
 - Emit periodic Display browser refresh diagnostic samples through Signal K

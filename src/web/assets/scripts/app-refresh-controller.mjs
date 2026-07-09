@@ -43,7 +43,7 @@ export function createAppRefreshController({
 	let lastSuccessfulConnectionAt = null;
 	const { fetchRefreshVessels } = createRefreshDataFetcher({ getHttpResponse });
 
-	async function refresh() {
+	async function refresh({ skippedRefreshes = 0 } = {}) {
 		const startTime = new Date();
 		const debug = refreshDebug.start();
 		let vessels;
@@ -161,6 +161,7 @@ export function createAppRefreshController({
 			debug.finish({
 				replayActive: replayStatus.active === true,
 				replayPaused: replayStatus.paused === true,
+				skippedRefreshes,
 				removedMissing: removedMmsis.length,
 				agedOut,
 				allowProjectionFallback,
