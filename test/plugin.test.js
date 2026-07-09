@@ -200,7 +200,7 @@ test("Signal K compatibility API exposes runtime Display debug controls", async 
     { json(value) { responses.push(value); } },
   );
   await routes.get("POST /ajrmMarineDisplay/debugControls")(
-    { body: { footprints: false, labels: false, tilePane: false } },
+    { body: { footprints: false, labels: false, rangeRings: false, tilePane: false } },
     { json(value) { responses.push(value); } },
   );
   await routes.get("GET /ajrmMarineDisplay/debugControls")(
@@ -211,11 +211,13 @@ test("Signal K compatibility API exposes runtime Display debug controls", async 
   assert.equal(responses[0].controls.footprints, true);
   assert.equal(responses[1].controls.footprints, false);
   assert.equal(responses[1].controls.labels, false);
+  assert.equal(responses[1].controls.rangeRings, false);
   assert.equal(responses[1].controls.tilePane, false);
   assert.equal(responses[1].controls.markerUpdates, true);
   assert.equal(responses[2].controls.footprints, false);
   assert.match(debugMessages[0], /event=display\.debug\.controls/);
   assert.match(debugMessages[0], /footprints=false/);
+  assert.match(debugMessages[0], /rangeRings=false/);
   assert.match(debugMessages[0], /tilePane=false/);
 });
 

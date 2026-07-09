@@ -34,8 +34,9 @@ export function createTargetMapRendererViewController({
 		});
 	}
 
-	function drawRangeRings() {
+	function drawRangeRings({ enabled = true } = {}) {
 		drawRendererRangeRings({
+			enabled,
 			rangeRings,
 			selfTarget: getSelfTarget(),
 		});

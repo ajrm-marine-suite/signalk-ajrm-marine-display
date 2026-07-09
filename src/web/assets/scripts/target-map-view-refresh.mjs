@@ -25,7 +25,7 @@ export function refreshMapViewForSelfTarget({
 
 		if (disableMapPanTo) return;
 
-		drawRangeRings();
+		drawRangeRings({ enabled: debugControls.rangeRings !== false });
 		if (debugControls.autoCharts !== false) autoCharts.update();
 		if (debugControls.harbourLayer !== false) updateHarbourDisplay();
 		return;

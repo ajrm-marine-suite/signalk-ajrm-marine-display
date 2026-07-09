@@ -17,7 +17,8 @@ export function updateRendererTargetTable({
 	});
 }
 
-export function drawRendererRangeRings({ rangeRings, selfTarget }) {
+export function drawRendererRangeRings({ rangeRings, selfTarget, enabled = true }) {
+	if (!enabled) return rangeRings.clear?.() ?? false;
 	return rangeRings.draw(selfTarget);
 }
 

@@ -57,7 +57,15 @@ export function createRangeRingsController({ map, metersPerNm, leaflet = L }) {
 		return true;
 	}
 
-	return { draw };
+	function clear() {
+		if (lastSignature === "") return false;
+		rangeRings.removeFrom(map);
+		rangeRings.clearLayers();
+		lastSignature = "";
+		return true;
+	}
+
+	return { clear, draw };
 }
 
 export function rangeRingStep(mapHeightInNauticalMiles) {

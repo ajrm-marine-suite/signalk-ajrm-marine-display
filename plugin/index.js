@@ -27,6 +27,7 @@ const DEFAULT_DEBUG_CONTROLS = Object.freeze({
   footprints: true,
   labels: true,
   targetTable: true,
+  rangeRings: true,
   autoCharts: true,
   harbourLayer: true,
   mapContainer: true,

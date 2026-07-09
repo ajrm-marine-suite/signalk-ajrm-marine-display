@@ -1,4 +1,5 @@
 import { shouldPauseFollowAfterMove } from "./map-follow-movement-decision.mjs";
+import { displayDebugControls } from "./display-debug-controls.mjs";
 
 export {
 	mapCentersEqual,
@@ -60,7 +61,7 @@ export function registerMapFollowMoveEvents({
 	});
 
 	map.on("zoomend", () => {
-		drawRangeRings();
+		drawRangeRings({ enabled: displayDebugControls().rangeRings !== false });
 		labelCollision.update();
 		scheduleAutoChartUpdate();
 	});

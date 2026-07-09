@@ -16,6 +16,7 @@ test("Display debug controls default every render feature on", () => {
 		footprints: true,
 		labels: true,
 		targetTable: true,
+		rangeRings: true,
 		autoCharts: true,
 		harbourLayer: true,
 		mapContainer: true,

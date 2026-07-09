@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import test from "node:test";
+import { setDisplayDebugControls } from "../src/web/assets/scripts/display-debug-controls.mjs";
 import { registerMapFollowMoveEvents } from "../src/web/assets/scripts/map-follow-events.mjs";
 
 function setup() {
+	setDisplayDebugControls({});
 	const handlers = {};
 	const calls = [];
 	const scheduled = [];
@@ -27,7 +29,7 @@ function setup() {
 	const labelCollision = {
 		update: () => calls.push(["labelCollision.update"]),
 	};
-	const drawRangeRings = () => calls.push(["drawRangeRings"]);
+	const drawRangeRings = (options) => calls.push(["drawRangeRings", options]);
 
 	registerMapFollowMoveEvents({
 		map,
@@ -90,10 +92,25 @@ test("registered zoom event refreshes range rings, labels, and auto charts", () 
 	handlers.zoomend();
 
 	assert.deepEqual(calls, [
-		["drawRangeRings"],
+		["drawRangeRings", { enabled: true }],
 		["labelCollision.update"],
 		["autoCharts.update"],
 	]);
+});
+
+test("registered zoom event clears range rings when debug control disables them", () => {
+	setDisplayDebugControls({ rangeRings: false });
+	const { calls, handlers } = setup();
+	setDisplayDebugControls({ rangeRings: false });
+
+	handlers.zoomend();
+
+	assert.deepEqual(calls, [
+		["drawRangeRings", { enabled: false }],
+		["labelCollision.update"],
+		["autoCharts.update"],
+	]);
+	setDisplayDebugControls({});
 });
 
 test("registered map events coalesce auto chart updates in one scheduled frame", () => {

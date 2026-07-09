@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.5.27` adds a range-rings debug control to isolate SVG overlay work
+from the rest of the Leaflet overlay pane during browser frame-stall diagnostics.
+
 Version `0.5.26` extends transient Signal K debug controls so the map container
 and individual Leaflet panes can be hidden while investigating browser frame
 stalls.

@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.5.27
+
+- Add a range-rings debug control to isolate SVG overlay work from the rest of
+  the Leaflet overlay pane during browser frame-stall diagnostics.
+
 ## 0.5.26
 
 - Extend transient Display debug controls to hide the map container and
