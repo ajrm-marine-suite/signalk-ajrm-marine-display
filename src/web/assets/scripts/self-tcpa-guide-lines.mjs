@@ -30,7 +30,11 @@ export function updateSelfTcpaGuideLines({
 	const tcpaLookahead = finiteOr(profile.tcpaLookahead, 1);
 	const start = [target.latitude, target.longitude];
 	const sog = finiteOr(target.sog, 0);
-	if (sog <= 0) {
+	const cog =
+		target.cog === null || target.cog === undefined || target.cog === ""
+			? null
+			: finiteOr(target.cog, null);
+	if (sog <= 0 || cog === null) {
 		hideSelfTcpaGuideLines(guides);
 		return true;
 	}
@@ -38,7 +42,7 @@ export function updateSelfTcpaGuideLines({
 	for (const guide of guides) {
 		const criteria = criteriaForSize(profile, "warning", guide.key);
 		const seconds = Math.max(0, finiteOr(criteria.tcpa, 0) * tcpaLookahead);
-		const end = projectedLocation(start, target.cog || 0, sog * seconds);
+		const end = projectedLocation(start, cog, sog * seconds);
 		updateGuideLine({
 			guide,
 			map,

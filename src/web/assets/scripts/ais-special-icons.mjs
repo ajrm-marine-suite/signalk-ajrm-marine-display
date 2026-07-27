@@ -52,7 +52,8 @@ export function getSelfIcon(
 	var boxSize = variant === "boat" ? 60 : 40;
 	var strokeWidth = 2;
 	const center = boxSize / 2;
-	const heading = toDegrees(target.hdg || target.cog) || 0;
+	const headingDegrees = toDegrees(target.hdg ?? target.cog);
+	const heading = Number.isFinite(headingDegrees) ? headingDegrees : 0;
 	const shape = getSelfIconShape({
 		boxSize,
 		center,

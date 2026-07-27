@@ -1,5 +1,9 @@
 import { applyTargetClassification } from "./target-classification.mjs";
 
+const NAVIGATION_REFERENCE_CONTRACT = "ajrm-marine-navigation-reference";
+const NAVIGATION_REFERENCE_SCHEMA_VERSION = 1;
+const NAVIGATION_REFERENCE_MAX_AGE_MS = 15_000;
+
 export function createTarget(mmsi) {
 	return {
 		mmsi: String(mmsi),
@@ -34,6 +38,7 @@ export function createTarget(mmsi) {
 		eta: "---",
 		isVirtual: 0,
 		isOffPosition: 0,
+		navigationReference: null,
 	};
 }
 
@@ -165,9 +170,80 @@ export function applySnapshotToTarget(target, vessel, fallbackId) {
 	target.eta = signalKText(vessel.navigation?.destination?.eta) ?? "---";
 	target.isVirtual = signalKBoolean(vessel.virtual) ? 1 : 0;
 	target.isOffPosition = signalKBoolean(vessel.offPosition) ? 1 : 0;
+	applyNavigationReferenceSnapshot(target, vessel);
 	applyTargetClassification(target);
 
 	return target;
+}
+
+export function applyNavigationReferenceSnapshot(target, vessel) {
+	const container = vessel?.plugins?.ajrmMarineNavigationReference;
+	const providerPresent = Boolean(
+		container &&
+			typeof container === "object" &&
+			Object.hasOwn(container, "state"),
+	);
+	if (!providerPresent) {
+		target.navigationReference = null;
+		return false;
+	}
+
+	const state = signalKValue(container.state);
+	const validContract =
+		state &&
+		typeof state === "object" &&
+		state.contract === NAVIGATION_REFERENCE_CONTRACT &&
+		state.schemaVersion === NAVIGATION_REFERENCE_SCHEMA_VERSION;
+	if (!validContract) {
+		clearProviderOwnMotion(target);
+		target.navigationReference = {
+			present: true,
+			valid: false,
+			reason: "provider-contract-invalid",
+		};
+		return true;
+	}
+
+	const updatedAtMs = Date.parse(state.updatedAt);
+	if (
+		!Number.isFinite(updatedAtMs) ||
+		Math.abs(Date.now() - updatedAtMs) > NAVIGATION_REFERENCE_MAX_AGE_MS
+	) {
+		clearProviderOwnMotion(target);
+		target.navigationReference = {
+			present: true,
+			valid: false,
+			reason: Number.isFinite(updatedAtMs)
+				? "provider-state-stale"
+				: "provider-updated-at-invalid",
+		};
+		return true;
+	}
+
+	const position = navigationReferencePosition(state.position);
+	const groundTrack = navigationReferenceGroundTrack(state.groundTrack);
+	const heading = navigationReferenceMeasurement(state.bowHeadingTrue);
+	target.latitude = position?.value.latitude;
+	target.longitude = position?.value.longitude;
+	target.lastSeenDate = validDate(position?.timestamp);
+	target.cog = groundTrack?.courseTrue.value;
+	target.sog = groundTrack?.speedOverGround.value;
+	target.hdg = heading?.value;
+	target.navigationReference = {
+		present: true,
+		valid: true,
+		contract: state.contract,
+		schemaVersion: state.schemaVersion,
+		updatedAt: state.updatedAt,
+		status: signalKText(state.status) || null,
+		position,
+		groundTrack,
+		bowHeadingTrue: heading,
+		clockReference: navigationReferenceMeasurement(state.clockReference, {
+			includeKind: true,
+		}),
+	};
+	return true;
 }
 
 export function applyDeltaValue(target, { path, value, timestamp }) {
@@ -275,4 +351,114 @@ export function applyDeltaValue(target, { path, value, timestamp }) {
 
 	applyTargetClassification(target);
 	return target;
+}
+
+function clearProviderOwnMotion(target) {
+	target.latitude = undefined;
+	target.longitude = undefined;
+	target.lastSeenDate = undefined;
+	target.cog = undefined;
+	target.sog = undefined;
+	target.hdg = undefined;
+}
+
+function navigationReferencePosition(input) {
+	const value = signalKValue(input?.value);
+	const latitude = finiteNumber(value?.latitude);
+	const longitude = finiteNumber(value?.longitude);
+	const measurement = navigationReferenceEvidence(input);
+	if (
+		latitude === undefined ||
+		longitude === undefined ||
+		Math.abs(latitude) > 90 ||
+		Math.abs(longitude) > 180 ||
+		!measurement
+	) {
+		return null;
+	}
+	return {
+		...measurement,
+		value: { latitude, longitude },
+	};
+}
+
+function navigationReferenceGroundTrack(input) {
+	if (!input || typeof input !== "object" || input.coherent !== true) return null;
+	const courseTrue = navigationReferenceMeasurement(input.courseTrue);
+	const speedOverGround = navigationReferenceMeasurement(input.speedOverGround);
+	if (!courseTrue || !speedOverGround) return null;
+	if (
+		!courseTrue.source ||
+		courseTrue.source !== speedOverGround.source ||
+		input.source !== courseTrue.source
+	) {
+		return null;
+	}
+	return {
+		source: courseTrue.source,
+		timestamp: validTimestamp(input.timestamp) ? input.timestamp : null,
+		ageMs: finiteNonNegative(input.ageMs),
+		gpsDependent:
+			typeof input.gpsDependent === "boolean" ? input.gpsDependent : null,
+		coherent: true,
+		quality:
+			input.quality && typeof input.quality === "object"
+				? { ...input.quality }
+				: null,
+		courseTrue,
+		speedOverGround,
+	};
+}
+
+function navigationReferenceMeasurement(input, { includeKind = false } = {}) {
+	const value = finiteNumber(input?.value);
+	const evidence = navigationReferenceEvidence(input);
+	if (value === undefined || !evidence) return null;
+	return {
+		...evidence,
+		value,
+		...(includeKind && typeof input.kind === "string"
+			? { kind: input.kind }
+			: {}),
+	};
+}
+
+function navigationReferenceEvidence(input) {
+	if (!input || typeof input !== "object") return null;
+	const timestamp = validTimestamp(input.timestamp) ? input.timestamp : null;
+	const source = signalKText(input.source);
+	const method = signalKText(input.method);
+	if (!timestamp || !source || !method) return null;
+	return {
+		source,
+		sourceKind: signalKText(input.sourceKind) || null,
+		timestamp,
+		ageMs: finiteNonNegative(input.ageMs),
+		method,
+		uncertaintyRad: finiteNonNegative(input.uncertaintyRad),
+		gpsDependent:
+			typeof input.gpsDependent === "boolean" ? input.gpsDependent : null,
+		originalTimestamp: validTimestamp(input.originalTimestamp)
+			? input.originalTimestamp
+			: null,
+	};
+}
+
+function finiteNumber(value) {
+	if (value === null || value === undefined || value === "") return undefined;
+	const number = Number(value);
+	return Number.isFinite(number) ? number : undefined;
+}
+
+function finiteNonNegative(value) {
+	const number = finiteNumber(value);
+	return number !== undefined && number >= 0 ? number : null;
+}
+
+function validTimestamp(value) {
+	return Number.isFinite(Date.parse(value));
+}
+
+function validDate(value) {
+	return validTimestamp(value) ? new Date(value) : undefined;
 }

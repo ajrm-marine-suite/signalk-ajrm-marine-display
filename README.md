@@ -2,6 +2,15 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.1` consumes AJRM Marine Navigation Reference schema v1 for
+own-vessel position, coherent COG/SOG, and qualified bow heading. It preserves
+the provider's source and clock-reference evidence, keeps valid 0° heading
+values, and suppresses course/TCPA guides when no COG is available instead of
+drawing them north. Provider schema version 1 must be numeric, and `updatedAt`
+must be valid and no more than 15 seconds old. A present malformed, unsupported,
+or stale provider is withheld rather than replaced with unrelated raw
+navigation values.
+
 Version `0.5.28` fixes CPA limit ring radii so metre profile thresholds are not
 multiplied by metres-per-nautical-mile, avoiding huge map overlays when
 simulator targets are active.
@@ -161,7 +170,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.5.15 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.1 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.6.1
+
+- Use AJRM Marine Navigation Reference schema v1 as the authoritative
+  own-vessel position, coherent COG/SOG, and qualified bow-heading source while
+  retaining its source, freshness, uncertainty, and clock-reference provenance.
+- Withhold mixed raw own-motion values when the provider is present but cannot
+  supply a valid value.
+- Require strict numeric schema version 1 and a valid provider `updatedAt`
+  within 15 seconds; withhold malformed, unsupported, or stale provider states
+  instead of falling back to unrelated raw navigation.
+- Preserve a valid zero-radian heading instead of falling through to COG, and
+  hide projected course/TCPA guides when COG is unavailable instead of drawing
+  a false northbound line.
+
 ## 0.5.28
 
 - Fix Display CPA limit rings to use metre profile thresholds directly instead

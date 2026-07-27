@@ -8,7 +8,12 @@ export function setSelectedCourseLine({
 	cpaMarker,
 	map,
 }) {
-	const projectedCpaLocation = projectedLocation(start, cog || 0, distance || 0);
+	if (!finiteNumber(cog) || !finiteNumber(distance) || distance < 0) {
+		clearCourseLine(line);
+		cpaMarker?.removeFrom?.(map);
+		return false;
+	}
+	const projectedCpaLocation = projectedLocation(start, cog, distance);
 	const state = {
 		kind: "selected",
 		start,
@@ -31,6 +36,7 @@ export function setSelectedCourseLine({
 
 	setMarkerLatLngIfChanged(cpaMarker, projectedCpaLocation);
 	if (!map.hasLayer(cpaMarker)) cpaMarker.addTo(map);
+	return true;
 }
 
 export function setProjectedCourseLine({
@@ -40,11 +46,11 @@ export function setProjectedCourseLine({
 	distance,
 	color,
 }) {
-	if ((distance || 0) <= 0) {
+	if (!finiteNumber(cog) || !finiteNumber(distance) || distance <= 0) {
 		clearCourseLine(line);
-		return;
+		return false;
 	}
-	const end = projectedLocation(start, cog || 0, distance || 0);
+	const end = projectedLocation(start, cog, distance);
 	const state = {
 		kind: "projected",
 		start,
@@ -53,7 +59,7 @@ export function setProjectedCourseLine({
 		opacity: 0.7,
 		dashArray: "20 10",
 	};
-	if (sameCourseLineState(line._ajrmMarineCourseLineState, state)) return;
+	if (sameCourseLineState(line._ajrmMarineCourseLineState, state)) return false;
 	line.setLatLngs([start, end]);
 	line.setStyle({
 		color,
@@ -62,6 +68,7 @@ export function setProjectedCourseLine({
 		dashArray: "20 10",
 	});
 	line._ajrmMarineCourseLineState = state;
+	return true;
 }
 
 export function clearCourseLine(line) {
@@ -89,4 +96,13 @@ function sameCourseLineState(previous, next) {
 
 function sameLatLng(previous, next) {
 	return previous?.[0] === next?.[0] && previous?.[1] === next?.[1];
+}
+
+function finiteNumber(value) {
+	return (
+		value !== null &&
+		value !== undefined &&
+		value !== "" &&
+		Number.isFinite(Number(value))
+	);
 }

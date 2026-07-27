@@ -56,9 +56,10 @@ export function getClassBIcon(target, isLarge, color) {
 	var boatLength = boxSize - 2 * margin;
 	var boatCenterOffset = margin / 2;
 	var boatBeam = boatLength / boatLengthToBeam;
+	const heading = targetHeadingDegrees(target);
 	const SVGIcon = `
     <svg width="${boxSize}px" height="${boxSize}px" pointerEvents="none">
-        <g transform="rotate(${toDegrees(target.hdg || target.cog) || 0} ${boxSize / 2} ${boxSize / 2})">
+        <g transform="rotate(${heading} ${boxSize / 2} ${boxSize / 2})">
             <polygon
                 points="${boxSize / 2 - boatBeam / 2},  ${boxSize / 2 + boatLength / 2 - boatCenterOffset}
                         ${boxSize / 2},                 ${boxSize / 2 - boatLength / 2 - boatCenterOffset}
@@ -85,9 +86,10 @@ export function getClassAIcon(target, isLarge, color) {
 	var margin = 10;
 	var boatLength = boxSize - 2 * margin;
 	var boatBeam = boatLength / boatLengthToBeam;
+	const heading = targetHeadingDegrees(target);
 	const SVGIcon = `
     <svg width="${boxSize}px" height="${boxSize}px" pointerEvents="none">
-        <g transform="rotate(${toDegrees(target.hdg || target.cog) || 0} ${boxSize / 2} ${boxSize / 2})">
+        <g transform="rotate(${heading} ${boxSize / 2} ${boxSize / 2})">
             <polygon
                 points="
                     ${boxSize / 2 - boatBeam / 2},   ${boxSize / 2 + boatLength / 2}
@@ -108,4 +110,9 @@ export function getClassAIcon(target, isLarge, color) {
     </svg>`;
 
 	return createAisDivIcon({ html: SVGIcon, boxSize });
+}
+
+function targetHeadingDegrees(target) {
+	const heading = toDegrees(target?.hdg ?? target?.cog);
+	return Number.isFinite(heading) ? heading : 0;
 }
