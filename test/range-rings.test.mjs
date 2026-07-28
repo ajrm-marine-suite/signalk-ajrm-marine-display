@@ -5,9 +5,13 @@ globalThis.window = {
 	requestAnimationFrame: (callback) => setTimeout(callback, 0),
 	cancelAnimationFrame: (id) => clearTimeout(id),
 	devicePixelRatio: 1,
-	navigator: { userAgent: "node-test" },
+	navigator: { platform: "", userAgent: "node-test" },
 	screen: {},
 };
+Object.defineProperty(globalThis, "navigator", {
+	configurable: true,
+	value: globalThis.window.navigator,
+});
 globalThis.document = {
 	documentElement: { style: {} },
 	createElement: () => ({ style: {}, getContext: () => null }),
