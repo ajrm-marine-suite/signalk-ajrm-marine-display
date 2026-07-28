@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.6
+
+- Expose Display's active-alert panel projection through its in-process runtime
+  API so suite BITE can verify that resolved historical alerts are absent.
+
 ## 0.6.5
 
 - Keep the bottom Active Alerts panel sourced exclusively from the

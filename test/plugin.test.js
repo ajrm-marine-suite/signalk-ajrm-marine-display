@@ -42,6 +42,27 @@ test("plugin exposes an enabled-by-default Display setting", () => {
   assert.equal(plugin.getOpenApi().info.version, packageInfo.version);
 });
 
+test("runtime API exposes the active-only alert panel projection for BITE", () => {
+  const paths = {
+    "plugins.ajrmMarineNotifications": {
+      active: [],
+      recentActivity: [{
+        eventId: "resolved-traffic",
+        lifecycle: "clear",
+        message: "Historical traffic advisory.",
+      }],
+    },
+  };
+  const appExtras = {};
+  const { plugin } = harness(paths, {}, {}, appExtras);
+  plugin.start({});
+  const api = globalThis[Symbol.for("mcdonaldajr.ajrmMarineDisplayApi")];
+  assert.equal(typeof api?.panelEvents, "function");
+  assert.deepEqual(api.panelEvents().entries, []);
+  plugin.stop();
+  assert.equal(globalThis[Symbol.for("mcdonaldajr.ajrmMarineDisplayApi")], undefined);
+});
+
 test("Signal K compatibility API returns Harbour region geometry", async () => {
   const geometry = {
     type: "Polygon",

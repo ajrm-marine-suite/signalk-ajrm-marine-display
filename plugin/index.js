@@ -20,6 +20,9 @@ const OBSERVATION_SOURCE = "ajrm-marine-display";
 const AJRM_MARINE_CAPTURE_API_REGISTRY = Symbol.for(
   "mcdonaldajr.ajrmMarineCaptureApi",
 );
+const AJRM_MARINE_DISPLAY_API_REGISTRY = Symbol.for(
+  "mcdonaldajr.ajrmMarineDisplayApi",
+);
 const DISTANCE_METADATA_PATHS = [
   "navigation.closestApproach.distance",
   "navigation.courseGreatCircle.distance",
@@ -114,6 +117,15 @@ module.exports = function ajrmMarineDisplay(app) {
       updatedAt: new Date().toISOString(),
     };
     publish(status);
+    const api = {
+      pluginId: plugin.id,
+      status: () => status,
+      panelEvents: () => panelEvents(brokerProjection()),
+      alertEvents: () => ({ events: alertEvents(brokerProjection()) }),
+      uiState: () => currentUiState(),
+    };
+    app.ajrmMarineDisplayApi = api;
+    globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY] = api;
     app.setPluginStatus(
       status.enabled
         ? `Enabled v${packageInfo.version}; AJRM Marine Traffic display`
@@ -122,6 +134,12 @@ module.exports = function ajrmMarineDisplay(app) {
   };
 
   plugin.stop = () => {
+    if (app.ajrmMarineDisplayApi?.pluginId === plugin.id) {
+      delete app.ajrmMarineDisplayApi;
+    }
+    if (globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY]?.pluginId === plugin.id) {
+      delete globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY];
+    }
     status = null;
   };
 
