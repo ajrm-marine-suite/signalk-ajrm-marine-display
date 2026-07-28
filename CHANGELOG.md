@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.5
+
+- Keep the bottom Active Alerts panel sourced exclusively from the
+  Notifications broker's active projection.
+- Do not substitute resolved recent activity when no active alert exists.
+
 ## 0.6.4
 
 - Drive browser announcements only from explicit broker audio-delivery events.

@@ -139,6 +139,39 @@ test("Notifications Plus remains the semantic owner of Display alerts", () => {
   assert.equal(panelEvents(broker).entries[0].message, "Collision alarm from Ferry Alpha.");
 });
 
+test("Active Alerts panel excludes resolved recent activity", () => {
+  const result = panelEvents({
+    active: [],
+    recentActivity: [
+      {
+        eventId: "resolved-traffic",
+        lifecycle: "resolved",
+        priority: { level: "warning" },
+        presentation: {
+          message: "Traffic advisory from KERRY.",
+          category: "cpa",
+        },
+      },
+      {
+        eventId: "resolved-instrument",
+        lifecycle: "resolved",
+        priority: { level: "information" },
+        presentation: {
+          message: "Engine room temperature rising.",
+          category: "instrument-alert",
+        },
+      },
+    ],
+  });
+
+  assert.deepEqual(result.entries, []);
+  assert.deepEqual(result.summary, {
+    count: 0,
+    hasActiveAlerts: false,
+    hasOnlyInfoMessages: true,
+  });
+});
+
 test("announcement feed includes the immediate audio event before resolution", () => {
   const immediate = {
     eventId: "audio-now",

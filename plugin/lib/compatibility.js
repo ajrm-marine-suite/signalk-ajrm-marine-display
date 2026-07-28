@@ -130,30 +130,17 @@ function alertEvents(brokerProjection) {
 
 function panelEvents(brokerProjection) {
   const active = alertEvents(brokerProjection).slice(0, 3);
-  const recent = Array.isArray(brokerProjection?.recentActivity)
-    ? brokerProjection.recentActivity
-    : [];
-  const entries = active.length
-    ? active.map((event) => ({
-        id: event.id,
-        severity: event.uiSeverity,
-        state: event.state,
-        category: event.category,
-        message: event.message,
-        source: "active-alert",
-        ts: event.ts,
-        uiRank: event.uiRank,
-        uiOrder: event.uiOrder,
-      }))
-    : recent.slice(0, 3).map((entry, index) => ({
-        id: String(entry?.eventId || `recent-${index}`),
-        severity: "info",
-        state: String(entry?.priority?.level || "normal"),
-        category: String(entry?.presentation?.category || "system"),
-        message: String(entry?.presentation?.message || ""),
-        source: "recent-message",
-        ts: entry?.timestamp || "",
-      }));
+  const entries = active.map((event) => ({
+    id: event.id,
+    severity: event.uiSeverity,
+    state: event.state,
+    category: event.category,
+    message: event.message,
+    source: "active-alert",
+    ts: event.ts,
+    uiRank: event.uiRank,
+    uiOrder: event.uiOrder,
+  }));
   return {
     serverTime: brokerProjection?.serverTime || new Date().toISOString(),
     entries,
