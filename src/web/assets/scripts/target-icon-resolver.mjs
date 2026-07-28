@@ -13,6 +13,7 @@ export function targetIconFor({
 	target,
 	selfMmsi,
 	selfIconVariant = "rings",
+	selfIconOrientation = "heading",
 	selfIconFillColor = "#ff00ff",
 	selfIconScalePercent = 100,
 	isLarge = false,
@@ -24,6 +25,7 @@ export function targetIconFor({
 			selfIconVariant,
 			selfIconFillColor,
 			selfIconScalePercent,
+			selfIconOrientation,
 		);
 	}
 	if (isSpecialSafetyMmsi(target.mmsi)) {

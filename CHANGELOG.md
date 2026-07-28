@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.6.3
+
+- Add a browser-local own-vessel icon direction setting for Heading or COG.
+- In Heading mode, use qualified bow heading and explicitly fall back to COG
+  only when heading is unavailable.
+- Render a neutral own-vessel symbol rather than false north when the selected
+  direction is unavailable.
+- Keep standard projected tracks, selected-target course lines, and profile
+  TCPA guide lines tied to COG regardless of the icon direction setting.
+
 ## 0.6.2
 
 - Render evidence-backed AIS Class A, Class B, and unknown targets instead of

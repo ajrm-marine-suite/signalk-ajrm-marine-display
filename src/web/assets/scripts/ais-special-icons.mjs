@@ -3,6 +3,7 @@ import { toDegrees } from "../../../shared/ais-utils.mjs";
 
 const SELF_ICON_FILL_OPACITY = "0.6";
 const SELF_ICON_DOT_FILL_OPACITY = "0.7";
+const DIRECTIONAL_SELF_ICON_VARIANTS = new Set(["triangle", "boat", "dot"]);
 
 export function getBlueBoxIcon() {
 	var boxSize = 80;
@@ -49,14 +50,20 @@ export function getSelfIcon(
 	variant = "rings",
 	fillColor = "#ff00ff",
 	scalePercent = 100,
+	orientation = "heading",
 ) {
+	const headingDegrees = toDegrees(resolveSelfIconDirection(target, orientation));
+	const hasDirection = Number.isFinite(headingDegrees);
+	const displayVariant =
+		hasDirection || !DIRECTIONAL_SELF_ICON_VARIANTS.has(variant)
+			? variant
+			: "rings";
 	const baseBoxSize = variant === "boat" ? 60 : 40;
 	const boxSize = Math.round(
 		baseBoxSize * normalizeSelfIconScale(scalePercent),
 	);
 	var strokeWidth = 2;
 	const center = baseBoxSize / 2;
-	const headingDegrees = toDegrees(target.hdg ?? target.cog);
 	const heading = Number.isFinite(headingDegrees) ? headingDegrees : 0;
 	const shape = getSelfIconShape({
 		boxSize: baseBoxSize,
@@ -64,7 +71,7 @@ export function getSelfIcon(
 		fillColor,
 		heading,
 		strokeWidth,
-		variant,
+		variant: displayVariant,
 	});
 
 	const SVGIcon = `
@@ -80,6 +87,12 @@ export function getSelfIcon(
     </svg>`;
 
 	return createAisDivIcon({ html: SVGIcon, boxSize });
+}
+
+function resolveSelfIconDirection(target, orientation) {
+	const cog = Number.isFinite(target?.cog) ? target.cog : undefined;
+	if (orientation === "cog") return cog;
+	return Number.isFinite(target?.hdg) ? target.hdg : cog;
 }
 
 function normalizeSelfIconScale(value) {

@@ -152,6 +152,7 @@ test("self icon scale is passed only to the own-vessel icon", () => {
 		target: { mmsi: "self" },
 		selfMmsi: "self",
 		selfIconScalePercent: 55,
+		selfIconOrientation: "cog",
 	});
 	targetIconFor({
 		aisIcons,
@@ -162,6 +163,37 @@ test("self icon scale is passed only to the own-vessel icon", () => {
 
 	assert.equal(calls[0][0], "self");
 	assert.equal(calls[0][4], 55);
+	assert.equal(calls[0][5], "cog");
 	assert.equal(calls[1][0], "A");
 	assert.equal(calls[1].length, 4);
+});
+
+test("own-vessel icon orientation changes only the self icon cache key", () => {
+	const selfTarget = { mmsi: "self", hdg: 0, cog: Math.PI / 2 };
+	const otherTarget = { mmsi: "235900016", hdg: 0, cog: Math.PI / 2 };
+
+	assert.notEqual(
+		targetIconCacheKey({
+			target: selfTarget,
+			selfMmsi: "self",
+			selfIconOrientation: "heading",
+		}),
+		targetIconCacheKey({
+			target: selfTarget,
+			selfMmsi: "self",
+			selfIconOrientation: "cog",
+		}),
+	);
+	assert.equal(
+		targetIconCacheKey({
+			target: otherTarget,
+			selfMmsi: "self",
+			selfIconOrientation: "heading",
+		}),
+		targetIconCacheKey({
+			target: otherTarget,
+			selfMmsi: "self",
+			selfIconOrientation: "cog",
+		}),
+	);
 });

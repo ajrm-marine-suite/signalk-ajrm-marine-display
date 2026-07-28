@@ -97,6 +97,7 @@ export function createAppDom() {
 
 	const mapControls = {
 		selfIconVariant: getRequiredElement("selectSelfIconVariant"),
+		selfIconOrientation: getRequiredElement("selectSelfIconOrientation"),
 		selfIconFillColor: getRequiredElement("colorSelfIconFill"),
 		selfIconScalePercent: getRequiredElement("rangeSelfIconScale"),
 		selfIconScaleValue: getRequiredElement("selfIconScaleValue"),

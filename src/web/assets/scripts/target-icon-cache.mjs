@@ -2,6 +2,7 @@ export function targetIconCacheKey({
 	target = {},
 	selfMmsi = "",
 	selfIconVariant = "",
+	selfIconOrientation = "",
 	selfIconFillColor = "",
 	selfIconScalePercent = "",
 	isLarge = false,
@@ -23,6 +24,7 @@ export function targetIconCacheKey({
 		booleanKey(isLarge),
 		valueKey(color),
 		isSelf ? valueKey(selfIconVariant) : "",
+		isSelf ? valueKey(selfIconOrientation) : "",
 		isSelf ? valueKey(selfIconFillColor) : "",
 		isSelf ? valueKey(selfIconScalePercent) : "",
 	].join("|");

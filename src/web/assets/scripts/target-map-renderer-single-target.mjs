@@ -167,6 +167,7 @@ function getSelfIconSettings(getSelfIconVariant) {
 		: { selfIconFillColor: "#ff00ff" };
 	return {
 		selfIconVariant: getSelfIconVariant(),
+		selfIconOrientation: settings.selfIconOrientation,
 		selfIconFillColor: settings.selfIconFillColor,
 		selfIconScalePercent: settings.selfIconScalePercent,
 	};

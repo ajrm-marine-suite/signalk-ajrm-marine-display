@@ -10,6 +10,7 @@ import {
 	setSelectedCourseLine,
 } from "../src/web/assets/scripts/course-lines.mjs";
 import { updateSelfTcpaGuideLines } from "../src/web/assets/scripts/self-tcpa-guide-lines.mjs";
+import { updateTargetCourseLine } from "../src/web/assets/scripts/target-course-line-update.mjs";
 
 globalThis.L = {
 	divIcon(options) {
@@ -27,6 +28,77 @@ test("valid zero-radian heading outranks eastbound COG in vessel icons", () => {
 		assert.match(icon.options.html, /rotate\(0 /);
 		assert.doesNotMatch(icon.options.html, /rotate\(90 /);
 	}
+});
+
+test("own-vessel icon direction can explicitly use heading or COG", () => {
+	const target = { hdg: 0, cog: Math.PI / 2 };
+	const headingIcon = getSelfIcon(
+		target,
+		"triangle",
+		"#ff00ff",
+		100,
+		"heading",
+	);
+	const cogIcon = getSelfIcon(
+		target,
+		"triangle",
+		"#ff00ff",
+		100,
+		"cog",
+	);
+
+	assert.match(headingIcon.options.html, /rotate\(0 /);
+	assert.match(cogIcon.options.html, /rotate\(90 /);
+});
+
+test("heading-oriented own icon explicitly falls back to COG when heading is unavailable", () => {
+	const icon = getSelfIcon(
+		{ cog: Math.PI / 2 },
+		"triangle",
+		"#ff00ff",
+		100,
+		"heading",
+	);
+
+	assert.match(icon.options.html, /rotate\(90 /);
+});
+
+test("heading-oriented own icon rejects a non-finite heading and falls back to COG", () => {
+	const icon = getSelfIcon(
+		{ hdg: Number.NaN, cog: Math.PI / 2 },
+		"triangle",
+		"#ff00ff",
+		100,
+		"heading",
+	);
+
+	assert.match(icon.options.html, /rotate\(90 /);
+});
+
+test("COG-oriented own icon becomes neutral when COG is unavailable", () => {
+	const icon = getSelfIcon(
+		{ hdg: Math.PI / 2 },
+		"triangle",
+		"#ff00ff",
+		100,
+		"cog",
+	);
+
+	assert.doesNotMatch(icon.options.html, /rotate\(/);
+	assert.match(icon.options.html, /<circle/);
+});
+
+test("heading-oriented own icon becomes neutral when heading and COG are unavailable", () => {
+	const icon = getSelfIcon(
+		{},
+		"boat",
+		"#ff00ff",
+		100,
+		"heading",
+	);
+
+	assert.doesNotMatch(icon.options.html, /rotate\(/);
+	assert.match(icon.options.html, /<circle/);
 });
 
 test("own-vessel icon scaling changes only its requested pixel size", () => {
@@ -110,6 +182,41 @@ test("self TCPA guides stay hidden while COG is unavailable", () => {
 
 	assert.equal(handled, true);
 	assert.deepEqual(guide.latLngs, []);
+});
+
+test("own-vessel projected track always receives COG rather than heading", () => {
+	let projected = null;
+	updateTargetCourseLine({
+		target: {
+			mmsi: "self",
+			latitude: 56,
+			longitude: -5,
+			sog: 2,
+			cog: Math.PI / 2,
+			hdg: 0,
+		},
+		selfMmsi: "self",
+		selectedVesselMmsi: null,
+		targets: new Map(),
+		line: lineStub(),
+		blueCircle1: {},
+		blueCircle2: {},
+		map: {},
+		L: {},
+		collisionProfiles: { current: "coastal" },
+		courseProjectionMinutes: 5,
+		vesselIcon: { color: "black" },
+		setProjectedCourseLineFn(value) {
+			projected = value;
+		},
+		updateSelfTcpaGuideLinesFn() {
+			return false;
+		},
+		hideSelfTcpaGuideLinesFn() {},
+	});
+
+	assert.equal(projected.cog, Math.PI / 2);
+	assert.notEqual(projected.cog, 0);
 });
 
 function lineStub() {

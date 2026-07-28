@@ -23,6 +23,7 @@ export function createDisplaySettingsControls(elements = {}, mapControls = {}) {
 	};
 	if (mapControls.selfTcpaGuideMode) {
 		controls.selfIconVariant = mapControls.selfIconVariant;
+		controls.selfIconOrientation = mapControls.selfIconOrientation;
 		controls.selfIconFillColor = mapControls.selfIconFillColor;
 		controls.selfIconScalePercent = mapControls.selfIconScalePercent;
 		controls.selfIconScaleValue = mapControls.selfIconScaleValue;

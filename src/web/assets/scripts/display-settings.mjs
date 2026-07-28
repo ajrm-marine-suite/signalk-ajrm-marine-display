@@ -70,6 +70,7 @@ export function createDisplaySettingsController({
 		if (!controls.selfTcpaGuideMode) return;
 		const settings = loadSelfTcpaGuideSettings();
 		controls.selfIconVariant.value = settings.selfIcon;
+		controls.selfIconOrientation.value = settings.selfIconOrientation;
 		controls.selfIconFillColor.value = settings.selfIconFillColor;
 		controls.selfIconScalePercent.value = String(
 			settings.selfIconScalePercent,
@@ -85,6 +86,7 @@ export function createDisplaySettingsController({
 		if (!controls.selfTcpaGuideMode) return;
 		const settings = saveSelfTcpaGuideSettings({
 			selfIcon: controls.selfIconVariant.value,
+			selfIconOrientation: controls.selfIconOrientation.value,
 			selfIconFillColor: controls.selfIconFillColor.value,
 			selfIconScalePercent: controls.selfIconScalePercent.value,
 			mode: controls.selfTcpaGuideMode.value,
@@ -98,6 +100,7 @@ export function createDisplaySettingsController({
 	function selfTcpaGuideControls() {
 		return [
 			controls.selfIconVariant,
+			controls.selfIconOrientation,
 			controls.selfIconFillColor,
 			controls.selfIconScalePercent,
 			controls.selfTcpaGuideMode,

@@ -1,6 +1,7 @@
 export const SELF_TCPA_GUIDE_DEFAULTS = Object.freeze({
 	mode: "course",
 	selfIcon: "rings",
+	selfIconOrientation: "heading",
 	selfIconFillColor: "#ff00ff",
 	selfIconScalePercent: 100,
 	largeColor: "#000000",
@@ -11,6 +12,7 @@ export const SELF_TCPA_GUIDE_DEFAULTS = Object.freeze({
 export const SELF_TCPA_GUIDE_STORAGE_KEYS = Object.freeze({
 	mode: "selfTcpaGuideMode",
 	selfIcon: "selfIconVariant",
+	selfIconOrientation: "selfIconOrientation",
 	selfIconFillColor: "selfIconFillColor",
 	selfIconScalePercent: "selfIconScalePercent",
 	largeColor: "selfTcpaGuideLargeColor",
@@ -19,6 +21,7 @@ export const SELF_TCPA_GUIDE_STORAGE_KEYS = Object.freeze({
 });
 
 const VALID_MODES = new Set(["course", "tcpa"]);
+const VALID_SELF_ICON_ORIENTATIONS = new Set(["heading", "cog"]);
 const VALID_SELF_ICONS = new Set([
 	"rings",
 	"crosshair",
@@ -34,6 +37,11 @@ export function normalizeSelfTcpaGuideSettings(value = {}) {
 		selfIcon: VALID_SELF_ICONS.has(value.selfIcon)
 			? value.selfIcon
 			: SELF_TCPA_GUIDE_DEFAULTS.selfIcon,
+		selfIconOrientation: VALID_SELF_ICON_ORIENTATIONS.has(
+			value.selfIconOrientation,
+		)
+			? value.selfIconOrientation
+			: SELF_TCPA_GUIDE_DEFAULTS.selfIconOrientation,
 		selfIconFillColor: normalizeColor(
 			value.selfIconFillColor,
 			SELF_TCPA_GUIDE_DEFAULTS.selfIconFillColor,
@@ -51,6 +59,9 @@ export function loadSelfTcpaGuideSettings(storage = localStorage) {
 	return normalizeSelfTcpaGuideSettings({
 		mode: storage.getItem(SELF_TCPA_GUIDE_STORAGE_KEYS.mode),
 		selfIcon: storage.getItem(SELF_TCPA_GUIDE_STORAGE_KEYS.selfIcon),
+		selfIconOrientation: storage.getItem(
+			SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconOrientation,
+		),
 		selfIconFillColor: storage.getItem(
 			SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconFillColor,
 		),
@@ -67,6 +78,10 @@ export function saveSelfTcpaGuideSettings(settings, storage = localStorage) {
 	const normalized = normalizeSelfTcpaGuideSettings(settings);
 	storage.setItem(SELF_TCPA_GUIDE_STORAGE_KEYS.mode, normalized.mode);
 	storage.setItem(SELF_TCPA_GUIDE_STORAGE_KEYS.selfIcon, normalized.selfIcon);
+	storage.setItem(
+		SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconOrientation,
+		normalized.selfIconOrientation,
+	);
 	storage.setItem(
 		SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconFillColor,
 		normalized.selfIconFillColor,

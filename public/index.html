@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.2";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.3";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-BxfFmcWD.js"></script>
+    <script type="module" crossorigin src="./assets/index-BqMrDAwu.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CYPPgTlM.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.2</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.3</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1109,11 +1109,23 @@
                         <select class="form-select" id="selectSelfIconVariant">
                           <option value="rings">Classic rings</option>
                           <option value="crosshair">Crosshair</option>
-                          <option value="triangle">Heading triangle</option>
+                          <option value="triangle">Direction triangle</option>
                           <option value="boat">Boat outline</option>
                           <option value="diamond">Diamond</option>
                           <option value="dot">Position dot</option>
                         </select>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="selectSelfIconOrientation">
+                          Own-vessel icon direction
+                        </label>
+                        <select class="form-select" id="selectSelfIconOrientation">
+                          <option value="heading">Boat heading (COG fallback)</option>
+                          <option value="cog">Course over ground (COG)</option>
+                        </select>
+                        <div class="form-text">
+                          For directional icons, heading aligns the icon with spoken clock positions when a compass heading is available, then explicitly falls back to COG when it is not. If the selected direction is unavailable, the icon becomes neutral instead of pointing north. Projected track lines always use COG.
+                        </div>
                       </div>
                       <div class="mb-3">
                         <label class="form-label" for="colorSelfIconFill">
@@ -1150,14 +1162,14 @@
                       </div>
                       <div class="mb-3">
                         <label class="form-label" for="selectSelfTcpaGuideMode">
-                          Mode
+                          Projected track display
                         </label>
                         <select class="form-select" id="selectSelfTcpaGuideMode">
-                          <option value="course">Standard projected course</option>
+                          <option value="course">Standard COG projected track</option>
                           <option value="tcpa">Profile TCPA guide lines</option>
                         </select>
                         <div class="form-text">
-                          TCPA guide lines use the current profile's warning TCPA for large, medium and small vessels.
+                          All projected lines use COG. TCPA guide lines use the current profile's warning TCPA for large, medium and small vessels.
                         </div>
                       </div>
                       <div class="row g-2">

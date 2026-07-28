@@ -2,6 +2,12 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.3` adds an explicit own-vessel icon direction setting. The icon
+can follow qualified bow heading, with a labelled COG fallback when heading is
+unavailable, or it can always follow COG. Projected track and TCPA guide lines
+remain independently tied to COG. A directional icon becomes neutral rather
+than falsely pointing north when its selected direction is unavailable.
+
 Version `0.6.2` renders only evidence-backed Class A or Class B AIS reports,
 shows unknown class explicitly, clears stale turn arrows on null rate-of-turn
 updates, adds a self-only 50-150% own-vessel icon size control, and adds a
@@ -131,8 +137,10 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Own-vessel follow/recentre and manual chart browsing.
 - Evidence-backed Class A/Class B AIS vessel symbols, an explicit unknown-class
   symbol, and base-station, AtoN and special-safety target symbols.
-- Browser-local own-vessel icon style, colour, and 50-150% size controls that
-  do not resize target vessels.
+- Browser-local own-vessel icon style, heading/COG direction, colour, and
+  50-150% size controls that do not resize target vessels.
+- Own-vessel projected track and TCPA guide lines always use COG, independently
+  of the icon direction setting.
 - Target labels, projected courses, footprints, range rings and CPA overlays.
 - Target table, sorting, selection and detailed vessel information.
 - Bottom alert panel and optional alert popups.
@@ -181,7 +189,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.2 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.3 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
