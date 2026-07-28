@@ -11,3 +11,8 @@ permissions:
 jobs:
   plugin-ci:
     uses: SignalK/signalk-server/.github/workflows/plugin-ci.yml@c86334b331c6e33b57ab1759407d01c15e94c583
+    with:
+      test-command: >-
+        node scripts/validate-scaffold.js &&
+        node --test &&
+        node --check plugin/index.js
