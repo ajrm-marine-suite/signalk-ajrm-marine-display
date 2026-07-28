@@ -119,7 +119,7 @@ test("Notifications Plus remains the semantic owner of Display alerts", () => {
         eventId: "event-1",
         timestamp: "2026-06-20T11:59:59.000Z",
         priority: { level: "alarm", score: 80 },
-        delivery: { visual: true, audio: true },
+        delivery: { visual: true, audio: true, expiresSeconds: 90 },
         presentation: {
           title: "Ferry Alpha",
           label: "Collision alarm",
@@ -134,6 +134,8 @@ test("Notifications Plus remains the semantic owner of Display alerts", () => {
   assert.equal(events[0].uiSeverity, "danger");
   assert.equal(events[0].mmsi, "235000001");
   assert.deepEqual(events[0].methods, ["visual", "sound"]);
+  assert.equal(events[0].shouldAnnounce, true);
+  assert.equal(events[0].audioExpiresAt, "2026-06-20T12:01:29.000Z");
   assert.equal(panelEvents(broker).entries[0].message, "Collision alarm from Ferry Alpha.");
 });
 

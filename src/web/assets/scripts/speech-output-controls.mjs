@@ -27,6 +27,18 @@ export function createSpeechOutputController({
 	let speechSettingsSavePromise = null;
 	let speechSettingsRefreshPromise = null;
 	let muteController;
+	const cancelSpeechWhenBackgrounded = () => {
+		if (
+			window.document?.visibilityState === "hidden" ||
+			(typeof window.document?.hasFocus === "function" &&
+				!window.document.hasFocus())
+		) {
+			window.speechSynthesis?.cancel?.();
+		}
+	};
+	window.addEventListener?.("visibilitychange", cancelSpeechWhenBackgrounded);
+	window.addEventListener?.("blur", cancelSpeechWhenBackgrounded);
+	window.addEventListener?.("pagehide", cancelSpeechWhenBackgrounded);
 
 	function applyServerSpeechOutputSettings(settings) {
 		if (!settings || typeof settings !== "object") return false;

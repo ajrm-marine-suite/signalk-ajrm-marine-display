@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.4
+
+- Drive browser announcements only from explicit broker audio-delivery events.
+- Do not build a native browser speech backlog while the Display tab or window
+  is hidden or unfocused; cancel pending speech when it moves to the background.
+- Queue only one fresh browser utterance at a time and discard expired events
+  instead of speaking them when focus returns.
+
 ## 0.6.3
 
 - Add a browser-local own-vessel icon direction setting for Heading or COG.

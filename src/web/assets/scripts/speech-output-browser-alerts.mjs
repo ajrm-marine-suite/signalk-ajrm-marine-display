@@ -1,5 +1,9 @@
 import { speakAndLogBrowserAlert } from "./browser-speech-actions.mjs";
 import {
+	browserSpeechBusy,
+	browserSpeechEventExpired,
+	browserSpeechForeground,
+	cancelBrowserSpeech,
 	shouldSpeakBrowserAlert,
 	shouldSpeakBrowserSpeechEvent,
 	shouldUseBrowserSpeech,
@@ -66,22 +70,50 @@ export async function speakBrowserAlertsForOutput({
 	) {
 		return;
 	}
+	if (!browserSpeechForeground(windowObject)) {
+		cancelBrowserSpeech(windowObject);
+		for (const event of events) {
+			if (!shouldSpeakBrowserAlert({ event, spokenAlerts: browserSpokenAlerts })) {
+				continue;
+			}
+			browserSpokenAlerts.set(event.id, {
+				message: event.message,
+				state: event.state,
+				ts: now(),
+				disposition: "discarded-background",
+			});
+		}
+		return;
+	}
 	for (const event of events) {
 		if (!shouldSpeakBrowserAlert({ event, spokenAlerts: browserSpokenAlerts })) {
 			continue;
 		}
-		speakAndLogBrowserAlert({
+		if (browserSpeechEventExpired(event, now)) {
+			browserSpokenAlerts.set(event.id, {
+				message: event.message,
+				state: event.state,
+				ts: now(),
+				disposition: "discarded-expired",
+			});
+			continue;
+		}
+		if (browserSpeechBusy(windowObject)) break;
+		const spoken = speakAndLogBrowserAlert({
 			fetchFn,
 			pluginId,
 			event,
 			windowObject,
 			Utterance,
 		});
+		if (!spoken) continue;
 		browserSpokenAlerts.set(event.id, {
 			message: event.message,
 			state: event.state,
 			ts: now(),
+			disposition: "queued",
 		});
+		break;
 	}
 	if (events.length > 0) return;
 	let speechEvents = [];
@@ -105,6 +137,16 @@ export async function speakBrowserAlertsForOutput({
 		) {
 			continue;
 		}
+		if (browserSpeechEventExpired(event, now)) {
+			browserSpokenAlerts.set(event.id, {
+				message: event.message,
+				state: event.state,
+				ts: currentTime,
+				disposition: "discarded-expired",
+			});
+			continue;
+		}
+		if (browserSpeechBusy(windowObject)) break;
 		const spoken = speakBrowserMessage({
 			message: event.message,
 			windowObject,

@@ -103,11 +103,19 @@ function alertEvents(brokerProjection) {
       const state = String(entry?.priority?.level || entry?.state || "alert");
       return {
         id: String(entry?.eventId || entry?.subjectKey || `alert-${index}`),
+        subjectKey: String(entry?.subjectKey || ""),
         mmsi: String(entry?.context?.mmsi || ""),
         methods: deliveryMethods(entry),
+        shouldAnnounce: entry?.delivery?.audio === true,
         state,
         category: String(entry?.presentation?.category || "cpa"),
         message: String(entry?.presentation?.message || ""),
+        audioMessage: String(
+          entry?.presentation?.audioMessage ||
+            entry?.presentation?.message ||
+            "",
+        ),
+        audioExpiresAt: audioExpiresAt(entry),
         displayName: String(entry?.presentation?.title || ""),
         uiLabel: String(entry?.presentation?.label || alertLabel(state)),
         uiSeverity: displaySeverity(state),
@@ -356,6 +364,15 @@ function deliveryMethods(entry) {
   if (entry?.delivery?.visual !== false) methods.push("visual");
   if (entry?.delivery?.audio === true) methods.push("sound");
   return methods;
+}
+
+function audioExpiresAt(entry) {
+  const supplied = Date.parse(entry?.audioExpiresAt || entry?.expiresAt || "");
+  if (Number.isFinite(supplied)) return new Date(supplied).toISOString();
+  const timestamp = Date.parse(entry?.timestamp || "");
+  const expiresSeconds = Number(entry?.delivery?.expiresSeconds);
+  if (!Number.isFinite(timestamp) || !Number.isFinite(expiresSeconds)) return null;
+  return new Date(timestamp + Math.max(0, expiresSeconds) * 1000).toISOString();
 }
 
 function validPosition(position) {

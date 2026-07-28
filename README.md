@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.4` prevents browser speech from accumulating while Display is
+hidden or unfocused. It cancels pending browser speech on backgrounding,
+discards expired delivery events, and queues no more than one fresh utterance
+at a time.
+
 Version `0.6.3` adds an explicit own-vessel icon direction setting. The icon
 can follow qualified bow heading, with a labelled COG fallback when heading is
 unavailable, or it can always follow COG. Projected track and TCPA guide lines
@@ -151,6 +156,10 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Harbour Limits loaded directly from Signal K region resources.
 - Immediate announcement-feed updates from Notifications Plus audio delivery,
   deduplicated when the same event later enters history.
+- Browser speech follows the provider's explicit audio-delivery flag, queues
+  only one fresh utterance at a time, and discards/cancels browser speech while
+  the tab or window is in the background so old traffic repeats are not spoken
+  in a burst when focus returns.
 - Replay indication, display settings, responsive phone/tablet presentation and
   the established Help interface.
 - Timestamped voyage observations, with optional structured diagnostic
@@ -189,7 +198,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.3 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.4 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

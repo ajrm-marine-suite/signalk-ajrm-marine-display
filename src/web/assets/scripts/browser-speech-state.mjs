@@ -18,6 +18,28 @@ export function shouldSpeakBrowserSpeechEvent({ event, spokenAlerts }) {
 	return Boolean(event?.id && event.message && !spokenAlerts.has(event.id));
 }
 
+export function browserSpeechForeground(windowObject = globalThis.window) {
+	const documentRef = windowObject?.document;
+	if (documentRef?.visibilityState === "hidden") return false;
+	return typeof documentRef?.hasFocus !== "function" || documentRef.hasFocus();
+}
+
+export function browserSpeechBusy(windowObject = globalThis.window) {
+	return Boolean(
+		windowObject?.speechSynthesis?.speaking ||
+			windowObject?.speechSynthesis?.pending,
+	);
+}
+
+export function browserSpeechEventExpired(event, now = Date.now) {
+	const expiresAt = Date.parse(event?.audioExpiresAt || event?.expiresAt || "");
+	return Number.isFinite(expiresAt) && now() >= expiresAt;
+}
+
+export function cancelBrowserSpeech(windowObject = globalThis.window) {
+	windowObject?.speechSynthesis?.cancel?.();
+}
+
 export function soundCheckBrowserLogBody(message) {
 	return {
 		output: "browser",

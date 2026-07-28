@@ -34,7 +34,7 @@ export function speakAndLogBrowserAlert({
 	Utterance = globalThis.SpeechSynthesisUtterance,
 }) {
 	const spoken = speakBrowserMessage({
-		message: event?.message,
+		message: event?.audioMessage || event?.message,
 		windowObject,
 		Utterance,
 	});
