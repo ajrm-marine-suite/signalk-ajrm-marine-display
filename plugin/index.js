@@ -16,6 +16,10 @@ const { loadHarbourRegions } = require("./lib/harbour-regions");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
+const OBSERVATION_SOURCE = "ajrm-marine-display";
+const AJRM_MARINE_CAPTURE_API_REGISTRY = Symbol.for(
+  "mcdonaldajr.ajrmMarineCaptureApi",
+);
 const DISTANCE_METADATA_PATHS = [
   "navigation.closestApproach.distance",
   "navigation.courseGreatCircle.distance",
@@ -204,6 +208,83 @@ module.exports = function ajrmMarineDisplay(app) {
         res.status(500).json({ error: error.message });
       }
     });
+    router.get(route("/observations/status"), async (_req, res) => {
+      try {
+        res.json(await observationStatus());
+      } catch (error) {
+        res.status(500).json({
+          ok: false,
+          error: error.message || "Unable to read voyage observation status",
+        });
+      }
+    });
+    router.post?.(route("/observations"), async (req, res) => {
+      try {
+        const text = normalizeObservationText(req.body?.text);
+        const captureApi = getCaptureApi();
+        if (typeof captureApi?.appendObservation !== "function") {
+          res.status(503).json({
+            ok: false,
+            error:
+              "AJRM Marine Capture observation support is not available.",
+          });
+          return;
+        }
+        const result = await captureApi.appendObservation({
+          text,
+          source: OBSERVATION_SOURCE,
+          includeSnapshot: req.body?.includeSnapshot === true,
+        });
+        res.json({
+          ok: true,
+          observation: result?.observation || result,
+        });
+      } catch (error) {
+        res.status(409).json({
+          ok: false,
+          error: error.message || "Unable to save voyage observation",
+        });
+      }
+    });
+  }
+
+  async function observationStatus() {
+    const captureApi = getCaptureApi();
+    const captureAvailable =
+      typeof captureApi?.appendObservation === "function";
+    if (!captureAvailable) {
+      return {
+        ok: true,
+        captureAvailable: false,
+        voyageActive: false,
+        voyageId: null,
+        snapshotAvailable: false,
+      };
+    }
+    const captureStatus =
+      typeof captureApi.status === "function"
+        ? await captureApi.status()
+        : null;
+    const capabilities = captureStatus?.observationCapabilities;
+    return {
+      ok: true,
+      captureAvailable: capabilities?.available === true,
+      voyageActive: Boolean(captureStatus?.currentVoyage?.id),
+      voyageId: captureStatus?.currentVoyage?.id || null,
+      snapshotAvailable: capabilities?.snapshotAvailable === true,
+      maximumTextCharacters:
+        Number.isInteger(capabilities?.maximumTextCharacters)
+          ? capabilities.maximumTextCharacters
+          : null,
+    };
+  }
+
+  function getCaptureApi() {
+    return (
+      app.ajrmMarineCaptureApi ||
+      globalThis[AJRM_MARINE_CAPTURE_API_REGISTRY] ||
+      null
+    );
   }
 
   function currentUiState() {
@@ -379,4 +460,20 @@ function slowestPhaseText(phases) {
 function stringOrEmpty(value) {
   if (value === null || value === undefined) return "";
   return String(value).replaceAll(/\s+/g, "_").slice(0, 300);
+}
+
+function normalizeObservationText(value) {
+  if (typeof value !== "string") {
+    throw new Error("Enter an observation before saving.");
+  }
+  const text = value
+    .normalize("NFC")
+    .replace(/\r\n?/g, "\n")
+    .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F\u007F]/g, "")
+    .trim();
+  if (!text) throw new Error("Enter an observation before saving.");
+  if (text.length > 2000) {
+    throw new Error("Voyage observations are limited to 2000 characters.");
+  }
+  return text;
 }

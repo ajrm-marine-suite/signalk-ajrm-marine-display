@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.1";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.2";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-BwyXlRRg.js"></script>
+    <script type="module" crossorigin src="./assets/index-BxfFmcWD.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CYPPgTlM.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.1</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.2</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -237,6 +237,15 @@
       data-bs-target="#modalHelp"
     >
       Help
+    </button>
+    <button
+      type="button"
+      class="d-none"
+      id="buttonOpenObservation"
+      data-bs-toggle="modal"
+      data-bs-target="#modalVoyageObservation"
+    >
+      Voyage observation
     </button>
 
     <div class="container">
@@ -363,6 +372,81 @@
               </button>
             </div>
           </div>
+        </div>
+      </div>
+
+      <div class="modal" tabindex="-1" id="modalVoyageObservation">
+        <div class="modal-dialog modal-dialog-centered">
+          <form class="modal-content" id="formVoyageObservation">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="bi bi-journal-text"></i>
+                Voyage observation
+              </h5>
+              <button
+                type="button"
+                class="btn-close"
+                data-bs-dismiss="modal"
+                aria-label="Close"
+              ></button>
+            </div>
+            <div class="modal-body">
+              <label class="form-label" for="textVoyageObservation">
+                What did you observe?
+              </label>
+              <textarea
+                class="form-control"
+                id="textVoyageObservation"
+                rows="5"
+                maxlength="2000"
+                required
+                placeholder="For example: The turn arrow remained after the target stopped reporting rate of turn."
+              ></textarea>
+              <div class="form-check mt-3">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  id="checkObservationSnapshot"
+                  checked
+                />
+                <label
+                  class="form-check-label"
+                  for="checkObservationSnapshot"
+                >
+                  Include diagnostic snapshot
+                </label>
+              </div>
+              <div
+                class="form-text"
+                id="observationSnapshotHelp"
+              >
+                Adds a structured Signal K and AJRM diagnostic snapshot at the same time. It is not a screen image.
+              </div>
+              <div
+                class="small text-body-secondary mt-3"
+                id="observationStatus"
+                role="status"
+                aria-live="polite"
+              ></div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-outline-secondary"
+                data-bs-dismiss="modal"
+              >
+                Close
+              </button>
+              <button
+                type="submit"
+                class="btn btn-primary"
+                id="buttonSaveObservation"
+                disabled
+              >
+                Save to voyage
+              </button>
+            </div>
+          </form>
         </div>
       </div>
 
@@ -1041,6 +1125,28 @@
                           id="colorSelfIconFill"
                           value="#ff00ff"
                         />
+                      </div>
+                      <div class="mb-3">
+                        <div class="d-flex justify-content-between gap-2">
+                          <label class="form-label" for="rangeSelfIconScale">
+                            Own-vessel icon size
+                          </label>
+                          <output id="selfIconScaleValue" for="rangeSelfIconScale">
+                            100%
+                          </output>
+                        </div>
+                        <input
+                          class="form-range"
+                          type="range"
+                          id="rangeSelfIconScale"
+                          min="50"
+                          max="150"
+                          step="5"
+                          value="100"
+                        />
+                        <div class="form-text">
+                          Reduce this on a small phone. AIS target icon sizes are unchanged.
+                        </div>
                       </div>
                       <div class="mb-3">
                         <label class="form-label" for="selectSelfTcpaGuideMode">

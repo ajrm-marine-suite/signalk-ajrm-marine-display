@@ -325,6 +325,153 @@ test("Signal K API formats target distances using Signal K display units metadat
   assert.equal(body["235000001"].cpaFormatted, "820 ft");
 });
 
+test("Display observation routes proxy timestamped notes to active Capture voyage", async () => {
+  const calls = [];
+  const { plugin } = harness({}, {}, {}, {
+    ajrmMarineCaptureApi: {
+      async status() {
+        return {
+          currentVoyage: { id: "voyage-20260728T120000Z" },
+          observationCapabilities: {
+            available: true,
+            snapshotAvailable: true,
+            maximumTextCharacters: 2000,
+          },
+        };
+      },
+      async appendObservation(value) {
+        calls.push(value);
+        return {
+          id: "observation-1",
+          recordedAt: "2026-07-28T12:34:56.000Z",
+          text: value.text,
+        };
+      },
+    },
+  });
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+
+  let statusBody;
+  await routes.get("GET /ajrmMarineDisplay/observations/status")(
+    {},
+    {
+      json(value) {
+        statusBody = value;
+      },
+      status() {
+        return this;
+      },
+    },
+  );
+  assert.deepEqual(statusBody, {
+    ok: true,
+    captureAvailable: true,
+    voyageActive: true,
+    voyageId: "voyage-20260728T120000Z",
+    snapshotAvailable: true,
+    maximumTextCharacters: 2000,
+  });
+
+  let postBody;
+  await routes.get("POST /ajrmMarineDisplay/observations")(
+    {
+      body: {
+        text: "  Target turn arrow remained visible.  ",
+        includeSnapshot: true,
+      },
+    },
+    {
+      json(value) {
+        postBody = value;
+      },
+      status() {
+        return this;
+      },
+    },
+  );
+
+  assert.deepEqual(calls, [{
+    text: "Target turn arrow remained visible.",
+    source: "ajrm-marine-display",
+    includeSnapshot: true,
+  }]);
+  assert.equal(postBody.ok, true);
+  assert.equal(postBody.observation.id, "observation-1");
+});
+
+test("Display observation route rejects non-string text without coercing it", async () => {
+  let appendCalls = 0;
+  const { plugin } = harness({}, {}, {}, {
+    ajrmMarineCaptureApi: {
+      async appendObservation() {
+        appendCalls += 1;
+      },
+    },
+  });
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+  let body;
+  let statusCode;
+
+  await routes.get("POST /ajrmMarineDisplay/observations")(
+    { body: { text: { unexpected: true }, includeSnapshot: false } },
+    {
+      json(value) {
+        body = value;
+      },
+      status(value) {
+        statusCode = value;
+        return this;
+      },
+    },
+  );
+
+  assert.equal(statusCode, 409);
+  assert.equal(appendCalls, 0);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /Enter an observation/);
+});
+
+test("Display observation status fails clearly when Capture support is absent", async () => {
+  const { plugin } = harness();
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+  let body;
+  let statusCode;
+
+  await routes.get("GET /ajrmMarineDisplay/observations/status")(
+    {},
+    {
+      json(value) {
+        body = value;
+      },
+      status(value) {
+        statusCode = value;
+        return this;
+      },
+    },
+  );
+  assert.equal(body.captureAvailable, false);
+  assert.equal(body.voyageActive, false);
+
+  await routes.get("POST /ajrmMarineDisplay/observations")(
+    { body: { text: "Test", includeSnapshot: false } },
+    {
+      json(value) {
+        body = value;
+      },
+      status(value) {
+        statusCode = value;
+        return this;
+      },
+    },
+  );
+  assert.equal(statusCode, 503);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /Capture observation support/);
+});
+
 test("Display profiles include AJRM Marine Traffic sensitivity settings", () => {
   const { plugin } = harness({
     "plugins.ajrmMarineTraffic.targets": { profile: "coastal" },

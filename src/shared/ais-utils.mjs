@@ -203,8 +203,9 @@ function applyDisplayFields(target) {
 	target.hdgFormatted =
 		target.hdg != null ? `${Math.round(toDegrees(target.hdg))} T` : "---";
 	target.rotFormatted = Math.round(toDegrees(target.rot)) || "---";
-	target.aisClassFormatted =
-		target.aisClass + (target.isVirtual ? " (virtual)" : "");
+	target.aisClassFormatted = `${target.aisClass ?? "Unknown"}${
+		target.isVirtual ? " (virtual)" : ""
+	}`;
 	target.sizeFormatted = `${target.length?.toFixed(1) ?? "---"} m x ${target.beam?.toFixed(1) ?? "---"} m`;
 	target.vesselFootprintSourceFormatted = vesselFootprintSourceLabel(target);
 	target.imoFormatted = target.imo?.replace(/imo/i, "") || "---";

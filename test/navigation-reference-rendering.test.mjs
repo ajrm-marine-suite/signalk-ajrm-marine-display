@@ -29,6 +29,18 @@ test("valid zero-radian heading outranks eastbound COG in vessel icons", () => {
 	}
 });
 
+test("own-vessel icon scaling changes only its requested pixel size", () => {
+	const compactRings = getSelfIcon({}, "rings", "#ff00ff", 50);
+	const defaultRings = getSelfIcon({}, "rings", "#ff00ff", 100);
+	const compactBoat = getSelfIcon({}, "boat", "#ff00ff", 50);
+
+	assert.match(compactRings.options.html, /width="20px"/);
+	assert.match(defaultRings.options.html, /width="40px"/);
+	assert.match(compactBoat.options.html, /width="30px"/);
+	assert.deepEqual(compactRings.options.iconAnchor, [10, 10]);
+	assert.deepEqual(defaultRings.options.iconAnchor, [20, 20]);
+});
+
 test("course lines are cleared instead of projecting false north without COG", () => {
 	const line = lineStub();
 	const cpaMarker = {

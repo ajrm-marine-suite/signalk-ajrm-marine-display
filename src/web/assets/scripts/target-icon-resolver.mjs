@@ -14,11 +14,17 @@ export function targetIconFor({
 	selfMmsi,
 	selfIconVariant = "rings",
 	selfIconFillColor = "#ff00ff",
+	selfIconScalePercent = 100,
 	isLarge = false,
 	color = "black",
 }) {
 	if (target.mmsi === selfMmsi) {
-		return aisIcons.getSelfIcon(target, selfIconVariant, selfIconFillColor);
+		return aisIcons.getSelfIcon(
+			target,
+			selfIconVariant,
+			selfIconFillColor,
+			selfIconScalePercent,
+		);
 	}
 	if (isSpecialSafetyMmsi(target.mmsi)) {
 		return aisIcons.getSartIcon();
@@ -32,5 +38,8 @@ export function targetIconFor({
 	if (isAisBaseStationTarget(target)) {
 		return aisIcons.getBaseIcon(target, isLarge, color);
 	}
-	return aisIcons.getClassBIcon(target, isLarge, color);
+	if (target.aisClass === "B") {
+		return aisIcons.getClassBIcon(target, isLarge, color);
+	}
+	return aisIcons.getUnknownVesselIcon(target, isLarge, color);
 }

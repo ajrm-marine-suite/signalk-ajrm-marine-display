@@ -20,6 +20,17 @@ function displayTargets(trafficProjection, options = {}) {
         const sog = finite(target?.navigation?.sog);
         const cog = finite(target?.navigation?.cogTrue);
         const hdg = finite(target?.navigation?.headingTrue);
+        const hasRateOfTurn = Object.hasOwn(
+          target?.navigation || {},
+          "rateOfTurn",
+        );
+        const rot = hasRateOfTurn
+          ? finite(target.navigation.rateOfTurn)
+          : undefined;
+        const hasAisClass = Object.hasOwn(target || {}, "aisClass");
+        const aisClass = hasAisClass
+          ? normalizeAisClass(target.aisClass)
+          : undefined;
         const position = target?.position || {};
         return [
           mmsi,
@@ -31,6 +42,12 @@ function displayTargets(trafficProjection, options = {}) {
             sog,
             cog,
             hdg,
+            ...(hasRateOfTurn
+              ? {
+                  rot,
+                  rotFormatted: rateOfTurnFormatted(rot),
+                }
+              : {}),
             length: finite(target?.dimensions?.length),
             beam: finite(target?.dimensions?.beam),
             range,
@@ -60,7 +77,13 @@ function displayTargets(trafficProjection, options = {}) {
             hdgFormatted: angleFormatted(hdg),
             latitudeFormatted: coordinateFormatted(position.latitude, true),
             longitudeFormatted: coordinateFormatted(position.longitude, false),
-            aisClassFormatted: "A",
+            ...(hasAisClass
+              ? {
+                  aisClass,
+                  aisClassEvidence: target?.aisClassEvidence ?? null,
+                  aisClassFormatted: aisClass || "Unknown",
+                }
+              : {}),
             sizeFormatted: `${finite(target?.dimensions?.length)?.toFixed(1) || "---"} m x ${finite(target?.dimensions?.beam)?.toFixed(1) || "---"} m`,
             vesselFootprintSourceFormatted:
               target?.dimensions?.reference === "reported" ? "AIS reported" : "Site estimated",
@@ -356,6 +379,18 @@ function radiansToDegrees(value) {
 function angleFormatted(value) {
   const degrees = radiansToDegrees(value);
   return degrees == null ? "---" : `${degrees} T`;
+}
+
+function rateOfTurnFormatted(value) {
+  const radians = finite(value);
+  return radians == null
+    ? "---"
+    : String(Math.round((radians * 180) / Math.PI));
+}
+
+function normalizeAisClass(value) {
+  const text = String(value ?? "").trim().toUpperCase();
+  return text === "A" || text === "B" ? text : null;
 }
 
 function formatDistance(value, unit = "nmi") {

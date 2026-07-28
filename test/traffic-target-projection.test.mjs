@@ -58,3 +58,25 @@ test("AJRM Marine Traffic projection preserves database-filled vessel dimensions
 	assert.equal(target.sizeFormatted, "18.5 m x 5.2 m");
 	assert.equal(target.vesselFootprintSourceFormatted, "Vessel database");
 });
+
+test("explicit null Traffic ROT clears a cached turn indicator value", () => {
+	const target = {
+		mmsi: "235900006",
+		rot: 0.05,
+	};
+	const targets = new Map([["235900006", target]]);
+
+	applyTrafficTargetProjection({
+		targets,
+		projection: {
+			235900006: {
+				mmsi: "235900006",
+				rot: null,
+				rotFormatted: "---",
+			},
+		},
+	});
+
+	assert.equal(target.rot, null);
+	assert.equal(target.rotFormatted, "---");
+});

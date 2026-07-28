@@ -98,6 +98,8 @@ export function createAppDom() {
 	const mapControls = {
 		selfIconVariant: getRequiredElement("selectSelfIconVariant"),
 		selfIconFillColor: getRequiredElement("colorSelfIconFill"),
+		selfIconScalePercent: getRequiredElement("rangeSelfIconScale"),
+		selfIconScaleValue: getRequiredElement("selfIconScaleValue"),
 		selfTcpaGuideMode: getRequiredElement("selectSelfTcpaGuideMode"),
 		selfTcpaGuideLargeColor: getRequiredElement("colorSelfTcpaGuideLarge"),
 		selfTcpaGuideMediumColor: getRequiredElement("colorSelfTcpaGuideMedium"),
@@ -106,6 +108,16 @@ export function createAppDom() {
 		replayMode: getRequiredElement("replayStatusMode"),
 		replayTime: getRequiredElement("replayStatusTime"),
 		replayFile: getRequiredElement("replayStatusFile"),
+	};
+
+	const observationControls = {
+		modal: getRequiredElement("modalVoyageObservation"),
+		form: getRequiredElement("formVoyageObservation"),
+		text: getRequiredElement("textVoyageObservation"),
+		includeSnapshot: getRequiredElement("checkObservationSnapshot"),
+		snapshotHelp: getRequiredElement("observationSnapshotHelp"),
+		status: getRequiredElement("observationStatus"),
+		save: getRequiredElement("buttonSaveObservation"),
 	};
 
 	const autoProfileControls = {
@@ -127,6 +139,7 @@ export function createAppDom() {
 		offcanvas,
 		speechControls,
 		mapControls,
+		observationControls,
 		autoProfileControls,
 		sizeControls,
 	};

@@ -43,6 +43,49 @@ test("AJRM Marine Traffic targets project into the Display webapp shape", () => 
   assert.equal(targets["235000001"].isValid, true);
 });
 
+test("Display projects explicit AIS class evidence and explicit null rate of turn", () => {
+  const targets = displayTargets({
+    targets: [
+      {
+        mmsi: "235000002",
+        aisClass: "B",
+        aisClassEvidence: {
+          messageType: 18,
+          source: "YDEN.4",
+        },
+        position: { latitude: 56.2, longitude: -5.5 },
+        navigation: {
+          rateOfTurn: null,
+        },
+      },
+    ],
+  });
+
+  assert.equal(targets["235000002"].aisClass, "B");
+  assert.equal(targets["235000002"].aisClassFormatted, "B");
+  assert.deepEqual(targets["235000002"].aisClassEvidence, {
+    messageType: 18,
+    source: "YDEN.4",
+  });
+  assert.equal(targets["235000002"].rot, null);
+  assert.equal(targets["235000002"].rotFormatted, "---");
+});
+
+test("Display does not invent AIS class or ROT ownership for older Traffic projections", () => {
+  const targets = displayTargets({
+    targets: [
+      {
+        mmsi: "235000003",
+        position: { latitude: 56.2, longitude: -5.5 },
+        navigation: {},
+      },
+    ],
+  });
+
+  assert.equal(Object.hasOwn(targets["235000003"], "aisClass"), false);
+  assert.equal(Object.hasOwn(targets["235000003"], "rot"), false);
+});
+
 test("Display target formatting can follow preferred distance units without changing raw values", () => {
   const targets = displayTargets(
     {

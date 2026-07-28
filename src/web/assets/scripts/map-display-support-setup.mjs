@@ -24,6 +24,8 @@ export function createDisplaySettingsControls(elements = {}, mapControls = {}) {
 	if (mapControls.selfTcpaGuideMode) {
 		controls.selfIconVariant = mapControls.selfIconVariant;
 		controls.selfIconFillColor = mapControls.selfIconFillColor;
+		controls.selfIconScalePercent = mapControls.selfIconScalePercent;
+		controls.selfIconScaleValue = mapControls.selfIconScaleValue;
 		controls.selfTcpaGuideMode = mapControls.selfTcpaGuideMode;
 		controls.selfTcpaGuideLargeColor = mapControls.selfTcpaGuideLargeColor;
 		controls.selfTcpaGuideMediumColor = mapControls.selfTcpaGuideMediumColor;

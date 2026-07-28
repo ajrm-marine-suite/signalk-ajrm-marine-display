@@ -33,6 +33,10 @@ export function createDisplaySettingsController({
 		for (const control of selfTcpaGuideControls()) {
 			control.addEventListener("change", saveSelfTcpaGuideControls);
 		}
+		controls.selfIconScalePercent?.addEventListener(
+			"input",
+			saveSelfTcpaGuideControls,
+		);
 		controls.fullScreen.addEventListener("change", toggleFullscreen);
 		document.addEventListener("fullscreenchange", fullscreenchangeHandler);
 	}
@@ -67,6 +71,10 @@ export function createDisplaySettingsController({
 		const settings = loadSelfTcpaGuideSettings();
 		controls.selfIconVariant.value = settings.selfIcon;
 		controls.selfIconFillColor.value = settings.selfIconFillColor;
+		controls.selfIconScalePercent.value = String(
+			settings.selfIconScalePercent,
+		);
+		updateSelfIconScaleLabel(settings.selfIconScalePercent);
 		controls.selfTcpaGuideMode.value = settings.mode;
 		controls.selfTcpaGuideLargeColor.value = settings.largeColor;
 		controls.selfTcpaGuideMediumColor.value = settings.mediumColor;
@@ -75,25 +83,34 @@ export function createDisplaySettingsController({
 
 	function saveSelfTcpaGuideControls() {
 		if (!controls.selfTcpaGuideMode) return;
-		saveSelfTcpaGuideSettings({
+		const settings = saveSelfTcpaGuideSettings({
 			selfIcon: controls.selfIconVariant.value,
 			selfIconFillColor: controls.selfIconFillColor.value,
+			selfIconScalePercent: controls.selfIconScalePercent.value,
 			mode: controls.selfTcpaGuideMode.value,
 			largeColor: controls.selfTcpaGuideLargeColor.value,
 			mediumColor: controls.selfTcpaGuideMediumColor.value,
 			smallColor: controls.selfTcpaGuideSmallColor.value,
 		});
+		updateSelfIconScaleLabel(settings.selfIconScalePercent);
 	}
 
 	function selfTcpaGuideControls() {
 		return [
 			controls.selfIconVariant,
 			controls.selfIconFillColor,
+			controls.selfIconScalePercent,
 			controls.selfTcpaGuideMode,
 			controls.selfTcpaGuideLargeColor,
 			controls.selfTcpaGuideMediumColor,
 			controls.selfTcpaGuideSmallColor,
 		].filter(Boolean);
+	}
+
+	function updateSelfIconScaleLabel(value) {
+		if (controls.selfIconScaleValue) {
+			controls.selfIconScaleValue.textContent = `${value}%`;
+		}
 	}
 
 	function toggleFullscreen() {

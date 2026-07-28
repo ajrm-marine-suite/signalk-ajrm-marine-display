@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
@@ -65,6 +65,57 @@
         "responses": {
           "200": {
             "description": "Debug controls updated"
+          }
+        }
+      }
+    },
+    "/observations/status": {
+      "get": {
+        "summary": "Check whether an active AJRM Marine Capture voyage can accept observations",
+        "responses": {
+          "200": {
+            "description": "Capture, voyage and optional diagnostic-snapshot availability"
+          }
+        }
+      }
+    },
+    "/observations": {
+      "post": {
+        "summary": "Append a timestamped observation to the active voyage",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "text",
+                  "includeSnapshot"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 2000
+                  },
+                  "includeSnapshot": {
+                    "type": "boolean",
+                    "description": "Request an AJRM Marine diagnostic snapshot at the same observation time."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Observation saved by AJRM Marine Capture"
+          },
+          "409": {
+            "description": "No active voyage or observation could not be saved"
+          },
+          "503": {
+            "description": "AJRM Marine Capture observation support is unavailable"
           }
         }
       }

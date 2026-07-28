@@ -20,7 +20,8 @@ export function createTarget(mmsi) {
 		lastSeenDate: undefined,
 		typeId: undefined,
 		type: "---",
-		aisClass: "A",
+		aisClass: null,
+		aisClassEvidence: null,
 		isAton: false,
 		targetKind: "vessel",
 		collisionCandidate: true,
@@ -140,7 +141,7 @@ export function applySnapshotToTarget(target, vessel, fallbackId) {
 	target.sog = signalKNumber(vessel.navigation?.speedOverGround);
 	target.cog = signalKNumber(vessel.navigation?.courseOverGroundTrue);
 	target.hdg = vessel.navigation?.headingTrue?.value;
-	target.rot = vessel.navigation?.rateOfTurn?.value;
+	target.rot = signalKNumber(vessel.navigation?.rateOfTurn);
 	const position = signalKValue(vessel.navigation?.position);
 	target.latitude = position?.latitude;
 	target.longitude = position?.longitude;
@@ -153,7 +154,7 @@ export function applySnapshotToTarget(target, vessel, fallbackId) {
 	target.type = shipType.name ?? atonType.name ?? "---";
 	target.isAton =
 		atonType.id != null || atonType.name != null || signalKValue(vessel.atonType) != null;
-	target.aisClass = signalKText(vessel.sensors?.ais?.class) || "A";
+	target.aisClass = normalizeAisClass(vessel.sensors?.ais?.class);
 	target.aisFromBow = signalKNumber(vessel.sensors?.ais?.fromBow);
 	target.aisFromCenter = signalKNumber(vessel.sensors?.ais?.fromCenter);
 	target.status = signalKText(vessel.navigation?.state) ?? "---";
@@ -304,7 +305,7 @@ export function applyDeltaValue(target, { path, value, timestamp }) {
 			target.status = signalKText(value) ?? rawValue;
 			break;
 		case "sensors.ais.class":
-			target.aisClass = signalKText(value) ?? rawValue;
+			target.aisClass = normalizeAisClass(value);
 			break;
 		case "sensors.ais.fromBow":
 			target.aisFromBow = signalKNumber(value);
@@ -351,6 +352,11 @@ export function applyDeltaValue(target, { path, value, timestamp }) {
 
 	applyTargetClassification(target);
 	return target;
+}
+
+export function normalizeAisClass(value) {
+	const text = signalKText(value)?.trim().toUpperCase();
+	return text === "A" || text === "B" ? text : null;
 }
 
 function clearProviderOwnMotion(target) {

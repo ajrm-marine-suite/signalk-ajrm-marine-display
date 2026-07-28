@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.6.2
+
+- Render evidence-backed AIS Class A, Class B, and unknown targets instead of
+  defaulting every vessel to Class A.
+- Clear a cached target turn indicator when Traffic or raw Signal K publishes
+  an explicit null rate of turn.
+- Add a persisted, self-only own-vessel icon size setting from 50% to 150%.
+- Add a Display voyage-observation modal that saves timestamped text through
+  Capture, with optional structured Snapshot evidence that cannot cause the
+  text note to be lost.
+
 ## 0.6.1
 
 - Use AJRM Marine Navigation Reference schema v1 as the authoritative

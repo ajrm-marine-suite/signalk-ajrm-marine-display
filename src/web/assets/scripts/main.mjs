@@ -40,6 +40,7 @@ import {
 import { chartResourcesPath } from "./startup-data-routes.mjs";
 import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
+import { createVoyageObservationController } from "./voyage-observation.mjs";
 
 const displayRuntimeStatus = await readDisplayRuntimeStatus();
 window.AJRM_MARINE_DISPLAY_DEBUG =
@@ -78,9 +79,16 @@ const {
 	offcanvas,
 	speechControls,
 	mapControls,
+	observationControls,
 	autoProfileControls,
 	sizeControls,
 } = createMainDom({ createDom: createAppDom });
+
+createVoyageObservationController({
+	pluginId: PLUGIN_ID,
+	controls: observationControls,
+	fetchFn: fetch,
+}).init();
 
 const { selectActiveProfile } = elements;
 createGpsStatusIndicator({

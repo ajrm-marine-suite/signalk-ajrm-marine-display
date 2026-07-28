@@ -2,6 +2,7 @@ export const SELF_TCPA_GUIDE_DEFAULTS = Object.freeze({
 	mode: "course",
 	selfIcon: "rings",
 	selfIconFillColor: "#ff00ff",
+	selfIconScalePercent: 100,
 	largeColor: "#000000",
 	mediumColor: "#0d6efd",
 	smallColor: "#198754",
@@ -11,6 +12,7 @@ export const SELF_TCPA_GUIDE_STORAGE_KEYS = Object.freeze({
 	mode: "selfTcpaGuideMode",
 	selfIcon: "selfIconVariant",
 	selfIconFillColor: "selfIconFillColor",
+	selfIconScalePercent: "selfIconScalePercent",
 	largeColor: "selfTcpaGuideLargeColor",
 	mediumColor: "selfTcpaGuideMediumColor",
 	smallColor: "selfTcpaGuideSmallColor",
@@ -36,6 +38,9 @@ export function normalizeSelfTcpaGuideSettings(value = {}) {
 			value.selfIconFillColor,
 			SELF_TCPA_GUIDE_DEFAULTS.selfIconFillColor,
 		),
+		selfIconScalePercent: normalizeSelfIconScalePercent(
+			value.selfIconScalePercent,
+		),
 		largeColor: normalizeColor(value.largeColor, SELF_TCPA_GUIDE_DEFAULTS.largeColor),
 		mediumColor: normalizeColor(value.mediumColor, SELF_TCPA_GUIDE_DEFAULTS.mediumColor),
 		smallColor: normalizeColor(value.smallColor, SELF_TCPA_GUIDE_DEFAULTS.smallColor),
@@ -48,6 +53,9 @@ export function loadSelfTcpaGuideSettings(storage = localStorage) {
 		selfIcon: storage.getItem(SELF_TCPA_GUIDE_STORAGE_KEYS.selfIcon),
 		selfIconFillColor: storage.getItem(
 			SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconFillColor,
+		),
+		selfIconScalePercent: storage.getItem(
+			SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconScalePercent,
 		),
 		largeColor: storage.getItem(SELF_TCPA_GUIDE_STORAGE_KEYS.largeColor),
 		mediumColor: storage.getItem(SELF_TCPA_GUIDE_STORAGE_KEYS.mediumColor),
@@ -63,6 +71,10 @@ export function saveSelfTcpaGuideSettings(settings, storage = localStorage) {
 		SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconFillColor,
 		normalized.selfIconFillColor,
 	);
+	storage.setItem(
+		SELF_TCPA_GUIDE_STORAGE_KEYS.selfIconScalePercent,
+		normalized.selfIconScalePercent,
+	);
 	storage.setItem(SELF_TCPA_GUIDE_STORAGE_KEYS.largeColor, normalized.largeColor);
 	storage.setItem(SELF_TCPA_GUIDE_STORAGE_KEYS.mediumColor, normalized.mediumColor);
 	storage.setItem(SELF_TCPA_GUIDE_STORAGE_KEYS.smallColor, normalized.smallColor);
@@ -71,4 +83,15 @@ export function saveSelfTcpaGuideSettings(settings, storage = localStorage) {
 
 function normalizeColor(value, fallback) {
 	return /^#[0-9a-f]{6}$/i.test(String(value || "")) ? value : fallback;
+}
+
+function normalizeSelfIconScalePercent(value) {
+	if (value === null || value === undefined || value === "") {
+		return SELF_TCPA_GUIDE_DEFAULTS.selfIconScalePercent;
+	}
+	const number = Number(value);
+	if (!Number.isFinite(number)) {
+		return SELF_TCPA_GUIDE_DEFAULTS.selfIconScalePercent;
+	}
+	return Math.round(Math.min(150, Math.max(50, number)));
 }

@@ -168,5 +168,6 @@ function getSelfIconSettings(getSelfIconVariant) {
 	return {
 		selfIconVariant: getSelfIconVariant(),
 		selfIconFillColor: settings.selfIconFillColor,
+		selfIconScalePercent: settings.selfIconScalePercent,
 	};
 }

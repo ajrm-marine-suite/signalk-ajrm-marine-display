@@ -2,6 +2,12 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.2` renders only evidence-backed Class A or Class B AIS reports,
+shows unknown class explicitly, clears stale turn arrows on null rate-of-turn
+updates, adds a self-only 50-150% own-vessel icon size control, and adds a
+voyage-observation form backed by AJRM Marine Capture. Observations can include
+a structured diagnostic Snapshot without risking loss of the text note.
+
 Version `0.6.1` consumes AJRM Marine Navigation Reference schema v1 for
 own-vessel position, coherent COG/SOG, and qualified bow heading. It preserves
 the provider's source and clock-reference evidence, keeps valid 0° heading
@@ -123,7 +129,10 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
   current position and zoom.
 - OpenSeaMap seamarks.
 - Own-vessel follow/recentre and manual chart browsing.
-- AIS vessel, base-station, AtoN and special-safety target symbols.
+- Evidence-backed Class A/Class B AIS vessel symbols, an explicit unknown-class
+  symbol, and base-station, AtoN and special-safety target symbols.
+- Browser-local own-vessel icon style, colour, and 50-150% size controls that
+  do not resize target vessels.
 - Target labels, projected courses, footprints, range rings and CPA overlays.
 - Target table, sorting, selection and detailed vessel information.
 - Bottom alert panel and optional alert popups.
@@ -136,6 +145,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
   deduplicated when the same event later enters history.
 - Replay indication, display settings, responsive phone/tablet presentation and
   the established Help interface.
+- Timestamped voyage observations, with optional structured diagnostic
+  Snapshot evidence, when AJRM Marine Capture has an active voyage.
 
 ## Deliberately not in Display
 
@@ -170,7 +181,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.1 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.2 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

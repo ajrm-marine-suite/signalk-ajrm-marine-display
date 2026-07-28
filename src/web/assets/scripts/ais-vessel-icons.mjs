@@ -112,6 +112,41 @@ export function getClassAIcon(target, isLarge, color) {
 	return createAisDivIcon({ html: SVGIcon, boxSize });
 }
 
+export function getUnknownVesselIcon(target, isLarge, color) {
+	const { boxSize, strokeWidth } = getVesselIconSize(isLarge);
+	const center = boxSize / 2;
+	const radius = boxSize * 0.2;
+	const heading = targetHeadingDegrees(target);
+	const SVGIcon = `
+    <svg width="${boxSize}px" height="${boxSize}px" pointerEvents="none">
+        <g
+            fill="#ffffff"
+            fill-opacity="0.9"
+            stroke="${color}"
+            stroke-width="${strokeWidth}"
+            pointer-events="all"
+        >
+            <circle cx="${center}" cy="${center}" r="${radius}" />
+            <text
+                x="${center}"
+                y="${center + boxSize * 0.09}"
+                fill="${color}"
+                stroke="none"
+                text-anchor="middle"
+                font-family="system-ui, sans-serif"
+                font-size="${boxSize * 0.3}"
+                font-weight="700"
+            >?</text>
+        </g>
+        <g transform="rotate(${heading} ${center} ${center})">
+            ${getRotationArrow(target, boxSize, strokeWidth)}
+        </g>
+        ${target.isLost ? getLostTargetCross(boxSize) : ""}
+    </svg>`;
+
+	return createAisDivIcon({ html: SVGIcon, boxSize });
+}
+
 function targetHeadingDegrees(target) {
 	const heading = toDegrees(target?.hdg ?? target?.cog);
 	return Number.isFinite(heading) ? heading : 0;

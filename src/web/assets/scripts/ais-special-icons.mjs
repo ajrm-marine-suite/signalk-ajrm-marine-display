@@ -48,14 +48,18 @@ export function getSelfIcon(
 	target = {},
 	variant = "rings",
 	fillColor = "#ff00ff",
+	scalePercent = 100,
 ) {
-	var boxSize = variant === "boat" ? 60 : 40;
+	const baseBoxSize = variant === "boat" ? 60 : 40;
+	const boxSize = Math.round(
+		baseBoxSize * normalizeSelfIconScale(scalePercent),
+	);
 	var strokeWidth = 2;
-	const center = boxSize / 2;
+	const center = baseBoxSize / 2;
 	const headingDegrees = toDegrees(target.hdg ?? target.cog);
 	const heading = Number.isFinite(headingDegrees) ? headingDegrees : 0;
 	const shape = getSelfIconShape({
-		boxSize,
+		boxSize: baseBoxSize,
 		center,
 		fillColor,
 		heading,
@@ -64,7 +68,7 @@ export function getSelfIcon(
 	});
 
 	const SVGIcon = `
-    <svg width="${boxSize}px" height="${boxSize}px" pointerEvents="none">
+    <svg width="${boxSize}px" height="${boxSize}px" viewBox="0 0 ${baseBoxSize} ${baseBoxSize}" pointerEvents="none">
         <g
             fill-opacity=0
             stroke-width=${strokeWidth}
@@ -76,6 +80,12 @@ export function getSelfIcon(
     </svg>`;
 
 	return createAisDivIcon({ html: SVGIcon, boxSize });
+}
+
+function normalizeSelfIconScale(value) {
+	const number = Number(value);
+	if (!Number.isFinite(number)) return 1;
+	return Math.min(150, Math.max(50, number)) / 100;
 }
 
 function getSelfIconShape({

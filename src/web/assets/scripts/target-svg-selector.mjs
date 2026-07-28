@@ -40,6 +40,11 @@ export function getTargetSvg(target) {
 		return targetSvgs.atonSvg;
 	}
 
+	// explicitly reported Class B
+	else if (target.aisClass === "B") {
+		return targetSvgs.powerboatSvg;
+	}
+
 	// everything else
 	else return targetSvgs.ufoSvg;
 }
