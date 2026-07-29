@@ -101,6 +101,24 @@ test("heading-oriented own icon becomes neutral when heading and COG are unavail
 	assert.match(icon.options.html, /<circle/);
 });
 
+test("stale own-vessel icon keeps its last direction and uses grey styling", () => {
+	const icon = getSelfIcon(
+		{
+			isStale: true,
+			lastKnownHdg: Math.PI / 2,
+		},
+		"boat",
+		"#ff00ff",
+		100,
+		"heading",
+	);
+
+	assert.match(icon.options.html, /rotate\(90 /);
+	assert.match(icon.options.html, /fill="#9ca3af"/);
+	assert.match(icon.options.html, /stroke="#6b7280"/);
+	assert.doesNotMatch(icon.options.html, /fill="#ff00ff"/);
+});
+
 test("own-vessel icon scaling changes only its requested pixel size", () => {
 	const compactRings = getSelfIcon({}, "rings", "#ff00ff", 50);
 	const defaultRings = getSelfIcon({}, "rings", "#ff00ff", 100);

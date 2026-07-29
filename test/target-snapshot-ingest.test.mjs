@@ -60,6 +60,88 @@ test("uses the vessel collection key for non-AIS snapshots without uuid", () => 
 	assert.equal(targets.get("self")?.latitude, 56.2);
 });
 
+test("replay cleanup retains own vessel at its last position and removes other targets", () => {
+	const timestamp = new Date().toISOString();
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.21616, longitude: -5.56725 },
+						timestamp,
+					},
+					speedOverGround: { value: 2.5 },
+					courseOverGroundTrue: { value: Math.PI / 2 },
+					headingTrue: { value: Math.PI / 3 },
+				},
+			},
+			"235900010": {
+				mmsi: { value: "235900010" },
+				navigation: {
+					position: {
+						value: { latitude: 56.22, longitude: -5.56 },
+						timestamp,
+					},
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+		removeMissing: true,
+	});
+
+	const result = ingestRawVesselData({
+		vessels: {},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+		removeMissing: true,
+	});
+
+	const self = targets.get("self");
+	assert.ok(self);
+	assert.equal(self.latitude, 56.21616);
+	assert.equal(self.longitude, -5.56725);
+	assert.equal(self.isStale, true);
+	assert.equal(self.isLost, true);
+	assert.equal(self.sog, undefined);
+	assert.equal(self.cog, undefined);
+	assert.equal(self.hdg, undefined);
+	assert.equal(self.lastKnownCog, Math.PI / 2);
+	assert.equal(self.lastKnownHdg, Math.PI / 3);
+	assert.deepEqual(result.removedMmsis, ["235900010"]);
+	assert.equal(targets.has("235900010"), false);
+});
+
+test("a fresh Display page can render a stale Signal K own-vessel position", () => {
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.21616, longitude: -5.56725 },
+						timestamp: "2026-07-14T14:33:19.000Z",
+					},
+					courseOverGroundTrue: { value: Math.PI / 2 },
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+		removeMissing: false,
+	});
+
+	const self = targets.get("self");
+	assert.ok(self);
+	assert.equal(self.latitude, 56.21616);
+	assert.equal(self.isStale, true);
+	assert.equal(self.lastKnownCog, Math.PI / 2);
+});
+
 test("uses Navigation Reference schema v1 as authoritative own motion", () => {
 	const timestamp = new Date().toISOString();
 	const targets = new Map();

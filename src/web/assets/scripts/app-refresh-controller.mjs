@@ -84,6 +84,7 @@ export function createAppRefreshController({
 					vessels,
 					targets,
 					targetMaxAge,
+					selfMmsi: getSelfMmsi(),
 					removeMissing: replayStatus.active === true,
 				}),
 			);

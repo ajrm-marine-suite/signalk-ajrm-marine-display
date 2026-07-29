@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.7
+
+- Keep own vessel at its last known position when replay ends or GPS becomes
+  stale, while allowing stale AIS targets to clear normally.
+- Remove stale own-vessel motion vectors and render its retained icon grey,
+  using the last known heading or COG only to preserve icon orientation.
+
 ## 0.6.6
 
 - Expose Display's active-alert panel projection through its in-process runtime

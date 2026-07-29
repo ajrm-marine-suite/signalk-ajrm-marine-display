@@ -54,6 +54,8 @@ export function getSelfIcon(
 ) {
 	const headingDegrees = toDegrees(resolveSelfIconDirection(target, orientation));
 	const hasDirection = Number.isFinite(headingDegrees);
+	const stale = target?.isStale === true || target?.isLost === true;
+	const displayFillColor = stale ? "#9ca3af" : fillColor;
 	const displayVariant =
 		hasDirection || !DIRECTIONAL_SELF_ICON_VARIANTS.has(variant)
 			? variant
@@ -68,7 +70,7 @@ export function getSelfIcon(
 	const shape = getSelfIconShape({
 		boxSize: baseBoxSize,
 		center,
-		fillColor,
+		fillColor: displayFillColor,
 		heading,
 		strokeWidth,
 		variant: displayVariant,
@@ -79,7 +81,7 @@ export function getSelfIcon(
         <g
             fill-opacity=0
             stroke-width=${strokeWidth}
-            stroke="gray"
+            stroke="${stale ? "#6b7280" : "gray"}"
             stroke-opacity=1
         >
             ${shape}
@@ -90,9 +92,15 @@ export function getSelfIcon(
 }
 
 function resolveSelfIconDirection(target, orientation) {
-	const cog = Number.isFinite(target?.cog) ? target.cog : undefined;
+	const cog = Number.isFinite(target?.cog)
+		? target.cog
+		: target?.lastKnownCog;
 	if (orientation === "cog") return cog;
-	return Number.isFinite(target?.hdg) ? target.hdg : cog;
+	return Number.isFinite(target?.hdg)
+		? target.hdg
+		: Number.isFinite(target?.lastKnownHdg)
+			? target.lastKnownHdg
+			: cog;
 }
 
 function normalizeSelfIconScale(value) {

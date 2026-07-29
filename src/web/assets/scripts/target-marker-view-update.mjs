@@ -9,7 +9,10 @@ export function updateTargetMarkerView({
 	const latLng = [target.latitude, target.longitude];
 	setMarkerLatLngIfChanged(boatMarker, latLng);
 	setMarkerIconIfChanged(boatMarker, icon);
-	setMarkerOpacityIfChanged(boatMarker, target.alarmIsMuted ? 0.45 : 1);
+	setMarkerOpacityIfChanged(
+		boatMarker,
+		target.isStale || target.isLost || target.alarmIsMuted ? 0.45 : 1,
+	);
 	targetOverlays.updateSilenceBadge(target);
 
 	if (target.mmsi === selectedVesselMmsi && selectionMarkers.blueBoxIcon) {

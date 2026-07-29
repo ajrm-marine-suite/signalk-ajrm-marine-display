@@ -2,6 +2,10 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.7` retains a grey own-vessel icon at the last known position after
+replay ends or GPS becomes stale. Its course projection is removed, while its
+last known heading or COG is retained only for icon orientation.
+
 Version `0.6.6` keeps the Active Alerts panel strictly active and exposes that
 projection to suite BITE. Resolved alerts
 and recent informational events remain available in history but no longer
@@ -203,7 +207,7 @@ browser-local so map interaction does not wait for server round trips.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.6 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.7 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
