@@ -14,8 +14,8 @@ Display consumes these versioned projections:
   `vessels.self.plugins.ajrmMarineNotifications`;
 - AJRM Marine Audio runtime status at
   `vessels.self.plugins.ajrmMarineAudio`;
-- AJRM Marine Logger replay state at
-  `vessels.self.plugins.ajrmMarineLogger.playback`.
+- AJRM Marine Capture replay state at
+  `vessels.self.plugins.ajrmMarineCapture.playback`.
 
 It also consumes standard Signal K own-navigation, vessel, notification and
 chart-resource trees as the interoperability and reduced-mode baseline.

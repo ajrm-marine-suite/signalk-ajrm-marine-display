@@ -216,20 +216,20 @@ export function defaultProjectionFallbackEnabled() {
 	);
 }
 
-export function replayStatusFromAjrmMarineLogger(status) {
+export function replayStatusFromAjrmMarineCapture(status) {
 	const playback = status?.playback;
 	return replayStatusFromPlaybackValue(playback);
 }
 
 export function replayStatusFromSignalKVessels(vessels) {
-	const playback = ajrmMarineLoggerPlaybackFromSignalKVessels(vessels);
+	const playback = ajrmMarineCapturePlaybackFromSignalKVessels(vessels);
 	return replayStatusFromPlaybackValue(playback);
 }
 
-export function ajrmMarineLoggerPlaybackFromSignalKVessels(vessels) {
+export function ajrmMarineCapturePlaybackFromSignalKVessels(vessels) {
 	if (!vessels || typeof vessels !== "object") return null;
 	for (const vessel of Object.values(vessels)) {
-		const playback = vessel?.plugins?.ajrmMarineLogger?.playback;
+		const playback = vessel?.plugins?.ajrmMarineCapture?.playback;
 		if (playback !== undefined && playback !== null) {
 			return signalKValue(playback);
 		}
@@ -253,7 +253,7 @@ function replayStatusFromPlaybackValue(playback) {
 		return { active: false };
 	}
 
-	const current = playback.current || playback.capturedAt || null;
+	const current = playback.replayOriginalAt || null;
 	const replayTimeMs = Date.parse(current);
 	return {
 		active: true,

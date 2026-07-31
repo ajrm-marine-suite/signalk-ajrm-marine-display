@@ -3,12 +3,12 @@ import test from "node:test";
 
 import {
 	createAppRefreshController,
-	replayStatusFromAjrmMarineLogger,
+	replayStatusFromAjrmMarineCapture,
 	replayStatusFromSignalKVessels,
 } from "../src/web/assets/scripts/app-refresh-controller.mjs";
 
 test("replay status follows the explicit active flag without requiring a timestamp", () => {
-	const status = replayStatusFromAjrmMarineLogger({
+	const status = replayStatusFromAjrmMarineCapture({
 		playback: {
 			active: true,
 			fileName: "voyage.jsonl",
@@ -20,16 +20,16 @@ test("replay status follows the explicit active flag without requiring a timesta
 	assert.equal(status.replayTimeMs, null);
 });
 
-test("replay status reads explicit Logger playback state from Signal K vessels", () => {
+test("replay status reads explicit Capture playback state from Signal K vessels", () => {
 	const status = replayStatusFromSignalKVessels({
 		self: {
 			plugins: {
-				ajrmMarineLogger: {
+				ajrmMarineCapture: {
 					playback: {
 						value: {
 							active: true,
 							paused: true,
-							current: "2026-07-08T12:00:00.000Z",
+							replayOriginalAt: "2026-07-08T12:00:00.000Z",
 							rate: 4,
 						},
 					},

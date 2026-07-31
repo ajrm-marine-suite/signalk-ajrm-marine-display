@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.8
+
+- Read replay state and original voyage time from
+  `plugins.ajrmMarineCapture.playback`.
+- Remove the Display runtime dependency on the retired Logger path.
+
 ## 0.6.7
 
 - Keep own vessel at its last known position when replay ends or GPS becomes
