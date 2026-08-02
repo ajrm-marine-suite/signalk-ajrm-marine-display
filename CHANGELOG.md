@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.6.10
 
 - Restore MMSI MID country derivation in the active vessel snapshot pipeline,
   so MMSI `232035943` and other UK targets show `GB` with the correct country
