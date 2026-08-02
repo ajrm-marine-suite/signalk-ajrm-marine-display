@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Restore MMSI MID country derivation in the active vessel snapshot pipeline,
+  so MMSI `232035943` and other UK targets show `GB` with the correct country
+  tooltip instead of `---`.
+- Render the MMSI country tooltip as focusable text rather than a dead `#`
+  hyperlink.
+
 ## 0.6.9
 
 - Add a prominent Help warning that avoidance prompts are limited indications

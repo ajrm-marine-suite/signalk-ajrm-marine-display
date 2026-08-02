@@ -1,5 +1,5 @@
 import { isFiniteCoord } from "./guards.mjs";
-import { mmsiMidToCountry } from "./mmsi-mid-decoder.mjs";
+import { countryForMmsi } from "./mmsi-mid-decoder.mjs";
 import {
 	applyTargetClassification,
 	isCollisionCandidateTarget,
@@ -183,9 +183,9 @@ function clearTargetAlarmState(target, order = 40000) {
 }
 
 function applyDisplayFields(target) {
-	var mmsiMid = getMid(target.mmsi);
-	target.mmsiCountryCode = mmsiMidToCountry.get(mmsiMid)?.code;
-	target.mmsiCountryName = mmsiMidToCountry.get(mmsiMid)?.name;
+	const mmsiCountry = countryForMmsi(target.mmsi);
+	target.mmsiCountryCode = mmsiCountry?.code;
+	target.mmsiCountryName = mmsiCountry?.name;
 	target.cpaFormatted = formatDistance(target.cpa, target.distanceUnit);
 	target.tcpaFormatted = formatTcpa(target.tcpa);
 	target.rangeFormatted =
@@ -475,33 +475,6 @@ export function getRhumbLineBearing(lat1, lon1, lat2, lon2) {
 
 	//return the angle, normalized
 	return (toDegrees(Math.atan2(diffLon, diffPhi)) + 360) % 360;
-}
-
-// 012345678
-// 8MIDXXXXX   Diver’s radio (not used in the U.S. in 2013)
-// MIDXXXXXX   Ship
-// 0MIDXXXXX   Group of ships; the U.S. Coast Guard, for example, is 03699999
-// 00MIDXXXX   Coastal stations
-// 111MIDXXX   SAR (Search and Rescue) aircraft
-// 99MIDXXXX   Aids to Navigation
-// 98MIDXXXX   Auxiliary craft associated with a parent ship
-// 970MIDXXX   AIS SART (Search and Rescue Transmitter) (might be bad info - might be no MID)
-// 972XXXXXX   MOB (Man Overboard) device (no MID)
-// 974XXXXXX   EPIRB (Emergency Position Indicating Radio Beacon) AIS (no MID)
-function getMid(mmsi) {
-	if (mmsi.startsWith("111") || mmsi.startsWith("970")) {
-		return mmsi.substring(3, 6);
-	} else if (
-		mmsi.startsWith("00") ||
-		mmsi.startsWith("98") ||
-		mmsi.startsWith("99")
-	) {
-		return mmsi.substring(2, 5);
-	} else if (mmsi.startsWith("0") || mmsi.startsWith("8")) {
-		return mmsi.substring(1, 4);
-	} else {
-		return mmsi.substring(0, 3);
-	}
 }
 
 // N 39° 57.0689

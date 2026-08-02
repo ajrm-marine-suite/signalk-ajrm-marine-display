@@ -1,4 +1,5 @@
 import { applyTargetClassification } from "./target-classification.mjs";
+import { countryForMmsi } from "./mmsi-mid-decoder.mjs";
 
 const NAVIGATION_REFERENCE_CONTRACT = "ajrm-marine-navigation-reference";
 const NAVIGATION_REFERENCE_SCHEMA_VERSION = 1;
@@ -134,7 +135,10 @@ function applySensorAisReference(target) {
 
 export function applySnapshotToTarget(target, vessel, fallbackId) {
 	const targetId = vesselTargetId(vessel, fallbackId);
+	const mmsiCountry = countryForMmsi(targetId);
 	target.mmsi = targetId;
+	target.mmsiCountryCode = mmsiCountry?.code;
+	target.mmsiCountryName = mmsiCountry?.name;
 	target.name = signalKText(vessel.name) || `<${targetId}>`;
 	target.callsign = signalKText(vessel.communication?.callsignVhf) || "---";
 	target.imo = signalKText(vessel.registrations?.imo);

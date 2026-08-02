@@ -7,6 +7,16 @@ import {
 	setElementClassPresenceIfChanged,
 	setElementTextIfChanged,
 } from "../src/web/assets/scripts/selected-vessel-details.mjs";
+import fs from "node:fs/promises";
+
+test("MMSI country tooltip is not rendered as a dead hyperlink", async () => {
+	const html = await fs.readFile(
+		new URL("../src/web/index.html", import.meta.url),
+		"utf8",
+	);
+	assert.match(html, /id="target\.mmsiCountryCode"/);
+	assert.doesNotMatch(html, /href="#"[^>]*id="target\.mmsiCountryCode"/s);
+});
 
 test("selected vessel details show placeholders for missing optional fields", () => {
 	resetSelectedVesselDetailsCache();

@@ -396,3 +396,27 @@ export const mmsiMidToCountry = new Map([
 	["678", { code: "ZM", name: "Zambia" }],
 	["679", { code: "ZW", name: "Zimbabwe" }],
 ]);
+
+export function mmsiMid(value) {
+	const mmsi = String(value ?? "").trim();
+	if (!/^\d{9}$/.test(mmsi)) return null;
+	if (mmsi.startsWith("111") || mmsi.startsWith("970")) {
+		return mmsi.slice(3, 6);
+	}
+	if (
+		mmsi.startsWith("00") ||
+		mmsi.startsWith("98") ||
+		mmsi.startsWith("99")
+	) {
+		return mmsi.slice(2, 5);
+	}
+	if (mmsi.startsWith("0") || mmsi.startsWith("8")) {
+		return mmsi.slice(1, 4);
+	}
+	return mmsi.slice(0, 3);
+}
+
+export function countryForMmsi(value) {
+	const mid = mmsiMid(value);
+	return mid ? mmsiMidToCountry.get(mid) ?? null : null;
+}

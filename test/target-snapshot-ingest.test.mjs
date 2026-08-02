@@ -2,6 +2,35 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import { ingestRawVesselData } from "../src/web/assets/scripts/target-snapshot-ingest.mjs";
 
+test("derives the MMSI country in the active vessel snapshot pipeline", () => {
+	const timestamp = new Date().toISOString();
+	const targets = new Map();
+
+	ingestRawVesselData({
+		vessels: {
+			"232035943": {
+				mmsi: { value: "232035943" },
+				name: { value: "EVE" },
+				navigation: {
+					position: {
+						value: { latitude: 56.018336, longitude: -5.6091328 },
+						timestamp,
+					},
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+	});
+
+	const eve = targets.get("232035943");
+	assert.equal(eve?.mmsiCountryCode, "GB");
+	assert.equal(
+		eve?.mmsiCountryName,
+		"United Kingdom of Great Britain and Northern Ireland",
+	);
+});
+
 test("ingests own-vessel snapshots keyed by Signal K uuid when MMSI is absent", () => {
 	const uuid = "urn:mrn:signalk:uuid:454fc872-a7aa-4f7a-bce4-fd63cbca53e0";
 	const targets = new Map();
