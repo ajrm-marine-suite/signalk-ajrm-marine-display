@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.9
+
+- Add a prominent Help warning that avoidance prompts are limited indications
+  rather than COLREG advice, identify missing situational inputs such as
+  sailing versus motoring, and retain skipper responsibility.
+
 ## 0.6.8
 
 - Read replay state and original voyage time from

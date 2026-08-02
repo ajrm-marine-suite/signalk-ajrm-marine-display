@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.8";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.9";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.8</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.9</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1266,7 +1266,17 @@
                 <strong>Simulator/test release:</strong>
                 AJRM Marine Display is an aid to awareness, not a navigation or
                 collision-avoidance authority. Use the chart, AIS targets, and
-                alerts as supporting information only.
+                alerts as supporting information only. Head-on, Give Way, Stand
+                On, overtaking, and other avoidance prompts are limited
+                indications based on available AIS, heading, CPA, and TCPA data;
+                they are not advice or a determination under the International
+                Regulations for Preventing Collisions at Sea (COLREGs). AJRM
+                Marine may not know essential facts such as whether your vessel
+                is sailing or motoring, whether vessels are in sight, the other
+                vessel's operational status, visibility, sea room, or local
+                constraints. The skipper remains responsible for assessing the
+                complete situation, applying the COLREGs, and deciding and
+                carrying out safe action.
               </div>
               <p>
                 Display is deliberately lean: it draws the chart, shows targets,

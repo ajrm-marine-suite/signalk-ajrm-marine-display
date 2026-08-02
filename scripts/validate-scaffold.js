@@ -30,6 +30,9 @@ assert.match(
   new RegExp(`AJRM_MARINE_WEBAPP_VERSION = "${packageInfo.version.replaceAll(".", "\\.")}"`),
 );
 assert.match(sourceIndex, /AJRM Marine Display Help/);
+assert.match(sourceIndex, /not advice or a determination under the International/);
+assert.match(sourceIndex, /whether your vessel\s+is sailing or motoring/);
+assert.match(sourceIndex, /skipper remains responsible/);
 assert.match(sourceIndex, /id="displayAudioModeLabel"[\s\S]*Sounds/);
 assert.match(refreshController, /applyTrafficTargetProjection/);
 assert.doesNotMatch(refreshController, /updateDerivedData/);
