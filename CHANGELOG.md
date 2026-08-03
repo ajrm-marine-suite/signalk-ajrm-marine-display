@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.14
+
+- Add an optional DR Plotter-style chart cursor box showing latitude and
+  longitude, plus range and true bearing from own vessel when its position is
+  available.
+- Store the enable/disable choice locally on each browser device and keep
+  cursor movement entirely client-side without triggering server refreshes.
+
 ## 0.6.13
 
 - Prevent new duplicate Signal K route names at the route-manager boundary.

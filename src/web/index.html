@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.13";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.14";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.13</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.14</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1213,6 +1213,19 @@
                           Prevent screen sleeping in iOS and Android
                         </label>
                       </div>
+                      <div class="form-check mb-3">
+                        <input
+                          class="form-check-input"
+                          type="checkbox"
+                          id="checkCursorPosition"
+                        />
+                        <label class="form-check-label" for="checkCursorPosition">
+                          Show chart cursor position
+                        </label>
+                        <div class="form-text">
+                          Shows latitude, longitude, and range/bearing from own vessel in a box at the bottom right of the chart.
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1815,6 +1828,11 @@
       <!--end offcanvasProfile-->
     </div>
     <!--end container-->
+    <div
+      id="cursorPosition"
+      class="cursor-position d-none"
+      aria-live="polite"
+    >Cursor --</div>
     <script type="module">
       import { startPageControllers } from "./assets/scripts/page-controllers.mjs";
       startPageControllers();

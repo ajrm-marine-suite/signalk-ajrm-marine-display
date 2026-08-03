@@ -24,6 +24,7 @@ export function createAppDom() {
 		modalClosebyBoats: getRequiredElement("modalClosebyBoats"),
 		gpsStatusIndicator: getRequiredElement("gpsStatusIndicator"),
 		gpsStatusText: getRequiredElement("gpsStatusText"),
+		cursorPosition: getRequiredElement("cursorPosition"),
 		totalTargetCountUI: getRequiredElement("totalTargetCountUI"),
 		filteredTargetCountUI: getRequiredElement("filteredTargetCountUI"),
 		alarmTargetCountUI: getRequiredElement("alarmTargetCountUI"),
@@ -98,6 +99,7 @@ export function createAppDom() {
 	};
 
 	const mapControls = {
+		cursorPosition: getRequiredElement("checkCursorPosition"),
 		selfIconVariant: getRequiredElement("selectSelfIconVariant"),
 		selfIconOrientation: getRequiredElement("selectSelfIconOrientation"),
 		selfIconFillColor: getRequiredElement("colorSelfIconFill"),

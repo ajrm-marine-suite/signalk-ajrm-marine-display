@@ -82,6 +82,28 @@ body,
   background-color: var(--bs-body-bg);
 }
 
+.cursor-position {
+  position: fixed;
+  right: 14px;
+  bottom: 24px;
+  z-index: 850;
+  padding: 7px 10px;
+  border: 1px solid rgba(96, 117, 137, 0.42);
+  border-radius: 7px;
+  background: rgba(var(--bs-body-bg-rgb), 0.92);
+  color: var(--bs-body-color);
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-size: 0.82rem;
+  font-weight: 800;
+  box-shadow: 0 2px 0 rgba(15, 23, 42, 0.16);
+  pointer-events: none;
+  white-space: nowrap;
+}
+
+body.ajrm-marine-alert-panel-open .cursor-position {
+  bottom: calc(var(--ajrm-marine-alert-panel-height, 9rem) + 24px);
+}
+
 .ajrm-marine-top-status-stack {
   position: fixed;
   top: 0.75rem;

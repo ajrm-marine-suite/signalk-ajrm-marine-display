@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.14` adds an optional DR Plotter-style chart cursor box. Enable it
+under **Settings → Device display** to show cursor latitude/longitude and, when
+own-vessel position is available, range and true bearing from the vessel. The
+choice is stored locally for each browser device.
+
 Version `0.6.13` prevents Display from creating duplicate Signal K route names,
 reuses the existing resource when a same-named GPX route is reopened, and adds
 confirmed deletion of a selected Signal K route resource. Existing duplicates
@@ -254,7 +259,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.13 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.14 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

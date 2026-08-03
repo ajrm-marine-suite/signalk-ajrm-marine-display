@@ -18,6 +18,7 @@ import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
 import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
+import { createCursorPositionController } from "./cursor-position-control.mjs";
 import {
 	applyDisplayDebugMapControls,
 	startDisplayDebugControlPolling,
@@ -163,6 +164,13 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 		loadCharts,
 		storage: window.localStorage,
 	});
+createCursorPositionController({
+	map,
+	element: elements.cursorPosition,
+	checkbox: mapControls.cursorPosition,
+	getOwnPosition: state.getSelfTarget,
+	storage: window.localStorage,
+}).init();
 const routeController = createRouteController({
 	L,
 	map,
