@@ -39,6 +39,12 @@ test("plugin exposes an enabled-by-default Display setting", () => {
   assert.equal(plugin.id, "signalk-ajrm-marine-display");
   assert.equal(plugin.schema.properties.enabled.default, true);
   assert.equal(plugin.schema.properties.refreshIntervalMs.default, 1000);
+  assert.equal(plugin.schema.properties.coordinateFormat.default, "dms");
+  assert.deepEqual(plugin.schema.properties.coordinateFormat.enum, [
+    "dms",
+    "degrees-minutes",
+    "decimal",
+  ]);
   assert.equal(plugin.getOpenApi().info.version, packageInfo.version);
 });
 
@@ -257,6 +263,7 @@ test("plugin publishes enabled Display status", () => {
     latitude: 56.45,
     longitude: -5.45,
     zoom: 10,
+    coordinateFormat: "dms",
   });
   assert.deepEqual(value.value.diagnostics, {
     browserRefreshDiagnostics: false,

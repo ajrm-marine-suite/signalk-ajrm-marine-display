@@ -6,6 +6,7 @@ export function createAppRuntimeState() {
 	let disableMapPanTo = false;
 	let selectedVesselMmsi;
 	let sortTableBy = "priority";
+	let coordinateFormat = "dms";
 
 	return {
 		getCollisionProfiles: () => collisionProfiles,
@@ -38,6 +39,10 @@ export function createAppRuntimeState() {
 		getSortTableBy: () => sortTableBy,
 		setSortTableBy: (value) => {
 			sortTableBy = value;
+		},
+		getCoordinateFormat: () => coordinateFormat,
+		setCoordinateFormat: (value) => {
+			coordinateFormat = value;
 		},
 	};
 }

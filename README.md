@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.15` adds a configurable latitude/longitude format for chart cursor
+and vessel-detail coordinates. Signal K Plugin Config supplies the default;
+**Settings → Device display** can change it immediately for an individual
+browser and remembers that local choice.
+
 Version `0.6.14` adds an optional DR Plotter-style chart cursor box. Enable it
 under **Settings → Device display** to show cursor latitude/longitude and, when
 own-vessel position is available, range and true bearing from the vessel. The
@@ -259,7 +264,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.14 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.15 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

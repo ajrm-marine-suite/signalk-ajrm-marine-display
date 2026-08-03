@@ -20,6 +20,7 @@ export function createAppRefreshController({
 	targets,
 	getSelfMmsi,
 	setSelfTarget,
+	getCoordinateFormat = () => "dms",
 	targetSilence,
 	serverAlertEvents,
 	alertPopup,
@@ -97,6 +98,7 @@ export function createAppRefreshController({
 				applyDisplayTargetGeometry({
 					targets,
 					selfMmsi: getSelfMmsi(),
+					coordinateFormat: getCoordinateFormat(),
 				});
 			});
 			setSelfTarget(targets.get(getSelfMmsi()));

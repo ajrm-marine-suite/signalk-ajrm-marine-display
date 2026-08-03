@@ -1,3 +1,11 @@
+import {
+	COORDINATE_FORMAT_STORAGE_KEY,
+	formatLatLon,
+	normalizeCoordinateFormat,
+} from "./coordinate-format.mjs";
+
+export { formatCoordinate, formatLatLon } from "./coordinate-format.mjs";
+
 const EARTH_RADIUS_METRES = 6371000;
 
 export const CURSOR_POSITION_STORAGE_KEY = "checkCursorPosition";
@@ -6,22 +14,41 @@ export function createCursorPositionController({
 	map,
 	element,
 	checkbox,
+	formatSelect,
+	defaultCoordinateFormat = "dms",
+	onCoordinateFormatChanged = () => {},
 	getOwnPosition = () => null,
 	storage = globalThis.localStorage,
 }) {
 	let enabled = storage?.getItem?.(CURSOR_POSITION_STORAGE_KEY) === "true";
+	let lastEvent = null;
+	let coordinateFormat = normalizeCoordinateFormat(
+		storage?.getItem?.(COORDINATE_FORMAT_STORAGE_KEY),
+		defaultCoordinateFormat,
+	);
 
 	function render(event) {
+		lastEvent = event;
 		if (!enabled) return;
 		const cursorPosition = leafletLatLngToPosition(event?.latlng);
 		if (!cursorPosition) {
 			clear();
 			return;
 		}
-		element.textContent = `Cursor ${formatLatLon(cursorPosition)}${cursorRangeText(
+		element.textContent = `Cursor ${formatLatLon(cursorPosition, coordinateFormat)}${cursorRangeText(
 			getOwnPosition(),
 			cursorPosition,
 		)}`;
+	}
+
+	function applyCoordinateFormat(value, { persist = true } = {}) {
+		coordinateFormat = normalizeCoordinateFormat(value, defaultCoordinateFormat);
+		if (formatSelect) formatSelect.value = coordinateFormat;
+		if (persist) {
+			storage?.setItem?.(COORDINATE_FORMAT_STORAGE_KEY, coordinateFormat);
+		}
+		onCoordinateFormatChanged(coordinateFormat);
+		if (lastEvent) render(lastEvent);
 	}
 
 	function clear() {
@@ -40,7 +67,11 @@ export function createCursorPositionController({
 
 	function init() {
 		applyEnabled(enabled, { persist: false });
+		applyCoordinateFormat(coordinateFormat, { persist: false });
 		checkbox.addEventListener("change", () => applyEnabled(checkbox.checked));
+		formatSelect?.addEventListener("change", () =>
+			applyCoordinateFormat(formatSelect.value),
+		);
 		map.on("mousemove", render);
 		map.on("mouseout", clear);
 	}
@@ -51,31 +82,9 @@ export function createCursorPositionController({
 		render,
 		clear,
 		isEnabled: () => enabled,
+		getCoordinateFormat: () => coordinateFormat,
+		setCoordinateFormat: applyCoordinateFormat,
 	};
-}
-
-export function formatLatLon(position) {
-	const latitude = Number(position?.latitude);
-	const longitude = Number(position?.longitude);
-	if (!Number.isFinite(latitude) || !Number.isFinite(longitude)) return "--";
-	return `${formatCoordinate(latitude, "N", "S")} ${formatCoordinate(
-		longitude,
-		"E",
-		"W",
-	)}`;
-}
-
-export function formatCoordinate(value, positive, negative) {
-	const absolute = Math.abs(Number(value));
-	if (!Number.isFinite(absolute)) return "n/a";
-	const degrees = Math.floor(absolute);
-	const minutesTotal = (absolute - degrees) * 60;
-	const minutes = Math.floor(minutesTotal);
-	const seconds = (minutesTotal - minutes) * 60;
-	const hemisphere = Number(value) >= 0 ? positive : negative;
-	return `${degrees}° ${String(minutes).padStart(2, "0")}' ${seconds.toFixed(
-		1,
-	)}"${hemisphere}`;
 }
 
 export function cursorRangeText(ownPosition, cursorPosition) {

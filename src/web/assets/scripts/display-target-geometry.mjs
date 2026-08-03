@@ -1,12 +1,29 @@
 const EARTH_RADIUS_METRES = 6371000;
 
-export function applyDisplayTargetGeometry({ targets, selfMmsi, now = Date.now() }) {
+import { formatCoordinate } from "./coordinate-format.mjs";
+
+export function applyDisplayTargetGeometry({
+	targets,
+	selfMmsi,
+	now = Date.now(),
+	coordinateFormat = "dms",
+}) {
 	const self = targets.get(String(selfMmsi));
 	for (const target of targets.values()) {
 		target.isValid = validPosition(target);
 		target.lastSeen = ageSeconds(target.lastSeenDate, now);
-		target.latitudeFormatted = coordinateText(target.latitude, true);
-		target.longitudeFormatted = coordinateText(target.longitude, false);
+		target.latitudeFormatted = formatCoordinate(
+			target.latitude,
+			"N",
+			"S",
+			coordinateFormat,
+		);
+		target.longitudeFormatted = formatCoordinate(
+			target.longitude,
+			"E",
+			"W",
+			coordinateFormat,
+		);
 		target.sogFormatted = Number.isFinite(target.sog)
 			? `${(target.sog * 1.94384).toFixed(1)} kn`
 			: "---";
@@ -107,18 +124,6 @@ function normalizeDistanceUnit(unit) {
 		return "statute";
 	}
 	return "nmi";
-}
-
-function coordinateText(value, latitude) {
-	if (!Number.isFinite(Number(value))) return "---";
-	const number = Number(value);
-	const absolute = Math.abs(number);
-	const degrees = Math.floor(absolute);
-	const minutes = ((absolute - degrees) * 60).toFixed(4);
-	const hemisphere = latitude
-		? number >= 0 ? "N" : "S"
-		: number >= 0 ? "E" : "W";
-	return `${hemisphere} ${degrees}° ${minutes}`;
 }
 
 function angleText(radiansValue) {

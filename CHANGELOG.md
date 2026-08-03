@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.15
+
+- Add a Signal K Plugin Config default for latitude/longitude formatting with
+  degrees/minutes/seconds, degrees/decimal-minutes, and decimal-degrees modes.
+- Add an immediate per-browser format selector under **Settings → Device
+  display**, remembered locally and applied to both the chart cursor and vessel
+  details.
+
 ## 0.6.14
 
 - Add an optional DR Plotter-style chart cursor box showing latitude and

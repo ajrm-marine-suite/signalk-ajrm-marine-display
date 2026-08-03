@@ -7,8 +7,9 @@ import {
 	createCursorPositionController,
 	formatLatLon,
 } from "../src/web/assets/scripts/cursor-position-control.mjs";
+import { COORDINATE_FORMAT_STORAGE_KEY } from "../src/web/assets/scripts/coordinate-format.mjs";
 
-function fixture(stored = null) {
+function fixture(stored = null, formatStored = null, defaultCoordinateFormat = "dms") {
 	const handlers = new Map();
 	const storageWrites = [];
 	const classes = new Set(["d-none"]);
@@ -27,18 +28,38 @@ function fixture(stored = null) {
 			this.onChange = handler;
 		},
 	};
+	const formatSelect = {
+		value: "",
+		addEventListener(_name, handler) {
+			this.onChange = handler;
+		},
+	};
 	const controller = createCursorPositionController({
 		map: { on: (name, handler) => handlers.set(name, handler) },
 		element,
 		checkbox,
+		formatSelect,
+		defaultCoordinateFormat,
 		getOwnPosition: () => ({ latitude: 56, longitude: -5 }),
 		storage: {
-			getItem: (key) => (key === CURSOR_POSITION_STORAGE_KEY ? stored : null),
+			getItem: (key) => {
+				if (key === CURSOR_POSITION_STORAGE_KEY) return stored;
+				if (key === COORDINATE_FORMAT_STORAGE_KEY) return formatStored;
+				return null;
+			},
 			setItem: (key, value) => storageWrites.push([key, value]),
 		},
 	});
 	controller.init();
-	return { controller, handlers, element, checkbox, classes, storageWrites };
+	return {
+		controller,
+		handlers,
+		element,
+		checkbox,
+		formatSelect,
+		classes,
+		storageWrites,
+	};
 }
 
 test("cursor readout is disabled by default and persists the device preference", () => {
@@ -50,6 +71,21 @@ test("cursor readout is disabled by default and persists the device preference",
 	view.checkbox.onChange();
 	assert.equal(view.classes.has("d-none"), false);
 	assert.deepEqual(view.storageWrites, [[CURSOR_POSITION_STORAGE_KEY, "true"]]);
+});
+
+test("coordinate format uses the configured default and a remembered browser override", () => {
+	const configured = fixture("true", null, "decimal");
+	assert.equal(configured.formatSelect.value, "decimal");
+	configured.handlers.get("mousemove")({ latlng: { lat: 56.01, lng: -5 } });
+	assert.match(configured.element.textContent, /^Cursor 56\.010000°N 5\.000000°W/);
+
+	const remembered = fixture("true", "degrees-minutes", "decimal");
+	assert.equal(remembered.formatSelect.value, "degrees-minutes");
+	remembered.formatSelect.value = "dms";
+	remembered.formatSelect.onChange();
+	assert.deepEqual(remembered.storageWrites, [
+		[COORDINATE_FORMAT_STORAGE_KEY, "dms"],
+	]);
 });
 
 test("cursor readout matches DR Plotter layout and includes own-vessel range", () => {

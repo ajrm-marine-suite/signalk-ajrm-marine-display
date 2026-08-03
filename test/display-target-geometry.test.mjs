@@ -60,3 +60,20 @@ test("fallback geometry formatting follows projected distance unit", () => {
 	assert.ok(target.range > 300);
 	assert.match(target.rangeFormatted, / mi$/);
 });
+
+test("target latitude and longitude use the selected coordinate format", () => {
+	const target = {
+		mmsi: "self",
+		latitude: 56.25,
+		longitude: -5.5,
+		lastSeenDate: new Date("2026-06-20T12:00:00.000Z"),
+	};
+	applyDisplayTargetGeometry({
+		targets: new Map([["self", target]]),
+		selfMmsi: "self",
+		coordinateFormat: "degrees-minutes",
+		now: Date.parse("2026-06-20T12:00:05.000Z"),
+	});
+	assert.equal(target.latitudeFormatted, "56° 15.000'N");
+	assert.equal(target.longitudeFormatted, "5° 30.000'W");
+});

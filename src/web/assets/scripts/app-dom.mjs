@@ -100,6 +100,7 @@ export function createAppDom() {
 
 	const mapControls = {
 		cursorPosition: getRequiredElement("checkCursorPosition"),
+		coordinateFormat: getRequiredElement("selectCoordinateFormat"),
 		selfIconVariant: getRequiredElement("selectSelfIconVariant"),
 		selfIconOrientation: getRequiredElement("selectSelfIconOrientation"),
 		selfIconFillColor: getRequiredElement("colorSelfIconFill"),

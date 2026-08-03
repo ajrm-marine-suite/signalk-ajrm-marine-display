@@ -40,6 +40,7 @@ export function mainTargetUiStateConfig({
 		getSelectedVesselMmsi: state.getSelectedVesselMmsi,
 		setSelectedVesselMmsi: state.setSelectedVesselMmsi,
 		getSortTableBy: state.getSortTableBy,
+		getCoordinateFormat: state.getCoordinateFormat,
 		getMapFollowSelf: mapFollow.getMapFollowSelf,
 		getDisableMapPanTo: state.getDisableMapPanTo,
 		getDisplayHarbours: () => harbourDisplay?.isEnabled?.() === true,

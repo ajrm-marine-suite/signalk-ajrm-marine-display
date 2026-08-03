@@ -106,6 +106,19 @@ module.exports = function ajrmMarineDisplay(app) {
         minimum: 2,
         maximum: 18,
       },
+      coordinateFormat: {
+        type: "string",
+        title: "Latitude/longitude display format",
+        description:
+          "Default coordinate format for Display browsers. A browser can override it immediately in Display Settings.",
+        default: "dms",
+        enum: ["dms", "degrees-minutes", "decimal"],
+        enumNames: [
+          "Degrees minutes seconds",
+          "Degrees decimal minutes",
+          "Decimal degrees",
+        ],
+      },
       browserRefreshDiagnostics: {
         type: "boolean",
         title: "Enable browser refresh diagnostics",
@@ -558,6 +571,7 @@ function normalizeOptions(value) {
       latitude: clamp(value.defaultLatitude, -90, 90, 56.45),
       longitude: clamp(value.defaultLongitude, -180, 180, -5.45),
       zoom: Math.round(clamp(value.defaultZoom, 2, 18, 10)),
+      coordinateFormat: normalizeCoordinateFormat(value.coordinateFormat),
     },
     diagnostics: {
       browserRefreshDiagnostics: value.browserRefreshDiagnostics === true,
@@ -566,6 +580,12 @@ function normalizeOptions(value) {
       directory: expandHome(value.routeDirectory || DEFAULT_ROUTE_DIRECTORY),
     },
   };
+}
+
+function normalizeCoordinateFormat(value) {
+  return ["dms", "degrees-minutes", "decimal"].includes(value)
+    ? value
+    : "dms";
 }
 
 function expandHome(value) {

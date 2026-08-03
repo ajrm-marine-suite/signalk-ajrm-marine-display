@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.14";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.15";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-Do0ssPA6.js"></script>
+    <script type="module" crossorigin src="./assets/index-LOnG3XmL.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CgC-v--u.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.14</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.15</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1224,6 +1224,19 @@
                         </label>
                         <div class="form-text">
                           Shows latitude, longitude, and range/bearing from own vessel in a box at the bottom right of the chart.
+                        </div>
+                      </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="selectCoordinateFormat">
+                          Latitude/longitude format
+                        </label>
+                        <select class="form-select" id="selectCoordinateFormat">
+                          <option value="dms">Degrees minutes seconds</option>
+                          <option value="degrees-minutes">Degrees decimal minutes</option>
+                          <option value="decimal">Decimal degrees</option>
+                        </select>
+                        <div class="form-text">
+                          Applies immediately to this browser and is remembered here. Signal K Plugin Config supplies the initial default.
                         </div>
                       </div>
                     </div>

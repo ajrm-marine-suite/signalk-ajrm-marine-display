@@ -168,6 +168,9 @@ createCursorPositionController({
 	map,
 	element: elements.cursorPosition,
 	checkbox: mapControls.cursorPosition,
+	formatSelect: mapControls.coordinateFormat,
+	defaultCoordinateFormat: displayRuntimeStatus?.defaults?.coordinateFormat,
+	onCoordinateFormatChanged: state.setCoordinateFormat,
 	getOwnPosition: state.getSelfTarget,
 	storage: window.localStorage,
 }).init();
