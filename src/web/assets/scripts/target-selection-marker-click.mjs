@@ -18,6 +18,11 @@ export function handleTargetMarkerClick({
 	targets,
 }) {
 	const boatMarker = event.target;
+	if (boatMarker.mmsi === getSelfMmsi()) {
+		selectBoatMarker(boatMarker);
+		showSelectedVesselDetails(boatMarker);
+		return;
+	}
 	const closebyBoatMarkers = findClosebyBoatMarkers({
 		latLng: event.latlng,
 		map,

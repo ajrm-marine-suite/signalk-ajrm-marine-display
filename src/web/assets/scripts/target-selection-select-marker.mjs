@@ -4,7 +4,6 @@ import { shouldSelectBoatMarker } from "./target-selection-state.mjs";
 export function selectBoatMarkerForDetails({
 	boatMarker,
 	getSelectedVesselMmsi,
-	getSelfMmsi,
 	getSelectionMarkers,
 	map,
 	setSelectedVesselMmsi,
@@ -12,13 +11,11 @@ export function selectBoatMarkerForDetails({
 	updateSingleVesselUI,
 }) {
 	if (!boatMarker) return;
-	const selfMmsi = getSelfMmsi();
 	const selectedVesselMmsi = getSelectedVesselMmsi();
 
 	if (
 		!shouldSelectBoatMarker({
 			markerMmsi: boatMarker.mmsi,
-			selfMmsi,
 			selectedVesselMmsi,
 		})
 	) {

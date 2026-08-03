@@ -59,6 +59,50 @@ test("selected vessel details show placeholders for missing optional fields", ()
 	);
 });
 
+test("own-vessel details hide collision-only controls and identify the vessel", () => {
+	resetSelectedVesselDetailsCache();
+	const elements = new Map();
+	const otherOnlyElements = Array.from({ length: 6 }, () => elementStub());
+	globalThis.document = {
+		getElementById(id) {
+			if (!elements.has(id)) elements.set(id, elementStub());
+			return elements.get(id);
+		},
+		querySelectorAll(selector) {
+			if (selector === ".target-other-vessel-only") return otherOnlyElements;
+			return [];
+		},
+	};
+	let muteUpdates = 0;
+
+	renderSelectedVesselDetails({
+		target: {
+			mmsi: "235900003",
+			name: "Wind Singer",
+			isValid: true,
+			sogFormatted: "5.0 kn",
+			cogFormatted: "123°",
+		},
+		isSelf: true,
+		targetSilence: {
+			updateButtonMuteToggleIcon() {
+				muteUpdates += 1;
+			},
+		},
+		activateToolTips() {},
+	});
+
+	assert.equal(muteUpdates, 0);
+	assert.equal(elements.get("target.name").textContent, "Wind Singer");
+	assert.equal(elements.get("target.sogFormatted").textContent, "5.0 kn");
+	assert.equal(elements.get("selectedVesselOwnBadge").classes.has("d-none"), false);
+	assert.equal(elements.get("selectedVesselAlert").classes.has("d-none"), true);
+	assert.equal(
+		otherOnlyElements.every((element) => element.classes.has("d-none")),
+		true,
+	);
+});
+
 test("renderSelectedVesselDetails skips unchanged detail refreshes", () => {
 	resetSelectedVesselDetailsCache();
 	const calls = [];
@@ -199,3 +243,30 @@ test("setElementClassPresenceIfChanged skips unchanged selected-vessel classes",
 	assert.equal(setElementClassPresenceIfChanged(element, "alert-danger", true), true);
 	assert.deepEqual(calls.at(-1), ["add", "alert-danger"]);
 });
+
+function elementStub() {
+	const attributes = new Map();
+	const classes = new Set();
+	return {
+		attributes,
+		classes,
+		classList: {
+			add(name) {
+				classes.add(name);
+			},
+			contains(name) {
+				return classes.has(name);
+			},
+			remove(name) {
+				classes.delete(name);
+			},
+		},
+		getAttribute(name) {
+			return attributes.get(name) ?? null;
+		},
+		setAttribute(name, value) {
+			attributes.set(name, String(value));
+		},
+		textContent: "",
+	};
+}

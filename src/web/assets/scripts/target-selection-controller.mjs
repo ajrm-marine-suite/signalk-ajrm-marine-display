@@ -114,7 +114,6 @@ export function createTargetSelectionController({
 		selectBoatMarkerForDetails({
 			boatMarker,
 			getSelectedVesselMmsi,
-			getSelfMmsi,
 			getSelectionMarkers,
 			map,
 			setSelectedVesselMmsi,

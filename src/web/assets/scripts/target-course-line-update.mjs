@@ -27,7 +27,11 @@ export function updateTargetCourseLine({
 	updateSelfTcpaGuideLinesFn = updateSelfTcpaGuideLines,
 	hideSelfTcpaGuideLinesFn = hideSelfTcpaGuideLines,
 }) {
-	if (target.mmsi === selfMmsi && selectedVesselMmsi) {
+	if (
+		target.mmsi === selfMmsi &&
+		selectedVesselMmsi &&
+		selectedVesselMmsi !== selfMmsi
+	) {
 		hideSelfTcpaGuideLinesFn(line);
 		setSelectedCourseLineFn({
 			line,
@@ -40,7 +44,7 @@ export function updateTargetCourseLine({
 		return;
 	}
 
-	if (selectedVesselMmsi === target.mmsi) {
+	if (selectedVesselMmsi === target.mmsi && target.mmsi !== selfMmsi) {
 		hideSelfTcpaGuideLinesFn(line);
 		setSelectedCourseLineFn({
 			line,

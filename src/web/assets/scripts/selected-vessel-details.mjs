@@ -9,10 +9,11 @@ export function renderSelectedVesselDetails({
 	target,
 	targetSilence,
 	activateToolTips,
+	isSelf = false,
 }) {
-	const signature = selectedVesselDetailsSignature(target);
+	const signature = selectedVesselDetailsSignature(target, isSelf);
 	if (signature === lastSelectedVesselDetailsSignature) return false;
-	targetSilence.updateButtonMuteToggleIcon(target);
+	if (!isSelf) targetSilence.updateButtonMuteToggleIcon(target);
 	setText("target.name", target.name);
 	setText("target.spokenSummary", target.spokenSummary || "---");
 	setText("target.lastSeen", target.lastSeen);
@@ -48,8 +49,9 @@ export function renderSelectedVesselDetails({
 	setText("target.longitudeFormatted", target.longitudeFormatted);
 
 	activateToolTips();
+	updateOwnVesselContext(isSelf);
 	updateClassAFields(target);
-	updateSelectedVesselAlert(target);
+	updateSelectedVesselAlert(target, isSelf);
 	lastSelectedVesselDetailsSignature = signature;
 	return true;
 }
@@ -58,8 +60,9 @@ export function resetSelectedVesselDetailsCache() {
 	lastSelectedVesselDetailsSignature = null;
 }
 
-export function selectedVesselDetailsSignature(target) {
+export function selectedVesselDetailsSignature(target, isSelf = false) {
 	return [
+		isSelf,
 		target.mmsi,
 		target.name,
 		target.spokenSummary,
@@ -91,6 +94,17 @@ export function selectedVesselDetailsSignature(target) {
 		target.alarmState,
 		target.alertLabel,
 	].map((value) => String(value ?? "")).join("\u001f");
+}
+
+function updateOwnVesselContext(isSelf) {
+	document.querySelectorAll(".target-other-vessel-only").forEach((element) => {
+		setElementClassPresenceIfChanged(element, "d-none", isSelf);
+	});
+	setElementClassPresenceIfChanged(
+		document.getElementById("selectedVesselOwnBadge"),
+		"d-none",
+		!isSelf,
+	);
 }
 
 function setText(id, value) {
@@ -127,8 +141,12 @@ function updateClassAFields(target) {
 	});
 }
 
-function updateSelectedVesselAlert(target) {
+function updateSelectedVesselAlert(target, isSelf) {
 	const selectedVesselAlert = document.getElementById("selectedVesselAlert");
+	if (isSelf) {
+		setElementClassPresenceIfChanged(selectedVesselAlert, "d-none", true);
+		return;
+	}
 	const state = selectedVesselAlertState(target);
 
 	if (state.hidden) {

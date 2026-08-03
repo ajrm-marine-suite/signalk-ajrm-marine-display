@@ -237,6 +237,44 @@ test("own-vessel projected track always receives COG rather than heading", () =>
 	assert.notEqual(projected.cog, 0);
 });
 
+test("selecting own vessel preserves its normal projected track", () => {
+	let projected = null;
+	let selected = null;
+	updateTargetCourseLine({
+		target: {
+			mmsi: "self",
+			latitude: 56,
+			longitude: -5,
+			sog: 2,
+			cog: Math.PI / 2,
+		},
+		selfMmsi: "self",
+		selectedVesselMmsi: "self",
+		targets: new Map([["self", { mmsi: "self" }]]),
+		line: lineStub(),
+		blueCircle1: {},
+		blueCircle2: {},
+		map: {},
+		L: {},
+		collisionProfiles: { current: "coastal" },
+		courseProjectionMinutes: 5,
+		vesselIcon: { color: "black" },
+		setSelectedCourseLineFn(value) {
+			selected = value;
+		},
+		setProjectedCourseLineFn(value) {
+			projected = value;
+		},
+		updateSelfTcpaGuideLinesFn() {
+			return false;
+		},
+		hideSelfTcpaGuideLinesFn() {},
+	});
+
+	assert.equal(selected, null);
+	assert.equal(projected.distance, 600);
+});
+
 function lineStub() {
 	return {
 		_ajrmMarineCourseLineState: { kind: "old" },

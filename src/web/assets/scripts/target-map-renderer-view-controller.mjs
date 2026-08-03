@@ -31,6 +31,7 @@ export function createTargetMapRendererViewController({
 			document: documentRef,
 			target,
 			targetSilence,
+			isSelf: target?.mmsi === getSelfMmsi(),
 		});
 	}
 

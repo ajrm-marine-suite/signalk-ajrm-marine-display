@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.16
+
+- Make the own-vessel map marker selectable and open the existing vessel-status
+  popup without invoking the nearby-target chooser.
+- Label own-vessel status explicitly and omit collision-relative fields and
+  target-silencing controls that do not apply to the vessel itself.
+- Preserve the normal own-vessel course projection while its status popup is
+  selected.
+
 ## 0.6.15
 
 - Add a Signal K Plugin Config default for latitude/longitude formatting with

@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.16` makes the own-vessel marker selectable. Clicking it opens the
+familiar vessel-detail popup, identifies it as **Own vessel**, and shows the
+available identity, motion and position data without inapplicable collision or
+silencing controls.
+
 Version `0.6.15` adds a configurable latitude/longitude format for chart cursor
 and vessel-detail coordinates. Signal K Plugin Config supplies the default;
 **Settings → Device display** can change it immediately for an individual
@@ -264,7 +269,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.15 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.16 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

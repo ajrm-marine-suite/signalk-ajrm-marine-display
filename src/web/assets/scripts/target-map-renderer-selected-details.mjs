@@ -5,12 +5,14 @@ export function updateRendererSelectedVesselDetails({
 	document,
 	target,
 	targetSilence,
+	isSelf = false,
 	renderDetails = renderSelectedVesselDetails,
 	activateTooltips = activateBootstrapTooltips,
 }) {
 	return renderDetails({
 		target,
 		targetSilence,
+		isSelf,
 		activateToolTips: () => activateTooltips({ document }),
 	});
 }

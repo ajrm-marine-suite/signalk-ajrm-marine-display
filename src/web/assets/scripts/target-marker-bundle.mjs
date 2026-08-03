@@ -21,9 +21,7 @@ export function createTargetMarkerBundle({
 		zIndexOffset: -999,
 	});
 
-	if (target.mmsi !== selfMmsi) {
-		boatMarker.on("click", targetSelection.boatClicked);
-	}
+	boatMarker.on("click", targetSelection.boatClicked);
 
 	const boatProjectedCourseLine = L.polyline([[]], {
 		color: "gray",

@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.15";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.16";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-LOnG3XmL.js"></script>
+    <script type="module" crossorigin src="./assets/index-C1jiLdNV.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CgC-v--u.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.15</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.16</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -568,7 +568,7 @@
               <div class="col-2">
                 <button
                   type="button"
-                  class="btn btn-outline-secondary"
+                  class="btn btn-outline-secondary target-other-vessel-only"
                   id="buttonMuteToggle"
                   title="Silence or unsilence this target"
                   aria-label="Silence or unsilence this target"
@@ -577,7 +577,14 @@
                 </button>
               </div>
               <div class="col">
-                <h5 class="modal-title text-center" id="target.name"></h5>
+                <h5 class="modal-title text-center">
+                  <span id="target.name"></span>
+                  <span
+                    class="badge text-bg-primary d-none"
+                    id="selectedVesselOwnBadge"
+                    >Own vessel</span
+                  >
+                </h5>
               </div>
               <div class="col-2 text-end">
                 <button
@@ -596,7 +603,7 @@
               ></h6>
               <table class="table table-sm">
                 <tbody>
-                  <tr>
+                  <tr class="target-other-vessel-only">
                     <th scope="row">Message</th>
                     <td class="text-wrap" style="white-space: normal; word-break: normal;">
                       <span id="target.spokenSummary"></span>
@@ -606,19 +613,19 @@
                     <th scope="row">Last Seen</th>
                     <td><span id="target.lastSeen"></span> secs</td>
                   </tr>
-                  <tr>
+                  <tr class="target-other-vessel-only">
                     <th scope="row">CPA</th>
                     <td><span id="target.cpaFormatted"></span></td>
                   </tr>
-                  <tr>
+                  <tr class="target-other-vessel-only">
                     <th scope="row">TCPA</th>
                     <td id="target.tcpaFormatted"></td>
                   </tr>
-                  <tr>
+                  <tr class="target-other-vessel-only">
                     <th scope="row">Range</th>
                     <td><span id="target.rangeFormatted"></span></td>
                   </tr>
-                  <tr>
+                  <tr class="target-other-vessel-only">
                     <th scope="row">Bearing</th>
                     <td><span id="target.bearingFormatted"></span></td>
                   </tr>
