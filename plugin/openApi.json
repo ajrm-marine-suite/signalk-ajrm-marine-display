@@ -2,8 +2,8 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.6.10",
-    "description": "Display status and chart-webapp projections backed by AJRM Marine Traffic and Notifications Plus."
+    "version": "0.6.11",
+    "description": "Display status, chart-webapp projections and display-only Signal K v2 route management backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
     {
@@ -116,6 +116,92 @@
           },
           "503": {
             "description": "AJRM Marine Capture observation support is unavailable"
+          }
+        }
+      }
+    },
+    "/routes": {
+      "get": {
+        "summary": "List the active route, Signal K v2 route resources and GPX files in the configured Pi directory",
+        "responses": {
+          "200": {
+            "description": "Route manager state and available routes"
+          }
+        }
+      }
+    },
+    "/routes/import": {
+      "post": {
+        "summary": "Import and display a browser-supplied GPX 1.1 route",
+        "responses": {
+          "200": {
+            "description": "Imported route is active"
+          },
+          "409": {
+            "description": "GPX route could not be imported"
+          }
+        }
+      }
+    },
+    "/routes/open-pi": {
+      "post": {
+        "summary": "Open and display a GPX 1.1 route from the configured Pi directory",
+        "responses": {
+          "200": {
+            "description": "Pi route is active"
+          }
+        }
+      }
+    },
+    "/routes/open-resource": {
+      "post": {
+        "summary": "Open and display a Signal K v2 route resource",
+        "responses": {
+          "200": {
+            "description": "Signal K route resource is active"
+          }
+        }
+      }
+    },
+    "/routes/reverse": {
+      "post": {
+        "summary": "Toggle the active route coordinate and waypoint order",
+        "responses": {
+          "200": {
+            "description": "Reversed route is active"
+          }
+        }
+      }
+    },
+    "/routes/save": {
+      "post": {
+        "summary": "Save or save-as the active route to Signal K and the configured Pi GPX directory",
+        "responses": {
+          "200": {
+            "description": "Route was saved"
+          }
+        }
+      }
+    },
+    "/routes/close": {
+      "post": {
+        "summary": "Close the displayed route without changing the Signal K Course API",
+        "responses": {
+          "200": {
+            "description": "No route is active"
+          }
+        }
+      }
+    },
+    "/routes/export": {
+      "get": {
+        "summary": "Download the active route as OpenCPN-compatible GPX 1.1",
+        "responses": {
+          "200": {
+            "description": "GPX route document"
+          },
+          "409": {
+            "description": "No route is active"
           }
         }
       }

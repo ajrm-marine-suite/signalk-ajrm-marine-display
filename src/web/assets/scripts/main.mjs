@@ -41,6 +41,7 @@ import { chartResourcesPath } from "./startup-data-routes.mjs";
 import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 import { createVoyageObservationController } from "./voyage-observation.mjs";
+import { createRouteController } from "./route-controller.mjs";
 
 const displayRuntimeStatus = await readDisplayRuntimeStatus();
 window.AJRM_MARINE_DISPLAY_DEBUG =
@@ -79,6 +80,7 @@ const {
 	offcanvas,
 	speechControls,
 	mapControls,
+	routeControls,
 	observationControls,
 	autoProfileControls,
 	sizeControls,
@@ -161,6 +163,19 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 		loadCharts,
 		storage: window.localStorage,
 	});
+const routeController = createRouteController({
+	L,
+	map,
+	controls: routeControls,
+	styleControls: {
+		color: mapControls.routeLineColor,
+		width: mapControls.routeLineWidth,
+		widthValue: mapControls.routeLineWidthValue,
+	},
+	fetchFn: fetch,
+	storage: window.localStorage,
+});
+routeController.init();
 if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 	startDisplayDebugControlPolling({
 		windowRef: window,

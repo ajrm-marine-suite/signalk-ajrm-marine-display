@@ -54,6 +54,22 @@ body {
   margin: 0;
 }
 
+.ajrm-route-arrow-marker {
+	background: transparent;
+	border: 0;
+	filter: drop-shadow(0 0 2px rgba(255, 255, 255, 0.95));
+	pointer-events: none;
+}
+
+.ajrm-route-arrow-marker span {
+	display: block;
+	font-size: 20px;
+	font-weight: 900;
+	line-height: 22px;
+	text-align: center;
+	transform-origin: 50% 50%;
+}
+
 html,
 body,
 #map {

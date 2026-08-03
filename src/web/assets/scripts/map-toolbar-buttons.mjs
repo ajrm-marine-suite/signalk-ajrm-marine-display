@@ -18,6 +18,11 @@ export function mapToolbarButtonSpecs({ offcanvas, document = globalThis.documen
 			action: () => offcanvas.settings.show(),
 		},
 		{
+			icon: DISPLAY_CONTROL_ICONS.routes,
+			title: "Routes",
+			action: () => document.getElementById("buttonOpenRoutes")?.click(),
+		},
+		{
 			icon: DISPLAY_CONTROL_ICONS.observation,
 			title: "Voyage observation",
 			action: () => document.getElementById("buttonOpenObservation")?.click(),

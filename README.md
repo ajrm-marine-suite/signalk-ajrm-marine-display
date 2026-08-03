@@ -2,6 +2,12 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.11` adds display-only route management. GPX 1.1 routes can be
+opened from the browser or the configured Pi route directory, stored as Signal
+K v2 route resources, reversed, saved and exported without activating the
+Signal K Course API. The active route and later route changes are exposed to
+AJRM Marine Capture so a replay can restore the same route timeline.
+
 Version `0.6.7` retains a grey own-vessel icon at the last known position after
 replay ends or GPS becomes stale. Its course projection is removed, while its
 last known heading or COG is retained only for icon orientation.
@@ -163,6 +169,11 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Auto Profile status and enable/disable control backed by AJRM Marine Traffic.
 - Global mute and stationary automute controls backed by AJRM Marine Traffic Audio Policy.
 - Harbour Limits loaded directly from Signal K region resources.
+- Display-only Signal K v2 routes with configurable colour and width,
+  direction arrows, and a reversible route order.
+- GPX 1.1 import and export compatible with OpenCPN route extensions and with
+  Savvy Navvy routes whose name is stored in GPX metadata and whose route
+  points are unnamed.
 - Immediate announcement-feed updates from Notifications Plus audio delivery,
   deduplicated when the same event later enters history.
 - Browser speech follows the provider's explicit audio-delivery flag, queues
@@ -199,15 +210,37 @@ AJRM Marine Display appears in Signal K Plugin Config.
 - **Enable AJRM Marine Display**
 - **Data refresh interval**
 - **Fallback map latitude, longitude and zoom**
+- **GPX route directory on the Signal K server** (default
+  `~/AJRMMarineRoutes`)
 
 Chart selection, pan, zoom, overlays and display preferences remain
 browser-local so map interaction does not wait for server round trips.
+
+## Routes
+
+Use the map's **Route** button to open a GPX file from either the Pi or the
+browser device, or to open an existing Signal K v2 route resource. A
+browser-selected route may also be saved into the configured Pi directory.
+The browser controls the local file chooser, so browsers do not permit the
+webapp to reopen or prescribe the previous Mac/PC directory; the chooser will
+normally remember it according to that browser's own privacy policy. The Pi
+directory is remembered in Signal K plugin configuration.
+
+**Reverse** is a toggle on the displayed route. Saving while reversed writes
+the reversed coordinate and waypoint order to both the Signal K resource and
+the GPX file. Opening a route only displays it: it does not engage an autopilot
+or alter the active Signal K course.
+
+AJRM Marine Capture records the route that was open at voyage start and every
+subsequent open, reverse, save or close with voyage elapsed time. Recomputed
+replay restores the start route and applies the recorded route changes at the
+corresponding source times.
 
 ## Install
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.10 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.11 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

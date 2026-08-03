@@ -84,6 +84,7 @@ export function createAppDom() {
 			getRequiredElement("settingsAlertsCollapse"),
 			getRequiredElement("settingsDeviceCollapse"),
 			getRequiredElement("settingsCourseGuideCollapse"),
+			getRequiredElement("settingsRouteCollapse"),
 		].map((section) =>
 			document.querySelector(`[data-bs-target="#${section.id}"]`),
 		),
@@ -92,6 +93,7 @@ export function createAppDom() {
 			getRequiredElement("settingsAlertsCollapse"),
 			getRequiredElement("settingsDeviceCollapse"),
 			getRequiredElement("settingsCourseGuideCollapse"),
+			getRequiredElement("settingsRouteCollapse"),
 		],
 	};
 
@@ -105,10 +107,36 @@ export function createAppDom() {
 		selfTcpaGuideLargeColor: getRequiredElement("colorSelfTcpaGuideLarge"),
 		selfTcpaGuideMediumColor: getRequiredElement("colorSelfTcpaGuideMedium"),
 		selfTcpaGuideSmallColor: getRequiredElement("colorSelfTcpaGuideSmall"),
+		routeLineColor: getRequiredElement("colorRouteLine"),
+		routeLineWidth: getRequiredElement("rangeRouteLineWidth"),
+		routeLineWidthValue: getRequiredElement("routeLineWidthValue"),
 		replayStatus: getRequiredElement("replayStatus"),
 		replayMode: getRequiredElement("replayStatusMode"),
 		replayTime: getRequiredElement("replayStatusTime"),
 		replayFile: getRequiredElement("replayStatusFile"),
+	};
+
+	const routeControls = {
+		modal: getRequiredElement("modalRoutes"),
+		piFile: getRequiredElement("selectPiRouteFile"),
+		piDirectory: getRequiredElement("routePiDirectory"),
+		openPi: getRequiredElement("buttonOpenPiRoute"),
+		resource: getRequiredElement("selectSignalKRoute"),
+		openResource: getRequiredElement("buttonOpenSignalKRoute"),
+		browserFile: getRequiredElement("inputBrowserRouteFile"),
+		browserFileHelp: getRequiredElement("routeBrowserFileHelp"),
+		saveImportedToPi: getRequiredElement("checkSaveImportedRouteToPi"),
+		openBrowser: getRequiredElement("buttonOpenBrowserRoute"),
+		title: getRequiredElement("activeRouteTitle"),
+		details: getRequiredElement("activeRouteDetails"),
+		reverse: getRequiredElement("checkReverseRoute"),
+		name: getRequiredElement("inputRouteName"),
+		fileName: getRequiredElement("inputRouteFileName"),
+		save: getRequiredElement("buttonSaveRoute"),
+		saveAs: getRequiredElement("buttonSaveRouteAs"),
+		download: getRequiredElement("buttonDownloadRoute"),
+		close: getRequiredElement("buttonCloseRoute"),
+		status: getRequiredElement("routeStatus"),
 	};
 
 	const observationControls = {
@@ -140,6 +168,7 @@ export function createAppDom() {
 		offcanvas,
 		speechControls,
 		mapControls,
+		routeControls,
 		observationControls,
 		autoProfileControls,
 		sizeControls,

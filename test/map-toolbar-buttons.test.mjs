@@ -25,13 +25,14 @@ test("map toolbar includes voyage observations without disturbing established or
 
 	assert.deepEqual(
 		specs.map((spec) => spec.title),
-		["AIS Targets", "Profiles", "Settings", "Voyage observation", "Help"],
+		["AIS Targets", "Profiles", "Settings", "Routes", "Voyage observation", "Help"],
 	);
 	for (const spec of specs) spec.action();
 	assert.deepEqual(calls, [
 		"targets",
 		"profiles",
 		"settings",
+		"buttonOpenRoutes",
 		"buttonOpenObservation",
 		"buttonOpenHelp",
 	]);
@@ -58,11 +59,11 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 		document: { getElementById: () => null },
 	});
 
-	assert.equal(result.buttons.length, 5);
-	assert.equal(calls.length, 5);
+	assert.equal(result.buttons.length, 6);
+	assert.equal(calls.length, 6);
 	assert.ok(calls.every((call) => call.target === map));
 	assert.deepEqual(
 		calls.map((call) => call.title),
-		["AIS Targets", "Profiles", "Settings", "Voyage observation", "Help"],
+		["AIS Targets", "Profiles", "Settings", "Routes", "Voyage observation", "Help"],
 	);
 });

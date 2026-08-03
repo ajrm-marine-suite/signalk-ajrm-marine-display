@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.10";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.11";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-y97kn7Yk.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CYPPgTlM.css">
+    <script type="module" crossorigin src="./assets/index-CdOf0Y4x.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-kapZ2TZ5.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.10</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.11</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -246,6 +246,15 @@
       data-bs-target="#modalVoyageObservation"
     >
       Voyage observation
+    </button>
+    <button
+      type="button"
+      class="d-none"
+      id="buttonOpenRoutes"
+      data-bs-toggle="modal"
+      data-bs-target="#modalRoutes"
+    >
+      Routes
     </button>
 
     <div class="container">
@@ -447,6 +456,98 @@
               </button>
             </div>
           </form>
+        </div>
+      </div>
+
+      <div class="modal fade" tabindex="-1" id="modalRoutes">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title">
+                <i class="bi bi-signpost-split-fill"></i>
+                Routes
+              </h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <ul class="nav nav-tabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" data-bs-toggle="tab" data-bs-target="#routePiTab" type="button" role="tab">
+                    On the Pi
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" data-bs-toggle="tab" data-bs-target="#routeBrowserTab" type="button" role="tab">
+                    This device
+                  </button>
+                </li>
+              </ul>
+              <div class="tab-content border border-top-0 rounded-bottom p-3 mb-3">
+                <div class="tab-pane fade show active" id="routePiTab" role="tabpanel">
+                  <label class="form-label" for="selectPiRouteFile">GPX file on the Pi</label>
+                  <div class="input-group mb-3">
+                    <select class="form-select" id="selectPiRouteFile"></select>
+                    <button class="btn btn-primary" type="button" id="buttonOpenPiRoute">Open</button>
+                  </div>
+                  <div class="form-text mb-3" id="routePiDirectory"></div>
+                  <label class="form-label" for="selectSignalKRoute">Signal K route resource</label>
+                  <div class="input-group">
+                    <select class="form-select" id="selectSignalKRoute"></select>
+                    <button class="btn btn-outline-primary" type="button" id="buttonOpenSignalKRoute">Open</button>
+                  </div>
+                </div>
+                <div class="tab-pane fade" id="routeBrowserTab" role="tabpanel">
+                  <label class="form-label" for="inputBrowserRouteFile">GPX 1.1 route file</label>
+                  <input class="form-control" type="file" id="inputBrowserRouteFile" accept=".gpx,application/gpx+xml,application/xml,text/xml" />
+                  <div class="form-text" id="routeBrowserFileHelp">
+                    Supports OpenCPN, Savvy Navvy and standard GPX 1.1 route files.
+                  </div>
+                  <div class="form-check mt-3">
+                    <input class="form-check-input" type="checkbox" id="checkSaveImportedRouteToPi" checked />
+                    <label class="form-check-label" for="checkSaveImportedRouteToPi">
+                      Save a GPX copy on the Pi when opened
+                    </label>
+                  </div>
+                  <button class="btn btn-primary w-100 mt-3" type="button" id="buttonOpenBrowserRoute">
+                    Open selected file
+                  </button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-body">
+                  <div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+                    <div>
+                      <div class="fw-semibold" id="activeRouteTitle">No route open</div>
+                      <div class="small text-body-secondary" id="activeRouteDetails"></div>
+                    </div>
+                    <input class="btn-check" type="checkbox" id="checkReverseRoute" autocomplete="off" disabled />
+                    <label class="btn btn-outline-warning" for="checkReverseRoute" id="buttonReverseRoute">
+                      <i class="bi bi-arrow-left-right"></i>
+                      Reverse
+                    </label>
+                  </div>
+                  <div class="row g-2 mb-3">
+                    <div class="col-md-7">
+                      <label class="form-label" for="inputRouteName">Route name</label>
+                      <input class="form-control" id="inputRouteName" maxlength="200" />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label" for="inputRouteFileName">Pi GPX filename</label>
+                      <input class="form-control" id="inputRouteFileName" maxlength="240" />
+                    </div>
+                  </div>
+                  <div class="d-grid gap-2 d-md-flex">
+                    <button class="btn btn-primary flex-fill" type="button" id="buttonSaveRoute" disabled>Save</button>
+                    <button class="btn btn-outline-primary flex-fill" type="button" id="buttonSaveRouteAs" disabled>Save As</button>
+                    <a class="btn btn-outline-secondary flex-fill disabled" id="buttonDownloadRoute" href="#" download>Download GPX</a>
+                    <button class="btn btn-outline-danger flex-fill" type="button" id="buttonCloseRoute" disabled>Close route</button>
+                  </div>
+                </div>
+              </div>
+              <div class="small mt-3" id="routeStatus" role="status" aria-live="polite"></div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -946,6 +1047,35 @@
                     </div>
                     <div class="form-text" id="displayAudioModeStatus">
                       Audio status unavailable.
+                    </div>
+                  </div>
+                </div>
+                <div class="card mb-3">
+                  <button
+                    class="btn btn-light d-flex align-items-center justify-content-between"
+                    type="button"
+                    data-bs-toggle="collapse"
+                    data-bs-target="#settingsRouteCollapse"
+                    aria-expanded="false"
+                    aria-controls="settingsRouteCollapse"
+                  >
+                    <span>Route appearance</span>
+                    <i class="bi bi-chevron-down"></i>
+                  </button>
+                  <div class="collapse" id="settingsRouteCollapse" data-bs-parent="#settingsForm">
+                    <div class="card-body border-top">
+                      <div class="mb-3">
+                        <label class="form-label" for="colorRouteLine">Route line colour</label>
+                        <input class="form-control form-control-color" type="color" id="colorRouteLine" value="#ff7a00" />
+                      </div>
+                      <div>
+                        <div class="d-flex justify-content-between">
+                          <label class="form-label" for="rangeRouteLineWidth">Route line thickness</label>
+                          <output id="routeLineWidthValue" for="rangeRouteLineWidth">4 px</output>
+                        </div>
+                        <input class="form-range" type="range" id="rangeRouteLineWidth" min="2" max="12" step="1" value="4" />
+                        <div class="form-text">Direction arrows use the effective route order, including the Reverse toggle.</div>
+                      </div>
                     </div>
                   </div>
                 </div>

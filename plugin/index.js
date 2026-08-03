@@ -1,6 +1,8 @@
 "use strict";
 
 const { randomUUID } = require("node:crypto");
+const os = require("node:os");
+const path = require("node:path");
 const packageInfo = require("../package.json");
 const openApi = require("./openApi.json");
 const defaultProfiles = require("./defaultDisplayProfiles.json");
@@ -13,6 +15,7 @@ const {
   valueOf,
 } = require("./lib/compatibility");
 const { loadHarbourRegions } = require("./lib/harbour-regions");
+const { createRouteManager } = require("./lib/route-manager");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
@@ -45,12 +48,22 @@ const DEFAULT_DEBUG_CONTROLS = Object.freeze({
   tooltipPane: true,
   popupPane: true,
 });
+const DEFAULT_ROUTE_DIRECTORY = "~/AJRMMarineRoutes";
+const ROUTE_STATE_FILE = path.join(
+  os.homedir(),
+  ".signalk",
+  "plugin-config-data",
+  PLUGIN_ID,
+  "active-route.json",
+);
 
 module.exports = function ajrmMarineDisplay(app) {
   const plugin = {};
   let options = normalizeOptions({});
   let status = null;
   let debugControls = normalizeDebugControls({});
+  let routeManager = null;
+  let routeManagerReady = Promise.resolve();
 
   plugin.id = PLUGIN_ID;
   plugin.name = "AJRM Marine Display";
@@ -100,11 +113,28 @@ module.exports = function ajrmMarineDisplay(app) {
           "When Signal K plugin debug logging is enabled, record slow Display browser refresh timings through the plugin debug log.",
         default: false,
       },
+      routeDirectory: {
+        type: "string",
+        title: "GPX route directory on the Signal K server",
+        description:
+          "Display lists and saves GPX 1.1 route files in this directory. Signal K v2 route resources remain the canonical server-side route records.",
+        default: DEFAULT_ROUTE_DIRECTORY,
+      },
     },
   };
 
   plugin.start = (pluginOptions = {}) => {
     options = normalizeOptions(pluginOptions);
+    routeManager = createRouteManager({
+      resourcesApi: app.resourcesApi,
+      routeDirectory: options.routes.directory,
+      stateFile: ROUTE_STATE_FILE,
+      onSelection: recordRouteSelection,
+    });
+    routeManagerReady = routeManager.init().catch((error) => {
+      app.error?.(`[${PLUGIN_ID}] route manager startup failed: ${error.message}`);
+      throw error;
+    });
     status = {
       contract: "ajrm-marine-display-status",
       contractVersion: 1,
@@ -114,6 +144,10 @@ module.exports = function ajrmMarineDisplay(app) {
       version: packageInfo.version,
       defaults: options.defaults,
       diagnostics: options.diagnostics,
+      routes: {
+        directory: options.routes.directory,
+        active: null,
+      },
       updatedAt: new Date().toISOString(),
     };
     publish(status);
@@ -123,6 +157,14 @@ module.exports = function ajrmMarineDisplay(app) {
       panelEvents: () => panelEvents(brokerProjection()),
       alertEvents: () => ({ events: alertEvents(brokerProjection()) }),
       uiState: () => currentUiState(),
+      async currentRoute() {
+        await routeManagerReady;
+        return routeManager?.current() || null;
+      },
+      async restoreRoute(snapshot) {
+        await routeManagerReady;
+        return routeManager?.restore(snapshot, { notify: false }) || null;
+      },
     };
     app.ajrmMarineDisplayApi = api;
     globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY] = api;
@@ -141,6 +183,7 @@ module.exports = function ajrmMarineDisplay(app) {
       delete globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY];
     }
     status = null;
+    routeManager = null;
   };
 
   plugin.registerWithRouter = (router) => registerRoutes(router);
@@ -204,6 +247,58 @@ module.exports = function ajrmMarineDisplay(app) {
       }),
     );
     router.get(route("/repeatIntervals"), (_req, res) => res.json({}));
+    router.get(route("/routes"), async (_req, res) => {
+      try {
+        await routeManagerReady;
+        res.set?.("Cache-Control", "no-store");
+        res.json({
+          ok: true,
+          active: routeManager.current(),
+          resources: await routeManager.list(),
+          piFiles: await routeManager.listPiFiles(),
+          routeDirectory: options.routes.directory,
+        });
+      } catch (error) {
+        res.status(500).json({ ok: false, error: error.message });
+      }
+    });
+    router.post?.(route("/routes/import"), async (req, res) => {
+      await routeAction(res, () => routeManager.importGpx({
+        xml: req.body?.gpx,
+        fileName: req.body?.fileName,
+        routeIndex: req.body?.routeIndex,
+        saveToPi: req.body?.saveToPi === true,
+      }));
+    });
+    router.post?.(route("/routes/open-pi"), async (req, res) => {
+      await routeAction(res, () => routeManager.openPi(req.body || {}));
+    });
+    router.post?.(route("/routes/open-resource"), async (req, res) => {
+      await routeAction(res, () => routeManager.openResource(req.body || {}));
+    });
+    router.post?.(route("/routes/reverse"), async (_req, res) => {
+      await routeAction(res, () => routeManager.reverse());
+    });
+    router.post?.(route("/routes/save"), async (req, res) => {
+      await routeAction(res, () => routeManager.save(req.body || {}));
+    });
+    router.post?.(route("/routes/close"), async (_req, res) => {
+      await routeAction(res, () => routeManager.close());
+    });
+    router.get(route("/routes/export"), async (_req, res) => {
+      try {
+        await routeManagerReady;
+        const exported = await routeManager.exportGpx();
+        res.set?.("Content-Type", "application/gpx+xml; charset=utf-8");
+        res.set?.(
+          "Content-Disposition",
+          `attachment; filename="${exported.fileName.replaceAll('"', '')}"`,
+        );
+        res.send(exported.xml);
+      } catch (error) {
+        res.status(409).json({ ok: false, error: error.message });
+      }
+    });
     router.get(route("/harbourRegions"), async (_req, res) => {
       try {
         res.set?.("Cache-Control", "no-store");
@@ -264,6 +359,26 @@ module.exports = function ajrmMarineDisplay(app) {
         });
       }
     });
+  }
+
+  async function routeAction(res, action) {
+    try {
+      await routeManagerReady;
+      const active = await action();
+      res.json({ ok: true, active });
+    } catch (error) {
+      res.status(409).json({ ok: false, error: error.message });
+    }
+  }
+
+  async function recordRouteSelection(selection) {
+    const captureApi = getCaptureApi();
+    if (typeof captureApi?.recordRouteSelection !== "function") return;
+    try {
+      await captureApi.recordRouteSelection(selection);
+    } catch (error) {
+      app.debug?.(`[${PLUGIN_ID}] route selection was not added to voyage: ${error.message}`);
+    }
   }
 
   async function observationStatus() {
@@ -438,7 +553,17 @@ function normalizeOptions(value) {
     diagnostics: {
       browserRefreshDiagnostics: value.browserRefreshDiagnostics === true,
     },
+    routes: {
+      directory: expandHome(value.routeDirectory || DEFAULT_ROUTE_DIRECTORY),
+    },
   };
+}
+
+function expandHome(value) {
+  const text = String(value || "").trim();
+  if (text === "~") return os.homedir();
+  if (text.startsWith("~/")) return path.join(os.homedir(), text.slice(2));
+  return path.resolve(text || path.join(os.homedir(), "AJRMMarineRoutes"));
 }
 
 function normalizeDebugControls(value = {}) {

@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.6.11
+
+- Add a display-only route manager for browser GPX files, Pi GPX files and
+  Signal K v2 route resources.
+- Draw the active route with configurable colour, width and direction arrows;
+  reverse it with a toggle and persist the reversed order when saved.
+- Import and export GPX 1.1 while retaining useful OpenCPN route and waypoint
+  extensions.
+- Accept Savvy Navvy's metadata-named routes with unnamed route points and
+  generate stable waypoint labels.
+- Publish an explicit active-route contract for Capture voyage recording and
+  replay restoration without silently activating the Signal K Course API.
+
 ## 0.6.10
 
 - Restore MMSI MID country derivation in the active vessel snapshot pipeline,
