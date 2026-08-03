@@ -19,6 +19,7 @@ export function createRouteController({
 	fetchFn = globalThis.fetch,
 	storage = globalThis.localStorage,
 	setIntervalFn = globalThis.setInterval,
+	confirmFn = globalThis.confirm,
 } = {}) {
 	const layer = L.layerGroup().addTo(map);
 	let active = null;
@@ -40,6 +41,7 @@ export function createRouteController({
 		controls.openResource.addEventListener("click", () => action("open-resource", {
 			id: controls.resource.value,
 		}, "Opening Signal K route…"));
+		controls.deleteResource.addEventListener("click", deleteSignalKResource);
 		controls.openBrowser.addEventListener("click", importBrowserFile);
 		controls.reverse.addEventListener("change", () => action("reverse", {}, "Reversing route…"));
 		controls.save.addEventListener("click", () => save(false));
@@ -120,6 +122,29 @@ export function createRouteController({
 		}, saveAs ? "Saving a new route…" : "Saving route…");
 	}
 
+	async function deleteSignalKResource() {
+		const id = controls.resource.value;
+		const selected = controls.resource.selectedOptions?.[0];
+		if (!id) return;
+		const label = selected?.dataset?.routeName || selected?.textContent || "this route";
+		if (!confirmFn?.(`Delete the Signal K route “${label}”?\n\nThis cannot be undone.`)) return;
+		setBusy(true, `Deleting ${label}…`);
+		try {
+			const response = await request("/delete-resource", {
+				method: "POST",
+				body: JSON.stringify({ id }),
+			});
+			applyActive(response.active, { fit: false });
+			setBusy(false);
+			await refresh({ fit: false });
+			setStatus(`${response.deleted?.name || label} deleted.`);
+		} catch (error) {
+			setStatus(error.message, true);
+		} finally {
+			setBusy(false);
+		}
+	}
+
 	function applyActive(value, { fit = false } = {}) {
 		active = value || null;
 		const nextFingerprint = activeRouteFingerprint(active);
@@ -181,11 +206,16 @@ export function createRouteController({
 			controls.resource,
 			response.resources || [],
 			(route) => route.id,
-			(route) => `${route.name} (${route.points} points)`,
+			(route) => `${route.name} (${route.points} points · ${route.id.slice(0, 8)})`,
 			"No Signal K route resources",
 		);
+		for (const option of controls.resource.options) {
+			const route = (response.resources || []).find((entry) => entry.id === option.value);
+			if (route) option.dataset.routeName = route.name;
+		}
 		controls.openPi.disabled = !controls.piFile.value;
 		controls.openResource.disabled = !controls.resource.value;
+		controls.deleteResource.disabled = !controls.resource.value;
 	}
 
 	function populateSelect(select, entries, value, label, emptyLabel) {
@@ -249,7 +279,7 @@ export function createRouteController({
 	function setBusy(value, message = "") {
 		busy = value;
 		if (message) setStatus(message);
-		for (const control of [controls.openPi, controls.openResource, controls.openBrowser, controls.save, controls.saveAs, controls.close]) {
+		for (const control of [controls.openPi, controls.openResource, controls.deleteResource, controls.openBrowser, controls.save, controls.saveAs, controls.close]) {
 			control.disabled = value || (!active && [controls.save, controls.saveAs, controls.close].includes(control));
 		}
 	}

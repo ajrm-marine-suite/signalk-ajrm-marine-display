@@ -89,6 +89,7 @@ test("route manager saves GPX on the Pi and persists active route state", async 
     async listResources() { return Object.fromEntries(resources); },
     async getResource(_type, id) { return resources.get(id); },
     async setResource(_type, id, value) { resources.set(id, structuredClone(value)); },
+    async deleteResource(_type, id) { resources.delete(id); },
   };
   const manager = createRouteManager({
     resourcesApi,
@@ -103,11 +104,23 @@ test("route manager saves GPX on the Pi and persists active route state", async 
     saveToPi: true,
   });
   assert.ok(resources.has(imported.resourceId));
+
+  const reopened = await manager.importGpx({
+    xml: OPENCPN_GPX,
+    fileName: "Test passage.gpx",
+  });
+  assert.equal(reopened.resourceId, imported.resourceId);
+  assert.equal(resources.size, 1);
+
+  await assert.rejects(
+    manager.save({ saveAs: true, name: "test PASSAGE" }),
+    /unique route name/,
+  );
   assert.equal((await manager.listPiFiles())[0].fileName, "Test passage.gpx");
   await manager.reverse();
   const saved = await manager.save({ saveAs: false });
   assert.equal(resources.get(saved.resourceId).feature.properties.coordinatesMeta[0].name, "Finish");
-  assert.equal(selections.length, 3);
+  assert.equal(selections.length, 4);
 
   const reloaded = createRouteManager({
     resourcesApi,
@@ -117,4 +130,17 @@ test("route manager saves GPX on the Pi and persists active route state", async 
   await reloaded.init();
   assert.equal(reloaded.current().resourceId, saved.resourceId);
   assert.equal(reloaded.current().reversed, true);
+
+  const deleted = await reloaded.deleteResource({ id: saved.resourceId });
+  assert.equal(deleted.deleted.name, "Test passage");
+  assert.equal(deleted.active, null);
+  assert.equal(resources.size, 0);
+
+  const duplicateRoute = parseGpxRoutes(OPENCPN_GPX)[0];
+  resources.set("11111111-1111-4111-8111-111111111111", duplicateRoute);
+  resources.set("22222222-2222-4222-8222-222222222222", duplicateRoute);
+  await assert.rejects(
+    reloaded.importGpx({ xml: OPENCPN_GPX, fileName: "Test passage.gpx" }),
+    /More than one Signal K route is named/,
+  );
 });

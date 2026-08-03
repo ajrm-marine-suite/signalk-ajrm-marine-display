@@ -276,6 +276,15 @@ module.exports = function ajrmMarineDisplay(app) {
     router.post?.(route("/routes/open-resource"), async (req, res) => {
       await routeAction(res, () => routeManager.openResource(req.body || {}));
     });
+    router.post?.(route("/routes/delete-resource"), async (req, res) => {
+      try {
+        await routeManagerReady;
+        const result = await routeManager.deleteResource(req.body || {});
+        res.json({ ok: true, ...result });
+      } catch (error) {
+        res.status(409).json({ ok: false, error: error.message });
+      }
+    });
     router.post?.(route("/routes/reverse"), async (_req, res) => {
       await routeAction(res, () => routeManager.reverse());
     });

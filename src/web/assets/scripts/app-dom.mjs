@@ -123,6 +123,7 @@ export function createAppDom() {
 		openPi: getRequiredElement("buttonOpenPiRoute"),
 		resource: getRequiredElement("selectSignalKRoute"),
 		openResource: getRequiredElement("buttonOpenSignalKRoute"),
+		deleteResource: getRequiredElement("buttonDeleteSignalKRoute"),
 		browserFile: getRequiredElement("inputBrowserRouteFile"),
 		browserFileHelp: getRequiredElement("routeBrowserFileHelp"),
 		saveImportedToPi: getRequiredElement("checkSaveImportedRouteToPi"),

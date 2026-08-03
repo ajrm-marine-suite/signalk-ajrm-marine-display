@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.6.12",
+    "version": "0.6.13",
     "description": "Display status, chart-webapp projections and display-only Signal K v2 route management backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [
@@ -159,6 +159,20 @@
         "responses": {
           "200": {
             "description": "Signal K route resource is active"
+          }
+        }
+      }
+    },
+    "/routes/delete-resource": {
+      "post": {
+        "summary": "Delete a selected Signal K v2 route resource",
+        "description": "Deletes only the selected Signal K resource UUID. If it is the active displayed route, the route is also closed. Pi GPX files are not deleted.",
+        "responses": {
+          "200": {
+            "description": "Signal K route resource was deleted"
+          },
+          "409": {
+            "description": "Route was not found or could not be deleted"
           }
         }
       }

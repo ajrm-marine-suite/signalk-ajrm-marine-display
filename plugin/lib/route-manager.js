@@ -36,9 +36,7 @@ function createRouteManager({
   }
 
   async function list() {
-    const resources = resourcesApi?.listResources
-      ? await resourcesApi.listResources("routes", {})
-      : {};
+    const resources = await resourceMap();
     return Object.entries(resources || {}).map(([id, value]) => ({
       id,
       name: value?.name || "Unnamed route",
@@ -73,7 +71,7 @@ function createRouteManager({
     const routes = parseGpxRoutes(xml, { fileName: safeGpxName(fileName, "route.gpx") });
     const index = boundedIndex(routeIndex, routes.length);
     const route = routes[index];
-    const resourceId = randomUUID();
+    const resourceId = await resourceIdForImport(route.name);
     await setResource(resourceId, route);
     const piFileName = saveToPi
       ? await writeGpxFile(route, fileName || `${route.name}.gpx`, resourceId)
@@ -95,7 +93,7 @@ function createRouteManager({
     const routes = parseGpxRoutes(xml, { fileName: safeName });
     const index = boundedIndex(routeIndex, routes.length);
     const route = routes[index];
-    const resourceId = randomUUID();
+    const resourceId = await resourceIdForImport(route.name);
     await setResource(resourceId, route);
     return setActive({
       resourceId,
@@ -144,6 +142,7 @@ function createRouteManager({
       name: cleanText(name, 200) || active.resource.name,
     });
     const resourceId = saveAs || !active.resourceId ? randomUUID() : active.resourceId;
+    await assertUniqueName(route.name, saveAs ? null : resourceId);
     await setResource(resourceId, route);
     const piFileName = await writeGpxFile(
       route,
@@ -169,6 +168,25 @@ function createRouteManager({
     await persist();
     if (notify) await onSelection(null);
     return null;
+  }
+
+  async function deleteResource({ id } = {}) {
+    const resourceId = uuid(id);
+    if (!resourcesApi?.deleteResource) {
+      throw new Error("Signal K Resources API cannot delete routes");
+    }
+    const resources = await resourceMap();
+    const resource = resources[resourceId];
+    if (!resource) throw new Error("Signal K route resource was not found");
+    await resourcesApi.deleteResource("routes", resourceId);
+    if (active?.resourceId === resourceId) await close();
+    return {
+      active: current(),
+      deleted: {
+        id: resourceId,
+        name: cleanText(resource.name, 200) || "Unnamed route",
+      },
+    };
   }
 
   async function restore(snapshot, { notify = false } = {}) {
@@ -212,6 +230,39 @@ function createRouteManager({
     await resourcesApi.setResource("routes", uuid(id), normalizeRouteResource(route));
   }
 
+  async function resourceMap() {
+    if (!resourcesApi?.listResources) return {};
+    return (await resourcesApi.listResources("routes", {})) || {};
+  }
+
+  async function resourcesNamed(name) {
+    const key = routeNameKey(name);
+    return Object.entries(await resourceMap()).filter(([, resource]) =>
+      routeNameKey(resource?.name) === key,
+    );
+  }
+
+  async function resourceIdForImport(name) {
+    const matches = await resourcesNamed(name);
+    if (matches.length > 1) {
+      throw new Error(
+        `More than one Signal K route is named “${name}”. Delete or rename the duplicate before importing this route.`,
+      );
+    }
+    return matches[0]?.[0] ? uuid(matches[0][0]) : randomUUID();
+  }
+
+  async function assertUniqueName(name, allowedResourceId) {
+    const conflicts = (await resourcesNamed(name)).filter(
+      ([id]) => id !== allowedResourceId,
+    );
+    if (conflicts.length) {
+      throw new Error(
+        `A Signal K route named “${name}” already exists. Choose a unique route name.`,
+      );
+    }
+  }
+
   async function writeGpxFile(route, requestedName, routeGuid) {
     const fileName = safeGpxName(requestedName, `${route.name || "route"}.gpx`);
     const destination = path.join(routeDirectory, fileName);
@@ -232,6 +283,7 @@ function createRouteManager({
   return {
     close,
     current,
+    deleteResource,
     exportGpx,
     importGpx,
     init,
@@ -243,6 +295,10 @@ function createRouteManager({
     reverse,
     save,
   };
+}
+
+function routeNameKey(value) {
+  return String(value || "").normalize("NFC").trim().toLocaleLowerCase("en");
 }
 
 function normalizeActive(value) {
@@ -311,5 +367,6 @@ async function readJson(fileName) {
 module.exports = {
   createRouteManager,
   normalizeActive,
+  routeNameKey,
   safeGpxName,
 };

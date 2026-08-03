@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.13` prevents Display from creating duplicate Signal K route names,
+reuses the existing resource when a same-named GPX route is reopened, and adds
+confirmed deletion of a selected Signal K route resource. Existing duplicates
+show their UUID prefix so they can be distinguished and removed deliberately.
+
 Version `0.6.12` corrects route direction-arrow rotation so the arrowheads
 align with the route rather than appearing at right angles to it.
 
@@ -234,6 +239,12 @@ the reversed coordinate and waypoint order to both the Signal K resource and
 the GPX file. Opening a route only displays it: it does not engage an autopilot
 or alter the active Signal K course.
 
+Signal K route names are unique within Display, compared case-insensitively.
+**Save As** therefore requires a new name. Reopening a same-named GPX route
+updates the existing Signal K resource instead of creating another one. The
+Delete button removes the selected Signal K resource only; it does not delete
+the corresponding GPX file in the configured Pi directory.
+
 AJRM Marine Capture records the route that was open at voyage start and every
 subsequent open, reverse, save or close with voyage elapsed time. Recomputed
 replay restores the start route and applies the recorded route changes at the
@@ -243,7 +254,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.12 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.13 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

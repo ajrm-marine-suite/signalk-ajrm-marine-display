@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.13
+
+- Prevent new duplicate Signal K route names at the route-manager boundary.
+- Reuse and update the existing Signal K resource when a same-named GPX route
+  is reopened, while rejecting ambiguous imports if duplicates already exist.
+- Require a unique name for Save As, using case-insensitive name comparison.
+- Add confirmed deletion of the selected Signal K route resource, with UUID
+  prefixes shown so pre-existing duplicates can be distinguished safely.
+
 ## 0.6.12
 
 - Correct the 90-degree route-arrow offset by converting compass bearings,
