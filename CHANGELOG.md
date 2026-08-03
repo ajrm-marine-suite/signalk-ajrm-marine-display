@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.17
+
+- Align zoomed-in target footprints with heading true when available.
+- Fall back to course over ground when AIS heading is explicitly unavailable,
+  instead of interpreting the missing value as north.
+
 ## 0.6.16
 
 - Make the own-vessel map marker selectable and open the existing vessel-status

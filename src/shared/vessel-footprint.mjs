@@ -7,6 +7,12 @@ export function finitePositive(value) {
 	return Number.isFinite(number) && number > 0 ? number : null;
 }
 
+function finiteAngle(value) {
+	if (value === null || value === undefined || value === "") return null;
+	const number = Number(value);
+	return Number.isFinite(number) ? number : null;
+}
+
 export function clamp(value, min, max) {
 	const number = Number(value);
 	if (!Number.isFinite(number)) return min;
@@ -42,9 +48,7 @@ export function targetBeamMeters(target = {}, length, options = {}) {
 export function vesselFootprint(target = {}, options = {}) {
 	const length = targetLengthMeters(target, options);
 	const beam = targetBeamMeters(target, length, options);
-	const heading = Number.isFinite(Number(target.hdg))
-		? Number(target.hdg)
-		: Number(target.cog);
+	const heading = finiteAngle(target.hdg) ?? finiteAngle(target.cog);
 	if (!length || !beam || !Number.isFinite(heading)) return null;
 	const toBow = finitePositive(target.dimensionToBow);
 	const toStern = finitePositive(target.dimensionToStern);
