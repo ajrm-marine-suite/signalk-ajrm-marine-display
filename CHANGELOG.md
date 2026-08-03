@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.12
+
+- Correct the 90-degree route-arrow offset by converting compass bearings,
+  which start at north, to the east-pointing arrow glyph's CSS rotation.
+
 ## 0.6.11
 
 - Add a display-only route manager for browser GPX files, Pi GPX files and

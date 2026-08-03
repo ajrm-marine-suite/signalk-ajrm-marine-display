@@ -5,6 +5,7 @@ import {
 	bearingDegrees,
 	normalizeRouteStyle,
 	routeArrowSegments,
+	routeArrowGlyphRotation,
 	routeLatLngs,
 	routeSummary,
 } from "../src/web/assets/scripts/route-rendering.mjs";
@@ -29,6 +30,13 @@ test("route rendering converts GeoJSON lon/lat to Leaflet lat/lon", () => {
 	assert.deepEqual(routeLatLngs(active), [[56, -5], [56.1, -4.9], [56.2, -4.8]]);
 	assert.equal(routeArrowSegments(routeLatLngs(active)).length, 2);
 	assert.ok(bearingDegrees([56, -5], [56.1, -4.9]) > 0);
+});
+
+test("route arrow glyph rotation converts compass bearing to a right-pointing glyph", () => {
+	assert.equal(bearingDegrees([56, -5], [57, -5]), 0);
+	assert.equal(routeArrowGlyphRotation(0), -90);
+	assert.equal(routeArrowGlyphRotation(90), 0);
+	assert.equal(routeArrowSegments([[56, -5], [57, -5]])[0].rotation, -90);
 });
 
 test("route style and active route summary are bounded", () => {

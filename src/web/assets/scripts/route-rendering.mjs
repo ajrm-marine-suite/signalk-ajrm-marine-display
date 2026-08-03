@@ -36,12 +36,20 @@ export function routeArrowSegments(latLngs, maximumArrows = 20) {
 	for (let index = 1; index < latLngs.length; index += stride) {
 		const from = latLngs[index - 1];
 		const to = latLngs[index];
+		const bearing = bearingDegrees(from, to);
 		arrows.push({
 			position: [(from[0] + to[0]) / 2, (from[1] + to[1]) / 2],
-			bearing: bearingDegrees(from, to),
+			bearing,
+			rotation: routeArrowGlyphRotation(bearing),
 		});
 	}
 	return arrows;
+}
+
+// The right-pointing arrow glyph starts at screen-east, whereas a compass
+// bearing starts at north. Subtract a quarter turn before applying CSS rotate.
+export function routeArrowGlyphRotation(bearing) {
+	return Number(bearing) - 90;
 }
 
 export function bearingDegrees([lat1, lon1], [lat2, lon2]) {

@@ -2,6 +2,9 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.12` corrects route direction-arrow rotation so the arrowheads
+align with the route rather than appearing at right angles to it.
+
 Version `0.6.11` adds display-only route management. GPX 1.1 routes can be
 opened from the browser or the configured Pi route directory, stored as Signal
 K v2 route resources, reversed, saved and exported without activating the
@@ -240,7 +243,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.11 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.12 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

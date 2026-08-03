@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.6.11",
+    "version": "0.6.12",
     "description": "Display status, chart-webapp projections and display-only Signal K v2 route management backed by AJRM Marine Traffic and Notifications Plus."
   },
   "servers": [

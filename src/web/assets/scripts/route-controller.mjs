@@ -159,7 +159,7 @@ export function createRouteController({
 		for (const arrow of routeArrowSegments(latLngs)) {
 			const icon = L.divIcon({
 				className: "ajrm-route-arrow-marker",
-				html: `<span style="color:${style.color};transform:rotate(${arrow.bearing}deg)">➤</span>`,
+				html: `<span style="color:${style.color};transform:rotate(${arrow.rotation}deg)">➤</span>`,
 				iconSize: [22, 22],
 				iconAnchor: [11, 11],
 			});
