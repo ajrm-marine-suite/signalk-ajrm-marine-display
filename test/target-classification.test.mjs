@@ -6,6 +6,7 @@ import {
 	classifyAisTarget,
 	targetKindLabel,
 } from "../src/shared/target-classification.mjs";
+import { getTargetSvg } from "../src/web/assets/scripts/target-svg-selector.mjs";
 
 test("ITU 111MIDXXX MMSIs identify visible non-collision SAR aircraft", () => {
 	const classification = classifyAisTarget({ mmsi: "111232534" });
@@ -14,7 +15,8 @@ test("ITU 111MIDXXX MMSIs identify visible non-collision SAR aircraft", () => {
 		targetKindDetail: "helicopter",
 		collisionCandidate: false,
 	});
-	assert.equal(targetKindLabel({ mmsi: "111232534" }), "SAR aircraft (helicopter)");
+	assert.equal(targetKindLabel({ mmsi: "111000599" }), "SAR aircraft (helicopter)");
+	assert.match(getTargetSvg({ mmsi: "111000599", targetKind: "sar-aircraft" }), /viewBox="0 0 50 50"/);
 });
 
 test("ordinary-MMSI hovercraft remain collision candidates", () => {
@@ -33,7 +35,7 @@ test("ordinary-MMSI hovercraft remain collision candidates", () => {
 });
 
 test("special safety MMSI detection requires an exact nine-digit allocation", () => {
-	assert.equal(aisSpecialSafetyMmsiType("111232534"), "sar-aircraft");
+	assert.equal(aisSpecialSafetyMmsiType("111000599"), "sar-aircraft");
 	assert.equal(aisSpecialSafetyMmsiType("111"), null);
 	assert.equal(aisSpecialSafetyMmsiType("1112325340"), null);
 });

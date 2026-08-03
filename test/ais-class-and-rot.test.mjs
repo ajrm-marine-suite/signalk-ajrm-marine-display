@@ -8,6 +8,7 @@ import {
 } from "../src/shared/target-model.mjs";
 import { targetIconCacheKey } from "../src/web/assets/scripts/target-icon-cache.mjs";
 import { targetIconFor } from "../src/web/assets/scripts/target-icon-resolver.mjs";
+import { getAircraftIcon } from "../src/web/assets/scripts/ais-special-icons.mjs";
 import { getUnknownVesselIcon } from "../src/web/assets/scripts/ais-vessel-icons.mjs";
 
 test("AIS class remains unknown until an explicit A or B value is received", () => {
@@ -78,10 +79,30 @@ test("unknown-class turn arrow rotates with vessel heading while the question ma
 	}
 });
 
+test("SAR aircraft map icon is a simple aircraft aligned with its heading", () => {
+	const previousLeaflet = globalThis.L;
+	globalThis.L = {
+		divIcon(options) {
+			return { options };
+		},
+	};
+
+	try {
+		const icon = getAircraftIcon({ hdg: Math.PI / 2 }, false, "#123456");
+		assert.match(icon.options.html, /class="ajrm-marine-sar-aircraft"/);
+		assert.match(icon.options.html, /transform="rotate\(90 25 25\)"/);
+		assert.match(icon.options.html, /fill="#123456"/);
+	} finally {
+		if (previousLeaflet === undefined) delete globalThis.L;
+		else globalThis.L = previousLeaflet;
+	}
+});
+
 test("target icon resolver uses only explicit A and B classes", () => {
 	const calls = [];
 	const aisIcons = {
 		getSelfIcon: () => "self",
+		getAircraftIcon: () => "aircraft",
 		getSartIcon: () => "sart",
 		getAtonIcon: () => "aton",
 		getClassAIcon: () => {
@@ -105,6 +126,13 @@ test("target icon resolver uses only explicit A and B classes", () => {
 		color: "black",
 	};
 
+	assert.equal(
+		targetIconFor({
+			...base,
+			target: { mmsi: "111000599", targetKind: "sar-aircraft" },
+		}),
+		"aircraft",
+	);
 	assert.equal(
 		targetIconFor({
 			...base,
@@ -136,6 +164,7 @@ test("self icon scale is passed only to the own-vessel icon", () => {
 			calls.push(["self", ...args]);
 			return "self";
 		},
+		getAircraftIcon: () => "aircraft",
 		getSartIcon: () => "sart",
 		getAtonIcon: () => "aton",
 		getClassAIcon: (...args) => {

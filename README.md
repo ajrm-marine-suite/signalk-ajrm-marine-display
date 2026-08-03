@@ -2,11 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
-Version `0.6.18` identifies the ITU `111MIDXXX` allocation as SAR aircraft,
+Version `0.6.19` identifies the ITU `111MIDXXX` allocation as SAR aircraft,
 shows the category (including the optional fixed-wing or helicopter subtype)
-in vessel details, retains the SAR map symbol, and treats the aircraft as a
-visible non-collision target. Ordinary-MMSI hovercraft and other surface craft
-remain collision candidates.
+in vessel details, draws a heading-aligned aircraft silhouette on the map and
+target table, and treats the aircraft as a visible non-collision target.
+Ordinary-MMSI hovercraft and other surface craft remain collision candidates.
 
 Version `0.6.17` aligns each zoomed-in target footprint with its reported true
 heading, falling back to course over ground when the target has no heading.
@@ -278,7 +278,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.18 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.19 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

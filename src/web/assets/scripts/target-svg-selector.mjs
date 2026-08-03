@@ -1,10 +1,16 @@
 import * as targetSvgs from "./ship-icons.mjs";
 import {
+	AIS_TARGET_KIND_SAR_AIRCRAFT,
+	classifyAisTarget,
 	isAisAtonTarget,
 	isAisSpecialSafetyMmsi,
 } from "../../../shared/target-classification.mjs";
 
 export function getTargetSvg(target) {
+	if (classifyAisTarget(target).targetKind === AIS_TARGET_KIND_SAR_AIRCRAFT) {
+		return targetSvgs.aircraftSvg;
+	}
+
 	// fishing
 	if (target.typeId === 30) {
 		return targetSvgs.fishingboatSvg;

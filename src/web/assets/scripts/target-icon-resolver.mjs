@@ -1,4 +1,6 @@
 import {
+	AIS_TARGET_KIND_SAR_AIRCRAFT,
+	classifyAisTarget,
 	isAisAtonTarget,
 	isAisBaseStationTarget,
 	isAisSpecialSafetyMmsi,
@@ -27,6 +29,9 @@ export function targetIconFor({
 			selfIconScalePercent,
 			selfIconOrientation,
 		);
+	}
+	if (classifyAisTarget(target).targetKind === AIS_TARGET_KIND_SAR_AIRCRAFT) {
+		return aisIcons.getAircraftIcon(target, isLarge, color);
 	}
 	if (isSpecialSafetyMmsi(target.mmsi)) {
 		return aisIcons.getSartIcon();

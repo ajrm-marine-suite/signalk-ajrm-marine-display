@@ -1,5 +1,5 @@
 export { getAtonIcon, getBaseIcon } from "./ais-station-icons.mjs";
-export { getBlueBoxIcon, getSartIcon, getSelfIcon } from "./ais-special-icons.mjs";
+export { getAircraftIcon, getBlueBoxIcon, getSartIcon, getSelfIcon } from "./ais-special-icons.mjs";
 export {
 	getClassAIcon,
 	getClassBIcon,

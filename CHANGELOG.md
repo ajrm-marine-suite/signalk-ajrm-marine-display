@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.6.19
+
+- Draw SAR aircraft with a simple top-down aircraft silhouette on the map,
+  aligned with heading or course over ground.
+- Use the same aircraft silhouette in the AIS target table while retaining the
+  existing emergency-beacon symbol for AIS-SART, MOB-AIS, and EPIRB-AIS.
+
 ## 0.6.18
 
 - Identify exact ITU `111MIDXXX` targets as visible non-collision SAR aircraft.

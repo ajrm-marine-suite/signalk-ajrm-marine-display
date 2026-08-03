@@ -45,6 +45,32 @@ export function getSartIcon() {
 	return createAisDivIcon({ html: SVGIcon, boxSize });
 }
 
+export function getAircraftIcon(target = {}, isLarge = false, color = "black") {
+	const boxSize = isLarge ? 70 : 50;
+	const headingDegrees = toDegrees(target?.hdg ?? target?.cog);
+	const heading = Number.isFinite(headingDegrees) ? headingDegrees : 0;
+	const lostCross = target?.isLost
+		? `<path d="M8,8 L42,42 M42,8 L8,42" stroke="red" stroke-width="3" />`
+		: "";
+	const SVGIcon = `
+    <svg width="${boxSize}px" height="${boxSize}px" viewBox="0 0 50 50" pointerEvents="none">
+        <g transform="rotate(${heading} 25 25)" pointer-events="all">
+            <path
+                class="ajrm-marine-sar-aircraft"
+                d="M25,3 C22.8,7 22.8,12 23,17 L7,27 L7,32 L23,27 L23,40 L17,45 L17,48 L25,45 L33,48 L33,45 L27,40 L27,27 L43,32 L43,27 L27,17 C27.2,12 27.2,7 25,3 Z"
+                fill="${color}"
+                stroke="#ffffff"
+                stroke-width="1.5"
+                stroke-opacity="0.9"
+                stroke-linejoin="round"
+            />
+        </g>
+        ${lostCross}
+    </svg>`;
+
+	return createAisDivIcon({ html: SVGIcon, boxSize });
+}
+
 export function getSelfIcon(
 	target = {},
 	variant = "rings",

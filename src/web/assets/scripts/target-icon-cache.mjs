@@ -13,6 +13,8 @@ export function targetIconCacheKey({
 		valueKey(target.mmsi),
 		valueKey(selfMmsi),
 		valueKey(target.aisClass),
+		valueKey(target.targetKind),
+		valueKey(target.targetKindDetail),
 		valueKey(target.name),
 		valueKey(target.type),
 		booleanKey(target.isAton),
