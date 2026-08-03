@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.18
+
+- Identify exact ITU `111MIDXXX` targets as visible non-collision SAR aircraft.
+- Show the SAR-aircraft category and optional fixed-wing/helicopter subtype in
+  vessel details while keeping ordinary-MMSI hovercraft as collision targets.
+
 ## 0.6.17
 
 - Align zoomed-in target footprints with heading true when available.

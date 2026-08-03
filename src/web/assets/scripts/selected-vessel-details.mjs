@@ -34,6 +34,7 @@ export function renderSelectedVesselDetails({
 		target.mmsiCountryName,
 	);
 	setText("target.type", target.type);
+	setText("target.targetKindFormatted", target.targetKindFormatted);
 	setText("target.aisClassFormatted", target.aisClassFormatted);
 	setText("target.status", target.status);
 	setText("target.sizeFormatted", target.sizeFormatted);
@@ -79,6 +80,7 @@ export function selectedVesselDetailsSignature(target, isSelf = false) {
 		target.mmsiCountryCode,
 		target.mmsiCountryName,
 		target.type,
+		target.targetKindFormatted,
 		target.aisClass,
 		target.aisClassFormatted,
 		target.status,

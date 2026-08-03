@@ -1,6 +1,7 @@
 export const AIS_TARGET_KIND_VESSEL = "vessel";
 export const AIS_TARGET_KIND_BASE_STATION = "ais-base-station";
 export const AIS_TARGET_KIND_AID_TO_NAVIGATION = "aid-to-navigation";
+export const AIS_TARGET_KIND_SAR_AIRCRAFT = "sar-aircraft";
 export const AIS_SPECIAL_SAFETY_TYPE_SAR_AIRCRAFT = "sar-aircraft";
 export const AIS_SPECIAL_SAFETY_TYPE_SART = "sart";
 export const AIS_SPECIAL_SAFETY_TYPE_MOB = "mob";
@@ -61,11 +62,31 @@ export function isAisAtonTarget(target = {}) {
 
 export function aisSpecialSafetyMmsiType(mmsi) {
 	const value = String(mmsi || "").trim();
-	if (value.startsWith("111")) return AIS_SPECIAL_SAFETY_TYPE_SAR_AIRCRAFT;
-	if (value.startsWith("970")) return AIS_SPECIAL_SAFETY_TYPE_SART;
-	if (value.startsWith("972")) return AIS_SPECIAL_SAFETY_TYPE_MOB;
-	if (value.startsWith("974")) return AIS_SPECIAL_SAFETY_TYPE_EPIRB;
+	if (/^111\d{6}$/.test(value)) return AIS_SPECIAL_SAFETY_TYPE_SAR_AIRCRAFT;
+	if (/^970\d{6}$/.test(value)) return AIS_SPECIAL_SAFETY_TYPE_SART;
+	if (/^972\d{6}$/.test(value)) return AIS_SPECIAL_SAFETY_TYPE_MOB;
+	if (/^974\d{6}$/.test(value)) return AIS_SPECIAL_SAFETY_TYPE_EPIRB;
 	return null;
+}
+
+export function sarAircraftDetail(mmsi) {
+	const value = String(mmsi || "").trim();
+	if (!/^111\d{6}$/.test(value)) return null;
+	if (value[6] === "1") return "fixed-wing";
+	if (value[6] === "5") return "helicopter";
+	return null;
+}
+
+export function targetKindLabel(target = {}) {
+	const classification = classifyAisTarget(target);
+	if (classification.targetKind === AIS_TARGET_KIND_SAR_AIRCRAFT) {
+		if (classification.targetKindDetail === "fixed-wing") return "SAR aircraft (fixed-wing)";
+		if (classification.targetKindDetail === "helicopter") return "SAR aircraft (helicopter)";
+		return "SAR aircraft";
+	}
+	if (classification.targetKind === AIS_TARGET_KIND_BASE_STATION) return "AIS base station";
+	if (classification.targetKind === AIS_TARGET_KIND_AID_TO_NAVIGATION) return "Aid to navigation";
+	return "Vessel";
 }
 
 export function isAisSpecialSafetyMmsi(mmsi) {
@@ -86,20 +107,30 @@ export function isAisEmergencyMmsi(mmsi) {
 }
 
 export function classifyAisTarget(target = {}) {
+	if (aisSpecialSafetyMmsiType(target.mmsi) === AIS_SPECIAL_SAFETY_TYPE_SAR_AIRCRAFT) {
+		return {
+			targetKind: AIS_TARGET_KIND_SAR_AIRCRAFT,
+			targetKindDetail: sarAircraftDetail(target.mmsi),
+			collisionCandidate: false,
+		};
+	}
 	if (isAisBaseStationTarget(target)) {
 		return {
 			targetKind: AIS_TARGET_KIND_BASE_STATION,
+			targetKindDetail: null,
 			collisionCandidate: false,
 		};
 	}
 	if (isAisAtonTarget(target)) {
 		return {
 			targetKind: AIS_TARGET_KIND_AID_TO_NAVIGATION,
+			targetKindDetail: null,
 			collisionCandidate: false,
 		};
 	}
 	return {
 		targetKind: AIS_TARGET_KIND_VESSEL,
+		targetKindDetail: null,
 		collisionCandidate: true,
 	};
 }
@@ -107,6 +138,7 @@ export function classifyAisTarget(target = {}) {
 export function applyTargetClassification(target = {}) {
 	const classification = classifyAisTarget(target);
 	target.targetKind = classification.targetKind;
+	target.targetKindDetail = classification.targetKindDetail;
 	target.collisionCandidate = classification.collisionCandidate;
 	return target;
 }

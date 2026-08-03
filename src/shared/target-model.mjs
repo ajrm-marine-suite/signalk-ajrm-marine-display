@@ -25,6 +25,7 @@ export function createTarget(mmsi) {
 		aisClassEvidence: null,
 		isAton: false,
 		targetKind: "vessel",
+		targetKindDetail: null,
 		collisionCandidate: true,
 		status: "---",
 		length: undefined,

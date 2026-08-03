@@ -3,6 +3,7 @@ import { countryForMmsi } from "./mmsi-mid-decoder.mjs";
 import {
 	applyTargetClassification,
 	isCollisionCandidateTarget,
+	targetKindLabel,
 } from "./target-classification.mjs";
 import { pointToFootprintDistanceMeters } from "./vessel-footprint.mjs";
 
@@ -206,6 +207,7 @@ function applyDisplayFields(target) {
 	target.aisClassFormatted = `${target.aisClass ?? "Unknown"}${
 		target.isVirtual ? " (virtual)" : ""
 	}`;
+	target.targetKindFormatted = targetKindLabel(target);
 	target.sizeFormatted = `${target.length?.toFixed(1) ?? "---"} m x ${target.beam?.toFixed(1) ?? "---"} m`;
 	target.vesselFootprintSourceFormatted = vesselFootprintSourceLabel(target);
 	target.imoFormatted = target.imo?.replace(/imo/i, "") || "---";
