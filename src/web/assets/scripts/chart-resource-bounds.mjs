@@ -7,8 +7,9 @@ export {
 } from "./chart-resource-bounds-candidates.mjs";
 
 export function chartBounds(chart, lat, lon) {
-	const candidates = Array.isArray(chart?.__autoChartBoundsCandidates)
-		? chart.__autoChartBoundsCandidates
+	const cachedBounds = chart?.__ajrmMapBounds ?? chart?.__autoChartBoundsCandidates;
+	const candidates = Array.isArray(cachedBounds)
+		? cachedBounds
 		: chartBoundsCandidates(chart);
 	return lat != null && lon != null
 		? candidates.find(

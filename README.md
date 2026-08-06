@@ -1,5 +1,9 @@
 # AJRM Marine Display
 
+Version `0.6.29` moves automatic/manual chart selection, cycling, result
+wording and keyboard filtering onto shared Map Core while retaining Display's
+richer chart rendering and layer management.
+
 Version `0.6.28` keeps the complete chart selector, including chart folders,
 inside short browser windows and enables reliable mouse/touch scrolling.
 
@@ -311,7 +315,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.27 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.29 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

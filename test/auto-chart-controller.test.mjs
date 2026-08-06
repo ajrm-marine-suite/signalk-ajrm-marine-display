@@ -213,3 +213,38 @@ test("chart cycling locks each overlapping chart, returns to Auto, and releases 
 	controller.update();
 	assert.equal(controller.manualChartId, null);
 });
+
+test("single overlapping chart remains automatic under the shared Map Core cycle contract", () => {
+	const controller = createAutoChartController({
+		L: {
+			layerGroup: () => fakeLayerGroup([]),
+			tileLayer: (url) => ({ name: url, addTo() {}, remove() {} }),
+		},
+		protomapsL: {},
+		map: {
+			_loaded: true,
+			layers: new Set(),
+			getMaxZoom: () => 22,
+			getZoom: () => 16,
+			hasLayer(layer) { return this.layers.has(layer); },
+		},
+		charts: {
+			only: {
+				name: "Only chart",
+				bounds: [-5.64, 56.25, -5.61, 56.27],
+				minzoom: 13,
+				maxzoom: 18,
+				tilemapUrl: "/only/{z}/{x}/{y}.png",
+			},
+		},
+		paintRules: [],
+		labelRules: [],
+		openSeaMap: null,
+		getPosition: () => ({ lat: 56.2585, lng: -5.6236 }),
+	});
+
+	const result = controller.cycleChart();
+	assert.equal(result.mode, "auto");
+	assert.equal(result.chart.name, "Only chart");
+	assert.equal(controller.manualChartId, null);
+});

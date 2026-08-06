@@ -1,46 +1,11 @@
-import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
+import {
+	CHART_CYCLE_SHORTCUT_STORAGE_KEY,
+	chartCycleResultMessage,
+	isChartCycleShortcutEvent,
+	normalizeChartCycleShortcut,
+} from "@ajrm-marine/map-core";
 
-export const DEFAULT_CHART_CYCLE_SHORTCUT = "C";
-
-export function normalizeChartCycleShortcut(value) {
-	const shortcut = String(value ?? "")
-		.trim()
-		.slice(0, 1)
-		.toUpperCase();
-	return shortcut || DEFAULT_CHART_CYCLE_SHORTCUT;
-}
-
-export function chartDisplayName(chart) {
-	return (
-		chart?.name ||
-		chart?.title ||
-		chart?.description ||
-		chart?.__autoChartId ||
-		"Unnamed chart"
-	);
-}
-
-export function chartCycleMessage(result) {
-	if (result?.mode === "disabled") return "Auto Charts is switched off";
-	if (result?.mode === "empty") return "No enabled chart covers the map centre";
-	if (result?.mode === "auto") {
-		return `Automatic chart: ${chartDisplayName(result.chart)}`;
-	}
-	if (result?.mode === "manual") {
-		return `Chart ${result.index} of ${result.total}: ${chartDisplayName(result.chart)}`;
-	}
-	return "Chart selection unavailable";
-}
-
-export function isEditableShortcutTarget(target) {
-	const tagName = String(target?.tagName || "").toLowerCase();
-	return (
-		target?.isContentEditable === true ||
-		tagName === "input" ||
-		tagName === "textarea" ||
-		tagName === "select"
-	);
-}
+export { chartCycleResultMessage as chartCycleMessage, normalizeChartCycleShortcut };
 
 export function createChartCycleControls({
 	autoCharts,
@@ -53,7 +18,7 @@ export function createChartCycleControls({
 	cancelSchedule = globalThis.clearTimeout,
 }) {
 	let shortcut = normalizeChartCycleShortcut(
-		storage?.getItem?.(SETTINGS_STORAGE_KEYS.chartCycleShortcut),
+		storage?.getItem?.(CHART_CYCLE_SHORTCUT_STORAGE_KEY),
 	);
 	let hideTimer = null;
 
@@ -67,29 +32,18 @@ export function createChartCycleControls({
 
 	function cycle() {
 		const result = autoCharts?.cycleChart?.() ?? null;
-		showStatus(chartCycleMessage(result));
+		showStatus(chartCycleResultMessage(result));
 		return result;
 	}
 
 	function saveShortcut() {
 		shortcut = normalizeChartCycleShortcut(shortcutInput?.value);
 		if (shortcutInput) shortcutInput.value = shortcut;
-		storage?.setItem?.(SETTINGS_STORAGE_KEYS.chartCycleShortcut, shortcut);
+		storage?.setItem?.(CHART_CYCLE_SHORTCUT_STORAGE_KEY, shortcut);
 	}
 
 	function keydownHandler(event) {
-		if (
-			event?.defaultPrevented ||
-			event?.repeat ||
-			event?.altKey ||
-			event?.ctrlKey ||
-			event?.metaKey ||
-			isEditableShortcutTarget(event?.target) ||
-			String(event?.key || "").length !== 1 ||
-			normalizeChartCycleShortcut(event?.key) !== shortcut
-		) {
-			return;
-		}
+		if (!isChartCycleShortcutEvent(event, storage)) return;
 		event.preventDefault?.();
 		cycle();
 	}

@@ -3,15 +3,12 @@ import {
 	ensureAutoChartGroupVisible,
 	shouldUpdateAutoChartLayer,
 } from "./auto-chart-controller-helpers.mjs";
+import { chartId, createChartCycleState } from "@ajrm-marine/map-core";
 import { resetAutoChartFallback } from "./auto-chart-layer-state.mjs";
-import {
-	chartCandidatesForMap,
-	createAutoChartList,
-} from "./auto-chart-selection.mjs";
+import { createAutoChartList } from "./auto-chart-selection.mjs";
 import { applyAutoChartToggle } from "./auto-chart-toggle-flow.mjs";
 import { updateAutoChartLayer } from "./auto-chart-update-flow.mjs";
 import { keepChartLayersOnTop } from "./chart-layer-ordering.mjs";
-import { chartContains } from "./chart-resource-utils.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 
 export function createAutoChartController({
@@ -27,15 +24,12 @@ export function createAutoChartController({
 	storage = globalThis.localStorage,
 }) {
 	let enabled = true;
-	let manualChartId = null;
 	const chartList = createAutoChartList(charts);
-	const { chooseChart, group, layerState, makeChartLayer } =
+	const chartCycle = createChartCycleState();
+	const { group, layerState, makeChartLayer } =
 		createAutoChartControllerParts({
 			L,
-			chartList,
-			getPosition,
 			labelRules,
-			map,
 			paintRules,
 			protomapsL,
 		});
@@ -62,62 +56,28 @@ export function createAutoChartController({
 	}
 
 	function selectedChart() {
-		if (!manualChartId) return chooseChart();
-		const position = getPosition();
-		const selected = chartList.find(
-			(chart) => chart.__autoChartId === manualChartId,
-		);
-		if (selected && chartContains(selected, position.lat, position.lng)) {
-			return selected;
-		}
-		manualChartId = null;
-		return chooseChart();
+		return chartCycle.choose(chartList, map, getPosition());
 	}
 
 	function cycleChart() {
 		if (!enabled) return { mode: "disabled", chart: null, index: 0, total: 0 };
-		const candidates = chartCandidatesForMap({ chartList, map, getPosition });
+		const position = getPosition();
+		const candidates = chartCycle.getCandidates(chartList, map, position);
 		if (candidates.length === 0) {
-			manualChartId = null;
+			chartCycle.reset();
 			update();
 			return { mode: "empty", chart: null, index: 0, total: 0 };
 		}
-
-		if (!manualChartId) {
-			const nextIndex = candidates.length === 1 ? 0 : 1;
-			const chart = candidates[nextIndex];
-			manualChartId = chart.__autoChartId;
-			update();
-			return {
-				mode: "manual",
-				chart,
-				index: nextIndex + 1,
-				total: candidates.length,
-			};
-		}
-
-		const currentIndex = candidates.findIndex(
-			(chart) => chart.__autoChartId === manualChartId,
-		);
-		if (currentIndex < 0 || currentIndex >= candidates.length - 1) {
-			manualChartId = null;
-			update();
-			return {
-				mode: "auto",
-				chart: candidates[0],
-				index: 1,
-				total: candidates.length,
-			};
-		}
-
-		const nextIndex = currentIndex + 1;
-		const chart = candidates[nextIndex];
-		manualChartId = chart.__autoChartId;
+		const chart = chartCycle.cycle(chartList, map, position);
 		update();
+		const manualChartId = chartCycle.manualChartId;
+		const index = manualChartId
+			? candidates.findIndex((candidate) => chartId(candidate) === manualChartId) + 1
+			: 1;
 		return {
-			mode: "manual",
+			mode: manualChartId ? "manual" : "auto",
 			chart,
-			index: nextIndex + 1,
+			index,
 			total: candidates.length,
 		};
 	}
@@ -137,15 +97,15 @@ export function createAutoChartController({
 		const nextChartList = createAutoChartList(refreshedCharts);
 		if (autoChartListsMatch(chartList, nextChartList)) return false;
 		chartList.splice(0, chartList.length, ...nextChartList);
-		if (!chartList.some((chart) => chart.__autoChartId === manualChartId)) {
-			manualChartId = null;
+		if (!chartList.some((chart) => chartId(chart) === chartCycle.manualChartId)) {
+			chartCycle.reset();
 		}
 		layerState.chartId = null;
 		return true;
 	}
 
 	async function toggle(nextEnabled) {
-		if (!nextEnabled) manualChartId = null;
+		if (!nextEnabled) chartCycle.reset();
 		enabled = applyAutoChartToggle({
 			ensureVisible,
 			group,
@@ -171,7 +131,7 @@ export function createAutoChartController({
 			return enabled;
 		},
 		get manualChartId() {
-			return manualChartId;
+			return chartCycle.manualChartId;
 		},
 	};
 }

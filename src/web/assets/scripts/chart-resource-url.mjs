@@ -10,6 +10,7 @@ export function numericChartZoom(value, fallback) {
 }
 
 export function chartZoom(chart) {
+	if (chart?.__ajrmMapZoom) return chart.__ajrmMapZoom;
 	if (chart?.__autoChartZoom) return chart.__autoChartZoom;
 	return {
 		min: numericChartZoom(chart?.minzoom ?? chart?.minZoom, 0),

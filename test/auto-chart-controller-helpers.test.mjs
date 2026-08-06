@@ -1,7 +1,6 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 import {
-	createAutoChartChooser,
 	createAutoChartControllerParts,
 	createAutoChartLayerMaker,
 	ensureAutoChartGroupVisible,
@@ -46,27 +45,6 @@ test("shouldUpdateAutoChartLayer requires a loaded map and visible Auto Charts g
 	assert.equal(shouldUpdateAutoChartLayer({ group, map }), false);
 });
 
-test("createAutoChartChooser chooses from map zoom and supplied position", () => {
-	const chartList = [
-		{
-			__autoChartId: "chart",
-			bounds: { west: -5, south: 53, east: -4, north: 54 },
-			minzoom: 3,
-			maxzoom: 12,
-		},
-	];
-	const chooser = createAutoChartChooser({
-		chartList,
-		getPosition: () => ({ lat: 53.5, lng: -4.5 }),
-		map: {
-			getMaxZoom: () => 18,
-			getZoom: () => 9,
-		},
-	});
-
-	assert.equal(chooser()?.__autoChartId, "chart");
-});
-
 test("createAutoChartLayerMaker delegates to the established Leaflet layer factory", () => {
 	let config;
 	const expectedLayer = {
@@ -97,21 +75,7 @@ test("createAutoChartControllerParts builds the chart controller wiring bundle",
 			layerGroup: () => group,
 			tileLayer: () => ({ addTo() {}, chartLayer: true, remove() {} }),
 		},
-		chartList: [
-			{
-				__autoChartId: "chart",
-				bounds: { west: -5, south: 53, east: -4, north: 54 },
-				minzoom: 3,
-				maxzoom: 12,
-				url: "/chart/{z}/{x}/{y}.png",
-			},
-		],
-		getPosition: () => ({ lat: 53.5, lng: -4.5 }),
 		labelRules: [],
-		map: {
-			getMaxZoom: () => 18,
-			getZoom: () => 9,
-		},
 		paintRules: [],
 		protomapsL: {},
 	});
@@ -119,6 +83,5 @@ test("createAutoChartControllerParts builds the chart controller wiring bundle",
 	assert.equal(parts.group, group);
 	assert.equal(parts.layerState.chartId, null);
 	assert.equal(parts.layerState.chartLayer, null);
-	assert.equal(parts.chooseChart()?.__autoChartId, "chart");
 	assert.equal(parts.makeChartLayer({ url: "/chart/{z}/{x}/{y}.png" })?.chartLayer, true);
 });

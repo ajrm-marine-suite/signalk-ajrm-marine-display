@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.29
+
+- Use Map Core's shared automatic/manual chart-selection state, chart-cycle
+  result wording, keyboard filtering, shortcut normalization and chart-resource
+  normalization.
+- Keep Display-specific raster/MVT rendering, live catalogue refresh, fallback
+  handling and operational layer ordering unchanged.
+
 ## 0.6.28
 
 - Size the chart selector from its measured screen position to the bottom of
