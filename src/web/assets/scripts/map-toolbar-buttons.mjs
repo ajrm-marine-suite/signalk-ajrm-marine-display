@@ -1,5 +1,11 @@
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
 
+export function toggleOffcanvas(instance, element) {
+	if (!instance) return;
+	if (element?.classList?.contains("show") || element?.classList?.contains("showing")) instance.hide();
+	else instance.show();
+}
+
 export function mapToolbarButtonSpecs({
 	offcanvas,
 	document = globalThis.document,
@@ -8,17 +14,17 @@ export function mapToolbarButtonSpecs({
 		{
 			icon: DISPLAY_CONTROL_ICONS.targets,
 			title: "AIS Targets",
-			action: () => offcanvas.targetList.show(),
+			action: () => toggleOffcanvas(offcanvas.targetList, document.getElementById("offcanvasTargetList")),
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.profiles,
 			title: "Profiles",
-			action: () => offcanvas.profiles.show(),
+			action: () => toggleOffcanvas(offcanvas.profiles, document.getElementById("offcanvasProfiles")),
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.settings,
 			title: "Settings",
-			action: () => offcanvas.settings.show(),
+			action: () => toggleOffcanvas(offcanvas.settings, document.getElementById("offcanvasSettings")),
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.routes,

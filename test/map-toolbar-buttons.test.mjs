@@ -3,7 +3,27 @@ import test from "node:test";
 import {
 	createMapToolbarButtons,
 	mapToolbarButtonSpecs,
+	toggleOffcanvas,
 } from "../src/web/assets/scripts/map-toolbar-buttons.mjs";
+
+test("off-canvas toolbar actions close an already visible panel", () => {
+	const calls = [];
+	const classes = new Set();
+	const instance = {
+		show() {
+			calls.push("show");
+			classes.add("show");
+		},
+		hide() {
+			calls.push("hide");
+			classes.delete("show");
+		},
+	};
+	const element = { classList: { contains: (name) => classes.has(name) } };
+	toggleOffcanvas(instance, element);
+	toggleOffcanvas(instance, element);
+	assert.deepEqual(calls, ["show", "hide"]);
+});
 
 test("map toolbar includes voyage observations without disturbing established order", () => {
 	const calls = [];

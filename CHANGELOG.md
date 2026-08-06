@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.27
+
+- Make AIS Targets, Profiles and Settings toolbar buttons true toggles: a
+  second press now closes the panel opened by the first press.
+- Treat an opening transition as open so a quick second press can close it.
+
 ## 0.6.26
 
 - Offset left off-canvas panels so they no longer cover the map toolbar.

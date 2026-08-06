@@ -1,5 +1,8 @@
 # AJRM Marine Display
 
+Version `0.6.27` makes the AIS Targets, Profiles and Settings map buttons close
+their own panel when pressed a second time.
+
 Version `0.6.26` opens left-side panels beside the map toolbar and keeps the
 toolbar visible above the off-canvas backdrop.
 
@@ -305,7 +308,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.26 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.27 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
