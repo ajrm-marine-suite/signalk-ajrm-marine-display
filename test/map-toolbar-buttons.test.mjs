@@ -25,7 +25,7 @@ test("off-canvas toolbar actions close an already visible panel", () => {
 	assert.deepEqual(calls, ["show", "hide"]);
 });
 
-test("map toolbar includes voyage observations without disturbing established order", () => {
+test("map toolbar keeps chart cycling directly below the chart selector", () => {
 	const calls = [];
 	const document = {
 		getElementById(id) {
@@ -46,22 +46,23 @@ test("map toolbar includes voyage observations without disturbing established or
 	assert.deepEqual(
 		specs.map((spec) => spec.title),
 		[
+			"Cycle chart",
 			"AIS Targets",
 			"Profiles",
 			"Settings",
 			"Routes",
-			"Cycle chart",
 			"Voyage observation",
 			"Help",
 		],
 	);
+	assert.equal(specs[0].title, "Cycle chart");
 	for (const spec of specs) spec.action();
 	assert.deepEqual(calls, [
+		"buttonCycleChart",
 		"targets",
 		"profiles",
 		"settings",
 		"buttonOpenRoutes",
-		"buttonCycleChart",
 		"buttonOpenObservation",
 		"buttonOpenHelp",
 	]);
@@ -94,11 +95,11 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 	assert.deepEqual(
 		calls.map((call) => call.title),
 		[
+			"Cycle chart",
 			"AIS Targets",
 			"Profiles",
 			"Settings",
 			"Routes",
-			"Cycle chart",
 			"Voyage observation",
 			"Help",
 		],

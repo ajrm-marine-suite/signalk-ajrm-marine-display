@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.30
+
+- Place Cycle chart immediately below the chart selector, matching DR Plotter,
+  Voyage Viewer and Harbour Editor.
+
 ## 0.6.29
 
 - Use Map Core's shared automatic/manual chart-selection state, chart-cycle

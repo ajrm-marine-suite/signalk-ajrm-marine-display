@@ -12,6 +12,11 @@ export function mapToolbarButtonSpecs({
 }) {
 	return [
 		{
+			icon: DISPLAY_CONTROL_ICONS.cycleCharts,
+			title: "Cycle chart",
+			action: () => document.getElementById("buttonCycleChart")?.click(),
+		},
+		{
 			icon: DISPLAY_CONTROL_ICONS.targets,
 			title: "AIS Targets",
 			action: () => toggleOffcanvas(offcanvas.targetList, document.getElementById("offcanvasTargetList")),
@@ -30,11 +35,6 @@ export function mapToolbarButtonSpecs({
 			icon: DISPLAY_CONTROL_ICONS.routes,
 			title: "Routes",
 			action: () => document.getElementById("buttonOpenRoutes")?.click(),
-		},
-		{
-			icon: DISPLAY_CONTROL_ICONS.cycleCharts,
-			title: "Cycle chart",
-			action: () => document.getElementById("buttonCycleChart")?.click(),
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.observation,
