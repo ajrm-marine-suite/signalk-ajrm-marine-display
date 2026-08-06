@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.24
+
+- Cache normalized chart bounds and zoom metadata when Auto Charts loads its
+  catalogue, avoiding repeated parsing while zooming, panning and following
+  own vessel.
+- Preserve the established coordinate-order handling, overlap ranking and
+  automatic cache replacement when chart resources refresh.
+
 ## 0.6.23
 
 - Add nested Charts Provider Simple folder controls beneath Auto Charts in the

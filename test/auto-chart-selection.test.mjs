@@ -28,6 +28,21 @@ test("createAutoChartList keeps Signal K chart ids on each chart", () => {
 	assert.deepEqual(createAutoChartList(null), []);
 });
 
+test("createAutoChartList caches normalized geometry and zoom metadata", () => {
+	const [chart] = createAutoChartList({
+		Cuan: {
+			bounds: [-5.7, 56.1, -5.5, 56.3],
+			minzoom: "13",
+			maxzoom: "18",
+		},
+	});
+	assert.deepEqual(chart.__autoChartBoundsCandidates, [
+		[-5.7, 56.1, -5.5, 56.3],
+		[56.1, -5.7, 56.3, -5.5],
+	]);
+	assert.deepEqual(chart.__autoChartZoom, { min: 13, max: 18 });
+});
+
 test("chartCandidatesForMap returns every eligible overlapping chart in automatic order", () => {
 	const chartList = createAutoChartList({
 		broad: { name: "Broad", bounds: [-6, 52, -2, 56], minzoom: 7, maxzoom: 14 },
