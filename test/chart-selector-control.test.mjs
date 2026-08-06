@@ -16,6 +16,7 @@ import {
 	chartSelectorControlApiConfig,
 	chartSelectorControlDefinition,
 	chartSelectorControlDefinitionConfig,
+	chartSelectorPanelHeight,
 	chartSelectorInputQuery,
 	chartSelectorPanelForControl,
 	configureChartSelectorButton,
@@ -26,6 +27,7 @@ import {
 	createLeafletChartSelectorControl,
 	createChartSelectorPanel,
 	escapeAttribute,
+	fitChartSelectorPanel,
 	handlePanelChange,
 	hidePanel,
 	isChartSelectorInput,
@@ -462,6 +464,17 @@ test("configureChartSelectorPanel renders the hidden selector panel", () => {
 	assert.match(panel.innerHTML, /OpenSeaMap/);
 });
 
+test("chart selector panel height follows the viewport space below the control", () => {
+	assert.equal(chartSelectorPanelHeight({ top: 170, viewportHeight: 600 }), 418);
+	assert.equal(chartSelectorPanelHeight({ top: 80, viewportHeight: 900 }), 560);
+	const panel = {
+		style: {},
+		getBoundingClientRect: () => ({ top: 170 }),
+	};
+	assert.equal(fitChartSelectorPanel(panel, { innerHeight: 600 }), 418);
+	assert.equal(panel.style.maxHeight, "418px");
+});
+
 test("chart selector DOM part helpers construct and attach the panel", () => {
 	const { L } = fakeLeaflet();
 	const container = createChartSelectorContainer(L);
@@ -680,7 +693,11 @@ test("chartSelectorEventHandlers exposes button, panel and map handlers", () => 
 			this.attributes[name] = value;
 		},
 	};
-	const panel = { hidden: true };
+	const panel = {
+		hidden: true,
+		style: {},
+		getBoundingClientRect: () => ({ top: 170 }),
+	};
 	try {
 		const handlers = chartSelectorEventHandlers({
 			L: { DomEvent: { stop: (event) => { event.stopped = true; } } },
@@ -689,11 +706,13 @@ test("chartSelectorEventHandlers exposes button, panel and map handlers", () => 
 			onSelectBaseLayer: (value) => calls.push(["base", value]),
 			onSetOverlayLayer: (value, checked) =>
 				calls.push(["overlay", value, checked]),
+			windowObject: { innerHeight: 600 },
 		});
 		const clickEvent = {};
 		handlers.buttonClick(clickEvent);
 		assert.equal(clickEvent.stopped, true);
 		assert.equal(panel.hidden, false);
+		assert.equal(panel.style.maxHeight, "418px");
 
 		const input = Object.assign(new FakeInput(), {
 			name: CHART_BASEMAP_INPUT_NAME,

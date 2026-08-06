@@ -33,10 +33,12 @@ export {
 	attachChartSelectorContainerBehaviour,
 	configureChartSelectorButton,
 	configureChartSelectorPanel,
+	chartSelectorPanelHeight,
 	createChartSelectorButton,
 	createChartSelectorContainer,
 	createChartSelectorElements,
 	createChartSelectorPanel,
+	fitChartSelectorPanel,
 } from "./chart-selector-dom.mjs";
 export {
 	CHART_SELECTOR_BUTTON_CLASS,

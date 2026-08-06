@@ -279,7 +279,11 @@ button.easy-button-button .button-state {
   box-shadow: var(--bs-box-shadow);
   font-size: 13px;
   max-height: min(80vh, 560px);
+  overflow-x: hidden;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
 }
 
 .ajrm-marine-chart-selector-title {

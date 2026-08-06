@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.28
+
+- Size the chart selector from its measured screen position to the bottom of
+  the browser, keeping chart folders reachable in short windows.
+- Enable contained mouse, touch and iPadOS momentum scrolling in the selector.
+
 ## 0.6.27
 
 - Make AIS Targets, Profiles and Settings toolbar buttons true toggles: a

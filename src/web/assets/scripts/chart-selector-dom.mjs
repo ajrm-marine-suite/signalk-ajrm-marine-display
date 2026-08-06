@@ -27,6 +27,25 @@ export function configureChartSelectorPanel({
 	return panel;
 }
 
+export function chartSelectorPanelHeight({
+	top = 0,
+	viewportHeight = 0,
+	bottomGap = 12,
+	maximum = 560,
+	minimum = 48,
+} = {}) {
+	const available = Number(viewportHeight) - Number(top) - Number(bottomGap);
+	return Math.max(minimum, Math.min(maximum, Number.isFinite(available) ? available : maximum));
+}
+
+export function fitChartSelectorPanel(panel, windowObject = globalThis.window) {
+	if (!panel) return null;
+	const top = panel.getBoundingClientRect?.().top ?? 0;
+	const height = chartSelectorPanelHeight({ top, viewportHeight: windowObject?.innerHeight });
+	if (panel.style) panel.style.maxHeight = `${Math.floor(height)}px`;
+	return height;
+}
+
 export function createChartSelectorContainer(L) {
 	return L.DomUtil.create("div", CHART_SELECTOR_CONTAINER_CLASS);
 }

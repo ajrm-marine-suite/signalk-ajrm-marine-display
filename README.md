@@ -1,5 +1,8 @@
 # AJRM Marine Display
 
+Version `0.6.28` keeps the complete chart selector, including chart folders,
+inside short browser windows and enables reliable mouse/touch scrolling.
+
 Version `0.6.27` makes the AIS Targets, Profiles and Settings map buttons close
 their own panel when pressed a second time.
 
