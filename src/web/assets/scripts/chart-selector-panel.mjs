@@ -3,6 +3,7 @@ import {
 	CHART_OVERLAY_INPUT_NAME,
 	chartSelectorInputQuery,
 } from "./chart-selector-inputs.mjs";
+import { CHART_FOLDER_INPUT_NAME } from "./chart-folder-groups.mjs";
 
 export function togglePanel({ L, button, panel, event }) {
 	L.DomEvent.stop(event);
@@ -27,6 +28,9 @@ export function overlayInputAction(input) {
 }
 
 export function chartSelectorInputAction(input) {
+	if (input.name === CHART_FOLDER_INPUT_NAME) {
+		return { type: "folder", value: input.value, checked: input.checked };
+	}
 	if (input.name === CHART_BASEMAP_INPUT_NAME) {
 		return baseMapInputAction(input);
 	}
@@ -44,6 +48,7 @@ export function applyChartSelectorInputAction({
 	action,
 	onSelectBaseLayer,
 	onSetOverlayLayer,
+	onSetChartFolder,
 }) {
 	if (action?.type === "base") {
 		onSelectBaseLayer(action.value);
@@ -53,16 +58,26 @@ export function applyChartSelectorInputAction({
 		onSetOverlayLayer(action.value, action.checked);
 		return true;
 	}
+	if (action?.type === "folder") {
+		onSetChartFolder?.(action.value, action.checked);
+		return true;
+	}
 	return false;
 }
 
-export function handlePanelChange({ event, onSelectBaseLayer, onSetOverlayLayer }) {
+export function handlePanelChange({
+	event,
+	onSelectBaseLayer,
+	onSetOverlayLayer,
+	onSetChartFolder,
+}) {
 	const input = event.target;
 	if (!isChartSelectorInput(input)) return;
 	applyChartSelectorInputAction({
 		action: chartSelectorInputAction(input),
 		onSelectBaseLayer,
 		onSetOverlayLayer,
+		onSetChartFolder,
 	});
 }
 

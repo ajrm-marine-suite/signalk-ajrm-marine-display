@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.23
+
+- Add nested Charts Provider Simple folder controls beneath Auto Charts in the
+  Display chart selector.
+- Apply folder changes globally through the provider API, refresh Auto Charts
+  immediately, and show when a child folder is disabled by a parent.
+- Hide the folder section when the installed Charts Provider Simple version
+  does not yet provide the folder-management API.
+
 ## 0.6.22
 
 - Add a visible Cycle chart map control for choosing among enabled charts that

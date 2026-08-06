@@ -2,6 +2,7 @@ import {
 	AUTO_CHARTS_OVERLAY_NAME,
 	HARBOUR_LIMITS_OVERLAY_NAME,
 } from "./chart-layer-overlay-actions.mjs";
+import { createChartFolderGroupsController } from "./chart-folder-groups.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 
 export function chartSelectorBaseLayerGetter({ storage }) {
@@ -48,6 +49,10 @@ export function chartSelectorSetupConfig({
 		onSelectBaseLayer: chartLayerController.selectBaseLayer,
 		onSetOverlayLayer: chartLayerController.setOverlayLayer,
 		escapeHtml,
+		chartFolderGroups: createChartFolderGroupsController({
+			autoCharts,
+			escapeHtml,
+		}),
 	};
 }
 

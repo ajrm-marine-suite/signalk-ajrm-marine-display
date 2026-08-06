@@ -2,6 +2,13 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.23` adds a collapsible nested chart-folder list beneath **Auto
+Charts** in the chart selector. With Charts Provider Simple 2.6.0 or later,
+folder checkboxes enable or withdraw every chart beneath that folder across
+Signal K, including nested folders. The list identifies child folders disabled
+by a parent and Auto Charts refreshes immediately after a change. With an older
+provider, the unsupported folder section remains hidden.
+
 Version `0.6.22` adds a visible Cycle chart control and a browser-local,
 configurable single-key shortcut (`C` by default). Each press selects the next
 enabled chart overlapping the map centre, then returns to Automatic selection.
@@ -286,7 +293,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.22 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.23 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

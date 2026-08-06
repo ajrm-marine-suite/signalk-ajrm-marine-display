@@ -10,13 +10,21 @@ export function chartSelectorEventHandlers({
 	panel,
 	onSelectBaseLayer,
 	onSetOverlayLayer,
+	chartFolderGroups,
 }) {
 	return {
 		buttonClick(event) {
 			togglePanel({ L, button, panel, event });
+			if (!panel.hidden) void chartFolderGroups?.refresh?.(panel);
 		},
 		panelChange(event) {
-			handlePanelChange({ event, onSelectBaseLayer, onSetOverlayLayer });
+			handlePanelChange({
+				event,
+				onSelectBaseLayer,
+				onSetOverlayLayer,
+				onSetChartFolder: (folderPath, enabled) =>
+					chartFolderGroups?.setEnabled?.({ panel, folderPath, enabled }),
+			});
 		},
 		mapClick() {
 			hidePanel({ button, panel });
@@ -31,6 +39,7 @@ export function bindChartSelectorEvents({
 	panel,
 	onSelectBaseLayer,
 	onSetOverlayLayer,
+	chartFolderGroups,
 }) {
 	const handlers = chartSelectorEventHandlers({
 		L,
@@ -38,6 +47,7 @@ export function bindChartSelectorEvents({
 		panel,
 		onSelectBaseLayer,
 		onSetOverlayLayer,
+		chartFolderGroups,
 	});
 	L.DomEvent.on(button, "click", handlers.buttonClick);
 	L.DomEvent.on(panel, "change", handlers.panelChange);

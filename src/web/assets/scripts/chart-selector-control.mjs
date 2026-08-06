@@ -61,6 +61,7 @@ export function chartSelectorControlDefinition({
 	onSelectBaseLayer,
 	onSetOverlayLayer,
 	escapeHtml,
+	chartFolderGroups,
 }) {
 	return {
 		options: { position: "topleft" },
@@ -78,6 +79,7 @@ export function chartSelectorControlDefinition({
 				panel,
 				onSelectBaseLayer,
 				onSetOverlayLayer,
+				chartFolderGroups,
 			});
 			return container;
 		},
@@ -92,6 +94,7 @@ export function chartSelectorControlDefinitionConfig({
 	onSelectBaseLayer,
 	onSetOverlayLayer,
 	escapeHtml,
+	chartFolderGroups,
 }) {
 	return {
 		L,
@@ -101,6 +104,7 @@ export function chartSelectorControlDefinitionConfig({
 		onSelectBaseLayer,
 		onSetOverlayLayer,
 		escapeHtml,
+		chartFolderGroups,
 	};
 }
 
@@ -141,6 +145,7 @@ export function createLeafletChartSelectorControl({
 	onSelectBaseLayer,
 	onSetOverlayLayer,
 	escapeHtml,
+	chartFolderGroups,
 }) {
 	const ChartSelectorControl = L.Control.extend(
 		chartSelectorControlDefinition(
@@ -150,8 +155,9 @@ export function createLeafletChartSelectorControl({
 				baseMaps,
 				overlayMaps,
 				onSelectBaseLayer,
-				onSetOverlayLayer,
-				escapeHtml,
+					onSetOverlayLayer,
+					escapeHtml,
+					chartFolderGroups,
 			}),
 		),
 	);
@@ -169,6 +175,7 @@ export function createChartSelectorControl({
 	onSelectBaseLayer,
 	onSetOverlayLayer,
 	escapeHtml,
+	chartFolderGroups,
 }) {
 	const control = createLeafletChartSelectorControl({
 		L,
@@ -178,6 +185,7 @@ export function createChartSelectorControl({
 		onSelectBaseLayer,
 		onSetOverlayLayer,
 		escapeHtml,
+		chartFolderGroups,
 	});
 
 	return chartSelectorControlApi(
