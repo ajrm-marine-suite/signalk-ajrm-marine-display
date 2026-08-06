@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.25
+
+- Make Display the suite reference for map and chart interaction.
+- Consume the versioned AJRM Marine map core for the shared Auto Charts
+  ranking contract used by Display, DR Plotter, Voyage Viewer and Harbour
+  Editor.
+- Keep Display's established chart selector, nested folder controls and
+  overlap-cycle workflow as the reference presentation.
+
 ## 0.6.24
 
 - Cache normalized chart bounds and zoom metadata when Auto Charts loads its

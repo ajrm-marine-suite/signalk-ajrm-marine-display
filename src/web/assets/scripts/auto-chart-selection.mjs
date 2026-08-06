@@ -1,4 +1,4 @@
-import { chartCandidates } from "./chart-resource-utils.mjs";
+import { chartCandidates } from "@ajrm-marine/map-core";
 import { chartBoundsCandidates } from "./chart-resource-bounds.mjs";
 import { chartZoom } from "./chart-resource-url.mjs";
 

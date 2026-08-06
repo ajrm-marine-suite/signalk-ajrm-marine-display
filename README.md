@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.25` establishes AJRM Marine Display as the reference map interface
+for the suite and consumes the versioned AJRM map core for shared Auto Charts
+ranking. DR Plotter, Voyage Viewer and Harbour Editor use the matching core
+control, chart-folder hierarchy and overlap-cycling behaviour.
+
 Version `0.6.24` caches normalized bounds and zoom metadata for the Auto Charts
 catalogue. This keeps chart selection responsive with large collections while
 preserving the established overlap, native-zoom and overzoom rules.
@@ -297,7 +302,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.24 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.25 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
