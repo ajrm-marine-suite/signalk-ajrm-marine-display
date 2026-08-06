@@ -1,4 +1,4 @@
-import { chooseBestChart } from "./chart-resource-utils.mjs";
+import { chartCandidates } from "./chart-resource-utils.mjs";
 
 export function createAutoChartList(charts) {
 	return Object.entries(charts || {}).map(([key, chart]) => ({
@@ -8,9 +8,13 @@ export function createAutoChartList(charts) {
 }
 
 export function chooseAutoChartForMap({ chartList, map, getPosition }) {
+	return chartCandidatesForMap({ chartList, map, getPosition })[0] || null;
+}
+
+export function chartCandidatesForMap({ chartList, map, getPosition }) {
 	const zoom = map.getZoom();
 	const position = getPosition();
-	return chooseBestChart(chartList, {
+	return chartCandidates(chartList, {
 		lat: position.lat,
 		lng: position.lng,
 		zoom,

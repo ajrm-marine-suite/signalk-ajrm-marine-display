@@ -52,11 +52,15 @@ export function compareChartCandidates({ lat, lng, zoom }) {
 }
 
 export function chooseBestChart(chartList, { lat, lng, zoom, maxZoom }) {
+	return chartCandidates(chartList, { lat, lng, zoom, maxZoom })[0] || null;
+}
+
+export function chartCandidates(chartList, { lat, lng, zoom, maxZoom }) {
 	const containing = chartList.filter((candidate) =>
 		chartContains(candidate, lat, lng),
 	);
 	const zoomMatches = containing.filter((candidate) =>
 		chartZoomMatches(candidate, { zoom, maxZoom }),
 	);
-	return zoomMatches.sort(compareChartCandidates({ lat, lng, zoom }))[0] || null;
+	return zoomMatches.sort(compareChartCandidates({ lat, lng, zoom }));
 }

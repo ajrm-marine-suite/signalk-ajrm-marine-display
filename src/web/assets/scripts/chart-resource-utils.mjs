@@ -6,6 +6,7 @@ export {
 } from "./chart-resource-bounds.mjs";
 export {
 	chartArea,
+	chartCandidates,
 	chartContains,
 	chartZoomMatches,
 	compareChartCandidates,

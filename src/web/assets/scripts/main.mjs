@@ -6,18 +6,16 @@ import "leaflet-easybutton";
 import defaultCollisionProfiles from "../defaultCollisionProfiles.json";
 import hornMp3Url from "../horn.mp3";
 import pmtilesUrl from "../ne_10m_land.pmtiles?url&no-inline";
-import { escapeHtml } from "./alert-events.mjs";
 import { resumeAisPlusAccessRequestPolling } from "./ajrm-marine-api-access.mjs";
-import {
-	DEFAULT_MAP_ZOOM,
-	PLUGIN_ID,
-} from "./app-constants.mjs";
+import { escapeHtml } from "./alert-events.mjs";
+import { DEFAULT_MAP_ZOOM, PLUGIN_ID } from "./app-constants.mjs";
 import { createAppDom } from "./app-dom.mjs";
 import { createAppRuntimeState } from "./app-runtime-state.mjs";
 import { createConfiguredAppServices } from "./app-services-setup.mjs";
 import { loadConfiguredStartupData } from "./app-startup-data-setup.mjs";
 import { createAppTargetCollections } from "./app-target-collections.mjs";
 import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
+import { createChartCycleControls } from "./chart-cycle-controls.mjs";
 import { createCursorPositionController } from "./cursor-position-control.mjs";
 import {
 	applyDisplayDebugMapControls,
@@ -31,18 +29,18 @@ import {
 	loadAndApplyMainStartupData,
 	setWindowStationaryAutomuteSpeed,
 } from "./main-core-setup.mjs";
-import { createMainMapDisplayAndChartControls } from "./main-map-display-chart-setup.mjs";
 import { createMainMapChartRuntime } from "./main-map-chart-setup.mjs";
+import { createMainMapDisplayAndChartControls } from "./main-map-display-chart-setup.mjs";
 import { finalizeMainStartup } from "./main-startup-finalize.mjs";
 import {
 	createMainTargetSupport,
 	createMainTargetUi,
 } from "./main-target-runtime-setup.mjs";
+import { createRouteController } from "./route-controller.mjs";
 import { chartResourcesPath } from "./startup-data-routes.mjs";
 import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 import { createVoyageObservationController } from "./voyage-observation.mjs";
-import { createRouteController } from "./route-controller.mjs";
 
 const displayRuntimeStatus = await readDisplayRuntimeStatus();
 window.AJRM_MARINE_DISPLAY_DEBUG =
@@ -132,10 +130,7 @@ const {
 	createServices: createConfiguredAppServices,
 });
 
-const {
-	charts,
-	initialPluginTargets,
-} = await loadAndApplyMainStartupData({
+const { charts, initialPluginTargets } = await loadAndApplyMainStartupData({
 	window,
 	state,
 	collisionProfileService,
@@ -164,6 +159,14 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 		loadCharts,
 		storage: window.localStorage,
 	});
+createChartCycleControls({
+	autoCharts,
+	button: mapControls.chartCycleButton,
+	document,
+	shortcutInput: mapControls.chartCycleShortcut,
+	statusElement: mapControls.chartCycleStatus,
+	storage: window.localStorage,
+}).init();
 createCursorPositionController({
 	map,
 	element: elements.cursorPosition,
@@ -210,20 +213,20 @@ const targetSupport = createMainTargetSupport({
 
 const { chartLayerController, harbourDisplay } =
 	createMainMapDisplayAndChartControls({
-	L,
-	map,
-	easyButton,
-	offcanvas,
-	document,
-	baseMaps,
-	OpenSeaMap,
-	autoCharts,
-	elements,
-	mapControls,
-	pluginId: PLUGIN_ID,
-	getHttpResponse,
-	escapeHtml,
-});
+		L,
+		map,
+		easyButton,
+		offcanvas,
+		document,
+		baseMaps,
+		OpenSeaMap,
+		autoCharts,
+		elements,
+		mapControls,
+		pluginId: PLUGIN_ID,
+		getHttpResponse,
+		escapeHtml,
+	});
 
 const {
 	targetSelection,

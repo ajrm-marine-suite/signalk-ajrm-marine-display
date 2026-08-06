@@ -1,6 +1,9 @@
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
 
-export function mapToolbarButtonSpecs({ offcanvas, document = globalThis.document }) {
+export function mapToolbarButtonSpecs({
+	offcanvas,
+	document = globalThis.document,
+}) {
 	return [
 		{
 			icon: DISPLAY_CONTROL_ICONS.targets,
@@ -21,6 +24,11 @@ export function mapToolbarButtonSpecs({ offcanvas, document = globalThis.documen
 			icon: DISPLAY_CONTROL_ICONS.routes,
 			title: "Routes",
 			action: () => document.getElementById("buttonOpenRoutes")?.click(),
+		},
+		{
+			icon: DISPLAY_CONTROL_ICONS.cycleCharts,
+			title: "Cycle chart",
+			action: () => document.getElementById("buttonCycleChart")?.click(),
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.observation,

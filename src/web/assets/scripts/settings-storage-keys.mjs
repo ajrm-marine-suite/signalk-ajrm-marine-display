@@ -1,5 +1,6 @@
 export const SETTINGS_STORAGE_KEYS = Object.freeze({
 	autoCharts: "checkAutoCharts",
+	chartCycleShortcut: "chartCycleShortcut",
 	baseLayer: "baselayer",
 	browserSpeech: "checkBrowserSpeech",
 	darkMode: "checkDarkMode",

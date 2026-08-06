@@ -97,7 +97,10 @@ test("createAutoChartController refreshes startup chart resources without rebuil
 	});
 
 	controller.update();
-	assert.equal(calls.includes("tileLayer:/charts/craobh/{z}/{x}/{y}.png"), false);
+	assert.equal(
+		calls.includes("tileLayer:/charts/craobh/{z}/{x}/{y}.png"),
+		false,
+	);
 
 	chartResources = {
 		craobh: {
@@ -111,7 +114,10 @@ test("createAutoChartController refreshes startup chart resources without rebuil
 	assert.equal(await controller.refreshCharts(), true);
 	controller.update();
 
-	assert.equal(calls.includes("tileLayer:/charts/craobh/{z}/{x}/{y}.png"), true);
+	assert.equal(
+		calls.includes("tileLayer:/charts/craobh/{z}/{x}/{y}.png"),
+		true,
+	);
 	assert.equal(await controller.refreshCharts(), false);
 });
 
@@ -138,4 +144,72 @@ test("createAutoChartController ignores failed chart resource refreshes", async 
 	});
 
 	assert.equal(await controller.refreshCharts(), false);
+});
+
+test("chart cycling locks each overlapping chart, returns to Auto, and releases outside coverage", () => {
+	const calls = [];
+	let position = { lat: 56.2585, lng: -5.6236 };
+	let zoom = 16;
+	const controller = createAutoChartController({
+		L: {
+			layerGroup: () => fakeLayerGroup(calls),
+			tileLayer(url) {
+				calls.push(`tileLayer:${url}`);
+				return { name: url, addTo() {}, remove() {} };
+			},
+		},
+		protomapsL: {},
+		map: {
+			_loaded: true,
+			layers: new Set(),
+			getMaxZoom: () => 22,
+			getZoom: () => zoom,
+			hasLayer(layer) {
+				return this.layers.has(layer);
+			},
+		},
+		charts: {
+			detail: {
+				name: "Detailed Cuan",
+				bounds: [-5.64, 56.25, -5.61, 56.27],
+				minzoom: 13,
+				maxzoom: 18,
+				tilemapUrl: "/detail/{z}/{x}/{y}.png",
+			},
+			alternate: {
+				name: "Alternate Cuan",
+				bounds: [-5.65, 56.24, -5.6, 56.28],
+				minzoom: 13,
+				maxzoom: 18,
+				tilemapUrl: "/alternate/{z}/{x}/{y}.png",
+			},
+		},
+		paintRules: [],
+		labelRules: [],
+		openSeaMap: null,
+		getPosition: () => position,
+	});
+
+	controller.update();
+	assert.equal(calls.at(-1), "group:addLayer:/detail/{z}/{x}/{y}.png");
+
+	const manual = controller.cycleChart();
+	assert.deepEqual(
+		{ mode: manual.mode, index: manual.index, total: manual.total },
+		{ mode: "manual", index: 2, total: 2 },
+	);
+	assert.equal(controller.manualChartId, "alternate");
+
+	zoom = 22;
+	controller.update();
+	assert.equal(controller.manualChartId, "alternate");
+
+	const automatic = controller.cycleChart();
+	assert.equal(automatic.mode, "auto");
+	assert.equal(controller.manualChartId, null);
+
+	controller.cycleChart();
+	position = { lat: 57, lng: -5.6236 };
+	controller.update();
+	assert.equal(controller.manualChartId, null);
 });

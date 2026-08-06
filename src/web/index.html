@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.21";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.22";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.21</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.22</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -228,7 +228,14 @@
         <span id="replayStatusTime"></span>
         <span id="replayStatusFile" class="text-body-secondary"></span>
       </div>
+      <div
+        id="chartCycleStatus"
+        class="ajrm-marine-chart-cycle-status shadow-sm d-none"
+        role="status"
+        aria-live="polite"
+      ></div>
     </div>
+    <button type="button" class="d-none" id="buttonCycleChart"></button>
     <button
       type="button"
       class="d-none"
@@ -1250,6 +1257,22 @@
                           Applies immediately to this browser and is remembered here. Signal K Plugin Config supplies the initial default.
                         </div>
                       </div>
+                      <div class="mb-3">
+                        <label class="form-label" for="inputChartCycleShortcut">
+                          Cycle overlapping charts key
+                        </label>
+                        <input
+                          class="form-control"
+                          type="text"
+                          id="inputChartCycleShortcut"
+                          maxlength="1"
+                          inputmode="text"
+                          value="C"
+                        />
+                        <div class="form-text">
+                          Press this key while the chart has focus, or use the Cycle chart map button. Each press selects the next enabled chart covering the map centre; after the last chart, selection returns to Automatic. This setting is remembered only in this browser.
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -1475,6 +1498,15 @@
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">
                     <svg class="ajrm-marine-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
+                      <path d="M8 3a5 5 0 0 0-4.546 2.914.5.5 0 0 1-.908-.418A6 6 0 0 1 13.47 4H15.5a.5.5 0 0 1 0 1H12a.5.5 0 0 1-.5-.5V1a.5.5 0 0 1 1 0v2.19A5.97 5.97 0 0 1 8 3m4.546 7.086a.5.5 0 0 1 .908.418A6 6 0 0 1 2.53 12H.5a.5.5 0 0 1 0-1H4a.5.5 0 0 1 .5.5V15a.5.5 0 0 1-1 0v-2.19A5.97 5.97 0 0 1 8 13a5 5 0 0 0 4.546-2.914" />
+                      <path d="M4.5 7.25 8 5.5l3.5 1.75L8 9zM4.5 9 8 10.75 11.5 9v1L8 11.75 4.5 10z" />
+                    </svg>
+                  </span>
+                  <span><strong>Cycle chart:</strong> cycles enabled charts overlapping the map centre, then returns to Automatic selection.</span>
+                </li>
+                <li>
+                  <span class="ajrm-marine-help-control-icon" aria-hidden="true">
+                    <svg class="ajrm-marine-control-icon" viewBox="0 0 16 16" width="1em" height="1em" fill="currentColor" focusable="false">
                       <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5" />
                       <path d="M1 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 4m0 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 8m0 4a.75.75 0 1 0 0-1.5A.75.75 0 0 0 1 12" />
                     </svg>
@@ -1521,9 +1553,13 @@
               <h6>Charts and following</h6>
               <p>
                 Auto Charts chooses a chart for the current vessel or map
-                position. Manual panning pauses following; press centre vessel
-                to follow own vessel again. OpenSeaMap is a transparent seamark
-                overlay and is kept above chart tiles.
+                position. When charts overlap, use Cycle chart or press the
+                configured key (C by default) to select the next chart. A manual
+                selection remains through zoom and overzoom, then returns to
+                Automatic after the last chart or when the map centre leaves
+                its coverage. Manual panning pauses following; press centre
+                vessel to follow own vessel again. OpenSeaMap is a transparent
+                seamark overlay and is kept above chart tiles.
               </p>
               <h6>After an update</h6>
               <p>

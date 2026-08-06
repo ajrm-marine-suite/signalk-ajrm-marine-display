@@ -99,6 +99,9 @@ export function createAppDom() {
 	};
 
 	const mapControls = {
+		chartCycleButton: getRequiredElement("buttonCycleChart"),
+		chartCycleShortcut: getRequiredElement("inputChartCycleShortcut"),
+		chartCycleStatus: getRequiredElement("chartCycleStatus"),
 		cursorPosition: getRequiredElement("checkCursorPosition"),
 		coordinateFormat: getRequiredElement("selectCoordinateFormat"),
 		selfIconVariant: getRequiredElement("selectSelfIconVariant"),

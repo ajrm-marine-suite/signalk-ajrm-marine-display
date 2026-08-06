@@ -2,10 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
-Version `0.6.21` selects the closest sufficient native chart resolution for the
-current map zoom. This prevents detailed charts from appearing prematurely,
-while retaining the most detailed available chart through overzoom once its
-native resolution is reached.
+Version `0.6.22` adds a visible Cycle chart control and a browser-local,
+configurable single-key shortcut (`C` by default). Each press selects the next
+enabled chart overlapping the map centre, then returns to Automatic selection.
+A manually selected chart remains locked through zoom and overzoom, but is
+released automatically when the map centre leaves its coverage.
 
 Version `0.6.19` identifies the ITU `111MIDXXX` allocation as SAR aircraft,
 shows the category (including the optional fixed-wing or helicopter subtype)
@@ -190,6 +191,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - OpenStreetMap, OpenTopoMap and Satellite basemaps.
 - Auto Charts as one overlay selecting the best Signal K provider chart for the
   current position and zoom.
+- A visible Cycle chart button and configurable browser-local shortcut for
+  choosing among overlapping charts without changing other Display clients.
 - OpenSeaMap seamarks.
 - Own-vessel follow/recentre and manual chart browsing.
 - Evidence-backed Class A/Class B AIS vessel symbols, an explicit unknown-class
@@ -283,7 +286,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.21 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.22 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

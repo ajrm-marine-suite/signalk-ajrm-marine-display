@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.22
+
+- Add a visible Cycle chart map control for choosing among enabled charts that
+  overlap the map centre, followed by a return to Automatic selection.
+- Keep a manually selected chart locked through zoom and overzoom, while
+  automatically releasing the lock after panning outside its coverage.
+- Add a browser-local, configurable single-key shortcut for cycling charts,
+  defaulting to `C`, with an on-map chart-name/status confirmation.
+
 ## 0.6.21
 
 - Select the chart whose native maximum zoom most closely fits the current map
