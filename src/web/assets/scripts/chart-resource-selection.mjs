@@ -33,13 +33,19 @@ export function chartZoomMatches(chart, { zoom, maxZoom }) {
 	);
 }
 
-export function compareChartCandidates({ lat, lng }) {
+export function compareChartCandidates({ lat, lng, zoom }) {
 	return (a, b) => {
 		const aZoom = chartZoom(a);
 		const bZoom = chartZoom(b);
+		const aHasNativeZoom = aZoom.max >= zoom;
+		const bHasNativeZoom = bZoom.max >= zoom;
+		if (aHasNativeZoom !== bHasNativeZoom) return aHasNativeZoom ? -1 : 1;
+		const nativeZoomOrder = aHasNativeZoom
+			? aZoom.max - bZoom.max
+			: bZoom.max - aZoom.max;
 		return (
+			nativeZoomOrder ||
 			chartArea(a, lat, lng) - chartArea(b, lat, lng) ||
-			bZoom.max - aZoom.max ||
 			bZoom.min - aZoom.min
 		);
 	};
@@ -52,5 +58,5 @@ export function chooseBestChart(chartList, { lat, lng, zoom, maxZoom }) {
 	const zoomMatches = containing.filter((candidate) =>
 		chartZoomMatches(candidate, { zoom, maxZoom }),
 	);
-	return zoomMatches.sort(compareChartCandidates({ lat, lng }))[0] || null;
+	return zoomMatches.sort(compareChartCandidates({ lat, lng, zoom }))[0] || null;
 }

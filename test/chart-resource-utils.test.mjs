@@ -52,7 +52,7 @@ test("chartZoom defaults invalid values conservatively", () => {
 	});
 });
 
-test("chooseBestChart prefers smaller coverage once a chart is eligible", () => {
+test("chooseBestChart prefers the closest sufficient native zoom", () => {
 	const charts = [
 		{
 			__autoChartId: "coarse",
@@ -90,7 +90,7 @@ test("chooseBestChart prefers smaller coverage once a chart is eligible", () => 
 			zoom: 11,
 			maxZoom: 22,
 		}).__autoChartId,
-		"tiny-lower-minzoom",
+		"detail",
 	);
 });
 
@@ -118,9 +118,9 @@ test("compareChartCandidates preserves Auto Charts ranking rules", () => {
 
 	assert.deepEqual(
 		charts
-			.toSorted(compareChartCandidates({ lat: 54, lng: -4 }))
+			.toSorted(compareChartCandidates({ lat: 54, lng: -4, zoom: 12 }))
 			.map((chart) => chart.__autoChartId),
-		["smaller-detail", "higher-minzoom", "wide-detail"],
+		["higher-minzoom", "wide-detail", "smaller-detail"],
 	);
 });
 

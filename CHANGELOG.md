@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.6.21
+
+- Select the chart whose native maximum zoom most closely fits the current map
+  zoom, preferring native coverage over an already-overzoomed chart.
+- Use geographic coverage only to break native-resolution ties, so detailed
+  Antares charts appear at an appropriate zoom and then remain through
+  overzoom. At Cuan Sound this steps from the overview chart at zoom 13, to
+  Admiralty 2326 at zooms 14–15, and to Antares from zoom 16 onward.
+
 ## 0.6.20
 
 - Keep the smallest-area, most detailed chart selected as map zoom increases,

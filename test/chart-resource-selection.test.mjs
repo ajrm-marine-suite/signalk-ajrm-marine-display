@@ -34,7 +34,7 @@ test("chartZoomMatches exposes the established zoom tolerance", () => {
 	);
 });
 
-test("Auto Charts retains the detailed Cuan Sound chart through overzoom", () => {
+test("Auto Charts selects Cuan charts at native detail and retains Antares through overzoom", () => {
 	const detailedAntaresChart = {
 		name: "AC 5615A Cuan Sound, The Narrows and Anchorage, edition 7",
 		bounds: [-5.6343634, 56.25099545, -5.61286818, 56.26605459],
@@ -47,15 +47,33 @@ test("Auto Charts retains the detailed Cuan Sound chart through overzoom", () =>
 		minzoom: 14,
 		maxzoom: 15,
 	};
-	const chartList = [broaderAdmiraltyChart, detailedAntaresChart];
+	const overviewAdmiraltyChart = {
+		name: "W-2169-0",
+		bounds: [-6.6512403, 55.9248317, -5.4259987, 56.356403],
+		minzoom: 12,
+		maxzoom: 13,
+	};
+	const chartList = [
+		broaderAdmiraltyChart,
+		detailedAntaresChart,
+		overviewAdmiraltyChart,
+	];
 	const position = { lat: 56.2585, lng: -5.6236, maxZoom: 22 };
 
 	assert.equal(
 		chooseBestChart(chartList, { ...position, zoom: 13 }),
-		detailedAntaresChart,
+		overviewAdmiraltyChart,
 	);
 	assert.equal(
 		chooseBestChart(chartList, { ...position, zoom: 14 }),
+		broaderAdmiraltyChart,
+	);
+	assert.equal(
+		chooseBestChart(chartList, { ...position, zoom: 15 }),
+		broaderAdmiraltyChart,
+	);
+	assert.equal(
+		chooseBestChart(chartList, { ...position, zoom: 16 }),
 		detailedAntaresChart,
 	);
 	assert.equal(
