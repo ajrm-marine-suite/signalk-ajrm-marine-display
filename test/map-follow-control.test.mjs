@@ -13,6 +13,10 @@ function fakeEasyButtonFactory() {
 				button: {
 					innerHTML: "",
 					title: "",
+					attributes: {},
+					setAttribute(name, value) {
+						this.attributes[name] = value;
+					},
 				},
 				addTo(map) {
 					this.map = map;
@@ -58,6 +62,7 @@ test("map follow control starts in following state and can show paused state", (
 
 	assert.equal(controller.getMapFollowSelf(), true);
 	assert.equal(button.title, "Following own vessel");
+	assert.equal(button.attributes["data-ajrm-map-help"], "Following own vessel");
 	assert.match(button.innerHTML, /ajrm-marine-control-icon/);
 	assert.match(button.innerHTML, /Follow own vessel/);
 
@@ -65,6 +70,7 @@ test("map follow control starts in following state and can show paused state", (
 
 	assert.equal(controller.getMapFollowSelf(), false);
 	assert.equal(button.title, "Follow paused. Click to centre own vessel");
+	assert.equal(button.attributes["data-ajrm-map-help"], "Follow paused. Click to centre own vessel");
 	assert.match(button.innerHTML, /ajrm-marine-control-icon/);
 	assert.match(button.innerHTML, /Paused/);
 });

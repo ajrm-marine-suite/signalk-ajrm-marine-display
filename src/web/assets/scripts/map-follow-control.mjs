@@ -1,5 +1,6 @@
 import { recenterOnSelfTarget } from "./map-follow-action.mjs";
 import { mapFollowButtonState } from "./map-follow-state.mjs";
+import { setMapControlHoverHelp } from "@ajrm-marine/map-core";
 
 export function createMapFollowController({
 	easyButton,
@@ -15,7 +16,7 @@ export function createMapFollowController({
 		if (!centerVesselButton?.button) return;
 		const state = mapFollowButtonState(mapFollowSelf);
 		centerVesselButton.button.innerHTML = state.html;
-		centerVesselButton.button.title = state.title;
+		setMapControlHoverHelp(centerVesselButton.button, state.title);
 	}
 
 	function setMapFollowSelf(enabled) {

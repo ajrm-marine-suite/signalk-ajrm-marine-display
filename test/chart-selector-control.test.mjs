@@ -444,7 +444,8 @@ test("configureChartSelectorButton sets accessible button attributes", () => {
 	configureChartSelectorButton(button);
 
 	assert.equal(button.type, "button");
-	assert.equal(button.title, CHART_SELECTOR_BUTTON_LABEL);
+	assert.equal(button.title, "Choose maps and charts");
+	assert.equal(button.attributes["data-ajrm-map-help"], "Choose maps and charts");
 	assert.equal(button.attributes["aria-label"], CHART_SELECTOR_BUTTON_LABEL);
 	assert.equal(button.attributes["aria-expanded"], "false");
 });
@@ -490,7 +491,7 @@ test("chart selector DOM part helpers construct and attach the panel", () => {
 
 	assert.equal(returned, container);
 	assert.equal(container.className, CHART_SELECTOR_CONTAINER_CLASS);
-	assert.equal(button.title, CHART_SELECTOR_BUTTON_LABEL);
+	assert.equal(button.title, "Choose maps and charts");
 	assert.equal(panel.hidden, true);
 	assert.equal(container._ajrmMarineChartPanel, panel);
 	assert.equal(container.disableClickPropagation, true);
@@ -529,7 +530,7 @@ test("createChartSelectorControl wires Leaflet DOM events and input updates", ()
 		assert.equal(container.className, CHART_SELECTOR_CONTAINER_CLASS);
 		assert.equal(container.disableClickPropagation, true);
 		assert.equal(container.disableScrollPropagation, true);
-		assert.equal(button.title, CHART_SELECTOR_BUTTON_LABEL);
+		assert.equal(button.title, "Choose maps and charts");
 		assert.equal(panel.className, CHART_SELECTOR_PANEL_CLASS);
 		assert.equal(panel.hidden, true);
 		assert.match(panel.innerHTML, /NaturalEarth \(offline\)/);

@@ -4,12 +4,13 @@ import {
 	CHART_SELECTOR_CONTAINER_CLASS,
 	CHART_SELECTOR_PANEL_CLASS,
 } from "./chart-selector-dom-constants.mjs";
+import { setMapControlHoverHelp } from "@ajrm-marine/map-core";
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
 import { renderPanel } from "./chart-selector-render.mjs";
 
 export function configureChartSelectorButton(button) {
 	button.type = "button";
-	button.title = CHART_SELECTOR_BUTTON_LABEL;
+	setMapControlHoverHelp(button, "Choose maps and charts");
 	button.setAttribute("aria-label", CHART_SELECTOR_BUTTON_LABEL);
 	button.setAttribute("aria-expanded", "false");
 	button.innerHTML = DISPLAY_CONTROL_ICONS.layers;

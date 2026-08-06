@@ -72,9 +72,15 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 	const calls = [];
 	const map = { name: "map" };
 	const easyButton = (icon, action, title) => ({
+		button: {
+			attributes: {},
+			setAttribute(name, value) {
+				this.attributes[name] = value;
+			},
+		},
 		addTo(target) {
 			calls.push({ icon, action, title, target });
-			return { title };
+			return this;
 		},
 	});
 
@@ -92,6 +98,7 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 	assert.equal(result.buttons.length, 7);
 	assert.equal(calls.length, 7);
 	assert.ok(calls.every((call) => call.target === map));
+	assert.ok(result.buttons.every((button) => button.button.attributes["data-ajrm-map-help"]));
 	assert.deepEqual(
 		calls.map((call) => call.title),
 		[

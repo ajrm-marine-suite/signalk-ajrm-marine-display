@@ -1,4 +1,5 @@
 import { createEasyButtonFactory } from "./easy-button-factory.mjs";
+import { labelLeafletZoomControls } from "@ajrm-marine/map-core";
 
 export function configuredMapOptions(defaultMapZoom) {
 	return {
@@ -33,6 +34,7 @@ export function createConfiguredMapBasics({
 	const createEasyButton =
 		factories.createEasyButtonFactory || createEasyButtonFactory;
 	const map = L.map("map", configuredMapOptions(defaultMapZoom));
+	labelLeafletZoomControls(map);
 	const chartScaleControl = addChartScaleControl({ L, map });
 	const easyButton = createEasyButton(L);
 

@@ -1,9 +1,10 @@
 # AJRM Marine Display
 
+Version `0.6.31` adds visible hover/focus help to every map control icon,
+including zoom, chart selection, chart cycling, follow and Display actions.
+
 Version `0.6.30` places Cycle chart immediately below the chart selector,
-matching DR Plotter, Voyage Viewer and Harbour Editor. Automatic/manual chart
-selection, cycling, result wording and keyboard filtering remain on shared Map
-Core while Display retains its richer chart rendering and layer management.
+matching DR Plotter, Voyage Viewer and Harbour Editor.
 
 Version `0.6.28` keeps the complete chart selector, including chart folders,
 inside short browser windows and enables reliable mouse/touch scrolling.
@@ -316,7 +317,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.30 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.31 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

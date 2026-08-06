@@ -1,4 +1,5 @@
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
+import { setMapControlHoverHelp } from "@ajrm-marine/map-core";
 
 export function toggleOffcanvas(instance, element) {
 	if (!instance) return;
@@ -55,9 +56,11 @@ export function createMapToolbarButtons({
 	offcanvas,
 	document = globalThis.document,
 }) {
-	const buttons = mapToolbarButtonSpecs({ offcanvas, document }).map((spec) =>
-		easyButton(spec.icon, spec.action, spec.title).addTo(map),
-	);
+	const buttons = mapToolbarButtonSpecs({ offcanvas, document }).map((spec) => {
+		const control = easyButton(spec.icon, spec.action, spec.title).addTo(map);
+		setMapControlHoverHelp(control?.button, spec.title);
+		return control;
+	});
 
 	return { buttons };
 }

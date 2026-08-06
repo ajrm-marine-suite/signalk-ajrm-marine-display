@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.6.31
+
+- Add visible hover/focus help to zoom, chart, follow and application map
+  icons, using AJRM Marine Map Core 0.6.11 for the shared label contract.
+
 ## 0.6.30
 
 - Place Cycle chart immediately below the chart selector, matching DR Plotter,
