@@ -38,9 +38,9 @@ export function compareChartCandidates({ lat, lng }) {
 		const aZoom = chartZoom(a);
 		const bZoom = chartZoom(b);
 		return (
-			bZoom.min - aZoom.min ||
 			chartArea(a, lat, lng) - chartArea(b, lat, lng) ||
-			bZoom.max - aZoom.max
+			bZoom.max - aZoom.max ||
+			bZoom.min - aZoom.min
 		);
 	};
 }

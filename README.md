@@ -2,6 +2,11 @@
 
 Operational chart, target and alert Display for the AJRM Marine suite.
 
+Version `0.6.20` keeps the smallest-area, most detailed available chart selected
+as the map zoom increases and continues displaying its final native tile level
+through overzoom. A broader chart can no longer replace a detailed chart merely
+because the broader chart has a higher minimum zoom level.
+
 Version `0.6.19` identifies the ITU `111MIDXXX` allocation as SAR aircraft,
 shows the category (including the optional fixed-wing or helicopter subtype)
 in vessel details, draws a heading-aligned aircraft silhouette on the map and
@@ -278,7 +283,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.19 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.20 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.6.20
+
+- Keep the smallest-area, most detailed chart selected as map zoom increases,
+  including through raster overzoom, instead of replacing it with a broader
+  chart merely because that chart has a higher minimum zoom level.
+- Cover the observed Cuan Sound Antares-to-Admiralty replacement with a focused
+  Auto Charts regression test.
+
 ## 0.6.19
 
 - Draw SAR aircraft with a simple top-down aircraft silhouette on the map,
