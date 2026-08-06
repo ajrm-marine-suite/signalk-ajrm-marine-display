@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.26
+
+- Offset left off-canvas panels so they no longer cover the map toolbar.
+- Keep the left Leaflet toolbar above the off-canvas backdrop so zoom, chart
+  and application buttons remain exposed while a panel is open.
+
 ## 0.6.25
 
 - Make Display the suite reference for map and chart interaction.

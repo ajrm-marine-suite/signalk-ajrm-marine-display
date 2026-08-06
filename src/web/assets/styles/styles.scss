@@ -82,6 +82,15 @@ body,
   background-color: var(--bs-body-bg);
 }
 
+.offcanvas.offcanvas-start {
+  left: 3.25rem;
+  max-width: calc(100vw - 4rem);
+}
+
+.leaflet-top.leaflet-left {
+  z-index: 1050;
+}
+
 .cursor-position {
   position: fixed;
   right: 14px;

@@ -1,5 +1,8 @@
 # AJRM Marine Display
 
+Version `0.6.26` opens left-side panels beside the map toolbar and keeps the
+toolbar visible above the off-canvas backdrop.
+
 Operational chart, target and alert Display for the AJRM Marine suite.
 
 Version `0.6.25` establishes AJRM Marine Display as the reference map interface
@@ -302,7 +305,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.25 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.26 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
