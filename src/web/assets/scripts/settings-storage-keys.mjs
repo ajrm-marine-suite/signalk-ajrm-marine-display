@@ -5,6 +5,7 @@ export const SETTINGS_STORAGE_KEYS = Object.freeze({
 	browserSpeech: "checkBrowserSpeech",
 	darkMode: "checkDarkMode",
 	displayHarbours: "checkDisplayHarbours",
+	displayScaledVesselShapes: "checkDisplayScaledVesselShapes",
 	noSleep: "checkNoSleep",
 	overlayLayer: "overlay",
 	showAlertPanel: "checkShowAlertPanel",

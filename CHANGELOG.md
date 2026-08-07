@@ -1,5 +1,25 @@
 # Changelog
 
+## 0.7.0
+
+- Complete a Signal K ownership, lifecycle, authorization and API review.
+- Send sound checks to AJRM Marine Audio, announcement-history clearing to
+  AJRM Marine Notifications, and all-well policy changes to AJRM Marine
+  Traffic instead of calling obsolete Display endpoints.
+- Require Signal K read/write or administrator access for every mutation and
+  document every registered route in OpenAPI.
+- Retract Display status and its in-process API on stop, and prevent delayed
+  route initialization from reviving stopped runtime state.
+- Permit browser speech only when Notifications explicitly marks the latest
+  event for audio delivery.
+- Remove the nonexistent GPS-warning pause call, dead browser announcement
+  logging, the unimplemented CPA vessel-shape setting, and unused Lodash.
+- Remove the dormant 553-line Display-side CPA/risk calculator. Production
+  Display used only its degree/radian helpers; Traffic remains the sole live
+  collision-risk authority.
+- Keep Traffic and Vessel Database as separate authorities: live risk state
+  and durable vessel identity respectively.
+
 ## 0.6.32
 
 - Refresh embedded Help for shared map controls, nested chart folders, route

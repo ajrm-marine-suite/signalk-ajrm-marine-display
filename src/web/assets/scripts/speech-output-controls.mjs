@@ -1,7 +1,7 @@
 import { speakBrowserAlertsForOutput } from "./speech-output-browser-alerts.mjs";
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 import { announceSoundState } from "./speech-output-sound-state.mjs";
 import { runSoundCheck } from "./speech-output-sound-check.mjs";
@@ -77,7 +77,7 @@ export function createSpeechOutputController({
 				});
 				if (!response?.ok) {
 					if (response) {
-						await assertAisPlusResponseAllowed(
+						await assertAjrmMarineResponseAllowed(
 							response,
 							"AJRM Marine speech settings",
 						);

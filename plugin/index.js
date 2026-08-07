@@ -8,6 +8,7 @@ const openApi = require("./openApi.json");
 const defaultProfiles = require("./defaultDisplayProfiles.json");
 const {
   alertEvents,
+  browserSpeechEvents,
   displayTargets,
   panelEvents,
   profiles,
@@ -64,6 +65,8 @@ module.exports = function ajrmMarineDisplay(app) {
   let debugControls = normalizeDebugControls({});
   let routeManager = null;
   let routeManagerReady = Promise.resolve();
+  let running = false;
+  let lifecycleGeneration = 0;
 
   plugin.id = PLUGIN_ID;
   plugin.name = "AJRM Marine Display";
@@ -137,6 +140,10 @@ module.exports = function ajrmMarineDisplay(app) {
   };
 
   plugin.start = (pluginOptions = {}) => {
+    clearRuntimeApi();
+    running = true;
+    lifecycleGeneration += 1;
+    const generation = lifecycleGeneration;
     options = normalizeOptions(pluginOptions);
     routeManager = createRouteManager({
       resourcesApi: app.resourcesApi,
@@ -145,8 +152,9 @@ module.exports = function ajrmMarineDisplay(app) {
       onSelection: recordRouteSelection,
     });
     routeManagerReady = routeManager.init().catch((error) => {
+      if (!running || generation !== lifecycleGeneration) return null;
       app.error?.(`[${PLUGIN_ID}] route manager startup failed: ${error.message}`);
-      throw error;
+      return null;
     });
     status = {
       contract: "ajrm-marine-display-status",
@@ -172,11 +180,15 @@ module.exports = function ajrmMarineDisplay(app) {
       uiState: () => currentUiState(),
       async currentRoute() {
         await routeManagerReady;
-        return routeManager?.current() || null;
+        return running && generation === lifecycleGeneration
+          ? routeManager?.current() || null
+          : null;
       },
       async restoreRoute(snapshot) {
         await routeManagerReady;
-        return routeManager?.restore(snapshot, { notify: false }) || null;
+        return running && generation === lifecycleGeneration
+          ? routeManager?.restore(snapshot, { notify: false }) || null
+          : null;
       },
     };
     app.ajrmMarineDisplayApi = api;
@@ -189,14 +201,14 @@ module.exports = function ajrmMarineDisplay(app) {
   };
 
   plugin.stop = () => {
-    if (app.ajrmMarineDisplayApi?.pluginId === plugin.id) {
-      delete app.ajrmMarineDisplayApi;
-    }
-    if (globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY]?.pluginId === plugin.id) {
-      delete globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY];
-    }
+    running = false;
+    lifecycleGeneration += 1;
+    clearRuntimeApi();
+    publish(null);
+    app.setPluginStatus?.("Stopped");
     status = null;
     routeManager = null;
+    routeManagerReady = Promise.resolve(null);
   };
 
   plugin.registerWithRouter = (router) => registerRoutes(router);
@@ -210,6 +222,7 @@ module.exports = function ajrmMarineDisplay(app) {
 
   function registerRoutes(router, prefix = "") {
     const route = (path) => `${prefix}${path}`;
+    const write = requireWriteAccess;
     router.get(route("/status"), (_req, res) =>
       res.json({ ok: true, plugin: PLUGIN_ID, status }),
     );
@@ -229,36 +242,24 @@ module.exports = function ajrmMarineDisplay(app) {
     router.get(route("/announcementLog"), (_req, res) =>
       res.json(currentUiState().announcementLog),
     );
-    router.get(route("/browserSpeechEvents"), (_req, res) =>
-      res.json({ events: [], summary: { count: 0 } }),
-    );
+    router.get(route("/browserSpeechEvents"), (_req, res) => {
+      const events = browserSpeechEvents(brokerProjection());
+      res.json({ events, summary: { count: events.length } });
+    });
     router.get(route("/autoProfileStatus"), (_req, res) =>
       res.json(currentUiState().autoProfileStatus),
     );
     router.get(route("/debugControls"), (_req, res) =>
       res.json({ ok: true, controls: debugControls }),
     );
-    router.post?.(route("/debugControls"), async (req, res) => {
+    router.post?.(route("/debugControls"), write(async (req, res) => {
       debugControls = normalizeDebugControls({
         ...debugControls,
         ...(req.body || {}),
       });
       debug("display.debug.controls", debugControls);
       res.json({ ok: true, controls: debugControls });
-    });
-    router.get(route("/autoProfileSettings"), (_req, res) =>
-      res.json(trafficAutoProfile().settings || { enabled: false }),
-    );
-    router.get(route("/getSpeechOutputSettings"), (_req, res) =>
-      res.json(currentUiState().speechOutput),
-    );
-    router.get(route("/encounterSettings"), (_req, res) =>
-      res.json({
-        useVesselShapeForCpa: true,
-        displayScaledVesselShapes: true,
-        allWellEnabled: false,
-      }),
-    );
+    }));
     router.get(route("/repeatIntervals"), (_req, res) => res.json({}));
     router.get(route("/routes"), async (_req, res) => {
       try {
@@ -275,21 +276,21 @@ module.exports = function ajrmMarineDisplay(app) {
         res.status(500).json({ ok: false, error: error.message });
       }
     });
-    router.post?.(route("/routes/import"), async (req, res) => {
+    router.post?.(route("/routes/import"), write(async (req, res) => {
       await routeAction(res, () => routeManager.importGpx({
         xml: req.body?.gpx,
         fileName: req.body?.fileName,
         routeIndex: req.body?.routeIndex,
         saveToPi: req.body?.saveToPi === true,
       }));
-    });
-    router.post?.(route("/routes/open-pi"), async (req, res) => {
+    }));
+    router.post?.(route("/routes/open-pi"), write(async (req, res) => {
       await routeAction(res, () => routeManager.openPi(req.body || {}));
-    });
-    router.post?.(route("/routes/open-resource"), async (req, res) => {
+    }));
+    router.post?.(route("/routes/open-resource"), write(async (req, res) => {
       await routeAction(res, () => routeManager.openResource(req.body || {}));
-    });
-    router.post?.(route("/routes/delete-resource"), async (req, res) => {
+    }));
+    router.post?.(route("/routes/delete-resource"), write(async (req, res) => {
       try {
         await routeManagerReady;
         const result = await routeManager.deleteResource(req.body || {});
@@ -297,16 +298,16 @@ module.exports = function ajrmMarineDisplay(app) {
       } catch (error) {
         res.status(409).json({ ok: false, error: error.message });
       }
-    });
-    router.post?.(route("/routes/reverse"), async (_req, res) => {
+    }));
+    router.post?.(route("/routes/reverse"), write(async (_req, res) => {
       await routeAction(res, () => routeManager.reverse());
-    });
-    router.post?.(route("/routes/save"), async (req, res) => {
+    }));
+    router.post?.(route("/routes/save"), write(async (req, res) => {
       await routeAction(res, () => routeManager.save(req.body || {}));
-    });
-    router.post?.(route("/routes/close"), async (_req, res) => {
+    }));
+    router.post?.(route("/routes/close"), write(async (_req, res) => {
       await routeAction(res, () => routeManager.close());
-    });
+    }));
     router.get(route("/routes/export"), async (_req, res) => {
       try {
         await routeManagerReady;
@@ -335,14 +336,14 @@ module.exports = function ajrmMarineDisplay(app) {
         res.status(500).json({ error: error.message });
       }
     });
-    router.post?.(route("/refreshDiagnostics"), async (req, res) => {
+    router.post?.(route("/refreshDiagnostics"), write(async (req, res) => {
       try {
         logRefreshDiagnostic(req);
         res.json({ ok: true });
       } catch (error) {
         res.status(500).json({ error: error.message });
       }
-    });
+    }));
     router.get(route("/observations/status"), async (_req, res) => {
       try {
         res.json(await observationStatus());
@@ -353,7 +354,7 @@ module.exports = function ajrmMarineDisplay(app) {
         });
       }
     });
-    router.post?.(route("/observations"), async (req, res) => {
+    router.post?.(route("/observations"), write(async (req, res) => {
       try {
         const text = normalizeObservationText(req.body?.text);
         const captureApi = getCaptureApi();
@@ -380,7 +381,7 @@ module.exports = function ajrmMarineDisplay(app) {
           error: error.message || "Unable to save voyage observation",
         });
       }
-    });
+    }));
   }
 
   async function routeAction(res, action) {
@@ -394,6 +395,7 @@ module.exports = function ajrmMarineDisplay(app) {
   }
 
   async function recordRouteSelection(selection) {
+    if (!running) return;
     const captureApi = getCaptureApi();
     if (typeof captureApi?.recordRouteSelection !== "function") return;
     try {
@@ -515,6 +517,33 @@ module.exports = function ajrmMarineDisplay(app) {
       context: "vessels.self",
       updates: [{ values: [{ path: STATUS_PATH, value }] }],
     });
+  }
+
+  function clearRuntimeApi() {
+    if (app.ajrmMarineDisplayApi?.pluginId === plugin.id) {
+      delete app.ajrmMarineDisplayApi;
+    }
+    if (globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY]?.pluginId === plugin.id) {
+      delete globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY];
+    }
+  }
+
+  function requireWriteAccess(handler) {
+    return function writeAccessHandler(req, res) {
+      const permission = req.skPrincipal?.permissions;
+      if (
+        permission === "admin" ||
+        permission === "readwrite" ||
+        (permission === undefined && req.skIsAuthenticated !== false)
+      ) {
+        return handler(req, res);
+      }
+      res.status(403).json({
+        ok: false,
+        error: "AJRM Marine Display controls require Signal K read/write or admin access.",
+      });
+      return undefined;
+    };
   }
 
   function logRefreshDiagnostic(req) {

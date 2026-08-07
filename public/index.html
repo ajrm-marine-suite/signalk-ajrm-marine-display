@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.32";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.0";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-BNdu8h_X.js"></script>
+    <script type="module" crossorigin src="./assets/index-BwNi94u7.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-TzBr6Frf.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.32</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.0</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -342,7 +342,7 @@
                 class="btn btn-warning btn-sm mt-3 d-none"
                 id="buttonPauseGpsAlarm"
               >
-                Pause lost GPS alarm
+                Dismiss GPS warning
               </button>
             </div>
           </div>
@@ -1400,16 +1400,6 @@
                         </div>
                       </div>
                       <hr />
-                      <div class="form-check mb-3">
-                        <input
-                          class="form-check-input"
-                          type="checkbox"
-                          id="checkUseVesselShapeForCpa"
-                        />
-                        <label class="form-check-label" for="checkUseVesselShapeForCpa">
-                          Use ship shape for CPA
-                        </label>
-                      </div>
                       <div class="form-check mb-3">
                         <input
                           class="form-check-input"

@@ -1,6 +1,23 @@
 # AJRM Marine Display
 
-Version `0.6.32` refreshes embedded Help for the shared map controls, chart
+Version `0.7.0` is the reviewed Signal K contract baseline. Display now sends
+Traffic, Notifications and Audio controls directly to their authoritative
+plugins, authenticates every mutation, documents every registered route in
+OpenAPI, retracts its runtime status on stop, and speaks only events for which
+Notifications explicitly selected audio delivery. Dead Display-owned sound,
+history and GPS-pause calls and the unimplemented CPA vessel-shape control have
+been removed. A dormant Display-side CPA/risk calculator has also been removed;
+Display consumes Traffic's authoritative risk projection instead of carrying a
+second safety engine.
+
+Display owns map interaction and presentation. AJRM Marine Traffic owns live
+target and collision-risk state; AJRM Marine Vessel Database remains a
+separate durable identity and classification service.
+
+<details>
+<summary>Earlier release notes</summary>
+
+Version `0.6.32` refreshed embedded Help for the shared map controls, chart
 folders, route handling, voyage observations, and Capture-led architecture.
 
 Version `0.6.31` adds visible hover/focus help to every map control icon,
@@ -219,6 +236,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Display owns chart interaction, rendering, target browsing, browser-local
   visual settings, and Help.
 
+</details>
+
 ## Display functionality
 
 - Offline NaturalEarth basemap.
@@ -320,7 +339,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.32 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.7.0 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
@@ -347,9 +366,10 @@ Commercial licensing is available by arrangement for organisations that want dif
 
 ## Safety
 
-> This software is Alpha Release and has not been tested in live environments
-> and must not be relied upon for navigation or safety. The Authors do not accept
-> any responsibility for loss or damage as a result of using this software.
+> This software is a public beta and must not be relied upon for navigation or
+> safety. The skipper remains responsible for navigation, collision avoidance
+> and every operational decision. The authors do not accept responsibility for
+> loss or damage resulting from its use.
 
 
 ## Public Beta

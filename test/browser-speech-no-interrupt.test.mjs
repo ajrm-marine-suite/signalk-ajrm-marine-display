@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { speakAndLogBrowserSoundCheck } from "../src/web/assets/scripts/browser-speech-actions.mjs";
+import { speakBrowserSoundCheck } from "../src/web/assets/scripts/browser-speech-actions.mjs";
 import { announceSoundState } from "../src/web/assets/scripts/speech-output-sound-state.mjs";
 
 class Utterance {
@@ -36,7 +36,7 @@ function okFetch() {
 test("browser sound check queues without interrupting current speech", () => {
 	const windowObject = speechWindow();
 
-	const spoken = speakAndLogBrowserSoundCheck({
+	const spoken = speakBrowserSoundCheck({
 		fetchFn: okFetch,
 		pluginId: "ajrmMarineDisplay",
 		message: "Sound Check. Testing 1, 2, 3.",

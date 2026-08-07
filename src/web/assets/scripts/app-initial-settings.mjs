@@ -58,8 +58,10 @@ export async function loadInitialAppSettings({
 	speechControls.allWellEnabled.checked = true;
 	speechControls.allWellIntervalMinutes.value = "15";
 	speechControls.allWellMessage.value = "All's well.";
-	speechControls.useVesselShapeForCpa.checked = true;
-	speechControls.displayScaledVesselShapes.checked = true;
+	speechControls.displayScaledVesselShapes.checked = storedNotFalse(
+		localStorage,
+		SETTINGS_STORAGE_KEYS.displayScaledVesselShapes,
+	);
 	setEncounterSettingsSnapshot({});
 	try {
 		const encounterSettings = await getHttpResponse(
@@ -69,19 +71,15 @@ export async function loadInitialAppSettings({
 		setEncounterSettingsSnapshot(encounterSettings);
 		speechControls.allWellEnabled.checked =
 			encounterSettings?.allWellEnabled !== false;
-		const intervalSeconds = Number(encounterSettings?.allWellIntervalSeconds);
-		speechControls.allWellIntervalMinutes.value = Number.isFinite(intervalSeconds)
-			? String(Math.max(1, Math.round(intervalSeconds / 60)))
+		const intervalMinutes = Number(encounterSettings?.allWellIntervalMinutes);
+		speechControls.allWellIntervalMinutes.value = Number.isFinite(intervalMinutes)
+			? String(Math.max(1, Math.round(intervalMinutes)))
 			: "15";
 		speechControls.allWellMessage.value =
 			typeof encounterSettings?.allWellMessage === "string" &&
 			encounterSettings.allWellMessage.trim()
 				? encounterSettings.allWellMessage
 				: "All's well.";
-		speechControls.useVesselShapeForCpa.checked =
-			encounterSettings?.useVesselShapeForCpa !== false;
-		speechControls.displayScaledVesselShapes.checked =
-			encounterSettings?.displayScaledVesselShapes !== false;
 	} catch (_err) {
 		// Encounter settings are optional; keep defaults if unavailable.
 	}

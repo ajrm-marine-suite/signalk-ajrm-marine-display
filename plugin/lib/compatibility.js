@@ -170,6 +170,22 @@ function announcementEvents(brokerProjection) {
   ];
 }
 
+function browserSpeechEvents(brokerProjection) {
+  const entry = brokerProjection?.lastAudioEvent;
+  if (!entry || entry?.delivery?.audio !== true) return [];
+  const message = String(
+    entry?.presentation?.audioMessage || entry?.presentation?.message || "",
+  ).trim();
+  if (!message) return [];
+  return [{
+    id: String(entry.eventId || entry.correlationId || ""),
+    message,
+    state: String(entry?.priority?.level || entry?.state || "alert"),
+    audioExpiresAt: audioExpiresAt(entry),
+    ts: entry.timestamp || brokerProjection?.serverTime || null,
+  }].filter((event) => event.id);
+}
+
 function uiState({
   trafficProjection,
   capabilities,
@@ -189,6 +205,7 @@ function uiState({
   const ownPosition = valueOf(self?.navigation?.position);
   const source = trafficProjection?.source || {};
   const announcements = announcementEvents(brokerProjection);
+  const speechEvents = browserSpeechEvents(brokerProjection);
   return {
     serverTime,
     currentProfile:
@@ -238,7 +255,10 @@ function uiState({
           }
         : null,
     },
-    browserSpeechEvents: { events: [], summary: { count: 0 } },
+    browserSpeechEvents: {
+      events: speechEvents,
+      summary: { count: speechEvents.length },
+    },
     announcementLog: {
       entries: announcements.map((entry) => ({
         announcementId: entry?.eventId,
@@ -474,6 +494,7 @@ function coordinateFormatted(value, latitude) {
 module.exports = {
   alertEvents,
   announcementEvents,
+  browserSpeechEvents,
   displayTargets,
   panelEvents,
   profiles,

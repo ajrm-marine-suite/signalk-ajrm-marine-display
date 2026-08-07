@@ -4,7 +4,7 @@ import {
 } from "./auto-profile-routes.mjs";
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 import {
 	applyAutoProfileSettingsToControls,
@@ -52,7 +52,7 @@ export function createAutoProfileSettingsController({
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
 			});
 			if (!response.ok) {
-				await assertAisPlusResponseAllowed(response, "AJRM Marine Auto Profile");
+				await assertAjrmMarineResponseAllowed(response, "AJRM Marine Auto Profile");
 				const body = await response.json().catch(() => ({}));
 				throw new Error(
 					body.error || `Error saving auto profile settings: ${response.status}`,

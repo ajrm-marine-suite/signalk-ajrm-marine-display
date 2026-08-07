@@ -1,4 +1,4 @@
-import { toDegrees } from "../../../shared/ais-utils.mjs";
+import { toDegrees } from "../../../shared/angles.mjs";
 import { createAisDivIcon } from "./ais-icon-utils.mjs";
 
 function getVesselIconSize(isLarge) {

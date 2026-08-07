@@ -1,5 +1,5 @@
 import { createAisDivIcon } from "./ais-icon-utils.mjs";
-import { toDegrees } from "../../../shared/ais-utils.mjs";
+import { toDegrees } from "../../../shared/angles.mjs";
 
 const SELF_ICON_FILL_OPACITY = "0.6";
 const SELF_ICON_DOT_FILL_OPACITY = "0.7";

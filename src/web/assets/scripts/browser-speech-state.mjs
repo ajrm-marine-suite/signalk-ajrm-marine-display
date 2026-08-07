@@ -40,31 +40,6 @@ export function cancelBrowserSpeech(windowObject = globalThis.window) {
 	windowObject?.speechSynthesis?.cancel?.();
 }
 
-export function soundCheckBrowserLogBody(message) {
-	return {
-		output: "browser",
-		vesselName: "AJRM Marine",
-		severity: "alert",
-		category: "test",
-		message,
-		reason: "sound-check",
-	};
-}
-
-export function eventBrowserLogBody(event) {
-	return {
-		output: "browser",
-		vesselName: event.displayName,
-		mmsi: event.mmsi,
-		severity: event.state,
-		category: event.category || "cpa",
-		message: event.message,
-		reason: event.reason || "browser-speech",
-		announcementId: event.id,
-		ts: event.ts,
-	};
-}
-
 export function speakBrowserMessage({
 	message,
 	windowObject = globalThis.window,

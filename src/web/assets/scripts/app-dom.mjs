@@ -73,7 +73,6 @@ export function createAppDom() {
 		allWellEnabled: getRequiredElement("checkAllWellEnabled"),
 		allWellIntervalMinutes: getRequiredElement("inputAllWellIntervalMinutes"),
 		allWellMessage: getRequiredElement("inputAllWellMessage"),
-		useVesselShapeForCpa: getRequiredElement("checkUseVesselShapeForCpa"),
 		displayScaledVesselShapes: getRequiredElement(
 			"checkDisplayScaledVesselShapes",
 		),

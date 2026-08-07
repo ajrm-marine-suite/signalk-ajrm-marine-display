@@ -1,6 +1,6 @@
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 
 export async function getJsonResponse(url, options = {}) {
@@ -13,7 +13,7 @@ export async function getJsonResponse(url, options = {}) {
 			headers: ajrmMarineAuthHeaders(),
 		});
 		if (!response.ok) {
-			await assertAisPlusResponseAllowed(response, "AJRM Marine");
+			await assertAjrmMarineResponseAllowed(response, "AJRM Marine");
 			if (response.status === 404 && options.ignore404) {
 				options.on404?.();
 			} else {

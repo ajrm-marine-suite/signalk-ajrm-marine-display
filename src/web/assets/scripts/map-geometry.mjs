@@ -1,4 +1,4 @@
-import { toDegrees, toRadians } from "../../../shared/ais-utils.mjs";
+import { toDegrees, toRadians } from "../../../shared/angles.mjs";
 
 export function projectedLocation(start, bearingRadians, distanceMeters) {
 	const radius = 6371e3;

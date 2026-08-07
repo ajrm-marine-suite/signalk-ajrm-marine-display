@@ -53,5 +53,10 @@ export function speechStorageBindings({ controls, storage }) {
 			key: SETTINGS_STORAGE_KEYS.showPopupAlerts,
 			storage,
 		},
+		{
+			control: controls.displayScaledVesselShapes,
+			key: SETTINGS_STORAGE_KEYS.displayScaledVesselShapes,
+			storage,
+		},
 	];
 }

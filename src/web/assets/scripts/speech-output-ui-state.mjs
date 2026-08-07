@@ -9,7 +9,7 @@ export function getSpeechOutputSettingsPath(_pluginId) {
 }
 
 export function encounterSettingsPath(_pluginId) {
-	return `/signalk/v1/api/ajrmMarineDisplay/encounterSettings`;
+	return `/plugins/signalk-ajrm-marine-traffic/commands/audio`;
 }
 
 export function speechOutputSettingsPath(_pluginId) {
@@ -17,7 +17,7 @@ export function speechOutputSettingsPath(_pluginId) {
 }
 
 export function soundCheckPath(_pluginId) {
-	return `/signalk/v1/api/ajrmMarineDisplay/soundCheck`;
+	return `/plugins/signalk-ajrm-marine-audio/sound-check`;
 }
 
 export function soundStateAnnouncementPath(_pluginId) {
@@ -29,7 +29,7 @@ export function announcementLogPath(_pluginId) {
 }
 
 export function clearAnnouncementLogPath(_pluginId) {
-	return `/signalk/v1/api/ajrmMarineDisplay/announcementLog/clear`;
+	return `/plugins/signalk-ajrm-marine-notifications/history/clear`;
 }
 
 export function browserSpeechEventsPath(_pluginId) {
@@ -65,13 +65,6 @@ export function encounterSettingsRequestOptions(controls) {
 	});
 }
 
-export function announcementLogRequestOptions(body) {
-	return jsonRequestOptions({
-		method: "POST",
-		body,
-	});
-}
-
 export function soundCheckRequestOptions(message) {
 	return jsonRequestOptions({
 		method: "POST",
@@ -98,14 +91,11 @@ export function speechOutputSettingsBody(controls) {
 export function encounterSettingsBody(controls) {
 	return {
 		allWellEnabled: controls.allWellEnabled.checked,
-		allWellIntervalSeconds: Math.max(
-			60,
-			Math.round(Number(controls.allWellIntervalMinutes.value || 15) * 60),
+		allWellIntervalMinutes: Math.max(
+			1,
+			Math.round(Number(controls.allWellIntervalMinutes.value || 15)),
 		),
 		allWellMessage: String(controls.allWellMessage.value || "").trim(),
-		useVesselShapeForCpa: controls.useVesselShapeForCpa?.checked !== false,
-		displayScaledVesselShapes:
-			controls.displayScaledVesselShapes?.checked !== false,
 	};
 }
 

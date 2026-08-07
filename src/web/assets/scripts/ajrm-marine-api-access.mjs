@@ -13,7 +13,7 @@ export function ajrmMarineAuthHeaders(headers = {}) {
 		: headers;
 }
 
-export async function assertAisPlusResponseAllowed(response, label = "AJRM Marine") {
+export async function assertAjrmMarineResponseAllowed(response, label = "AJRM Marine") {
 	if (response.ok) return;
 	if (response.status === 401 && accessToken) {
 		accessToken = "";
@@ -28,7 +28,7 @@ export async function assertAisPlusResponseAllowed(response, label = "AJRM Marin
 	throw new Error(accessMessage(response.status, body, loginStatus, label));
 }
 
-export function resumeAisPlusAccessRequestPolling() {
+export function resumeAjrmMarineAccessRequestPolling() {
 	const pendingHref = readStoredValue(ACCESS_REQUEST_STORAGE_KEY);
 	if (pendingHref) pollAccessRequest(pendingHref);
 }

@@ -5,6 +5,7 @@ const test = require("node:test");
 const {
   alertEvents,
   announcementEvents,
+  browserSpeechEvents,
   displayTargets,
   panelEvents,
   uiState,
@@ -111,7 +112,7 @@ test("Display target formatting can follow preferred distance units without chan
   assert.equal(targets["235000001"].cpaFormatted, "820 ft");
 });
 
-test("Notifications Plus remains the semantic owner of Display alerts", () => {
+test("AJRM Marine Notifications remains the semantic owner of Display alerts", () => {
   const broker = {
     serverTime: "2026-06-20T12:00:00.000Z",
     active: [
@@ -137,6 +138,34 @@ test("Notifications Plus remains the semantic owner of Display alerts", () => {
   assert.equal(events[0].shouldAnnounce, true);
   assert.equal(events[0].audioExpiresAt, "2026-06-20T12:01:29.000Z");
   assert.equal(panelEvents(broker).entries[0].message, "Collision alarm from Ferry Alpha.");
+});
+
+test("browser speech requires explicit Notifications audio delivery", () => {
+  const base = {
+    eventId: "traffic:235000001:4",
+    timestamp: "2026-06-20T12:00:02.000Z",
+    priority: { level: "warning" },
+    presentation: {
+      message: "Traffic advisory from Ferry Alpha.",
+    },
+  };
+
+  assert.deepEqual(browserSpeechEvents({ lastAudioEvent: base }), []);
+  assert.deepEqual(
+    browserSpeechEvents({
+      lastAudioEvent: {
+        ...base,
+        delivery: { audio: true, expiresSeconds: 30 },
+      },
+    }),
+    [{
+      id: "traffic:235000001:4",
+      message: "Traffic advisory from Ferry Alpha.",
+      state: "warning",
+      audioExpiresAt: "2026-06-20T12:00:32.000Z",
+      ts: "2026-06-20T12:00:02.000Z",
+    }],
+  );
 });
 
 test("Active Alerts panel excludes resolved recent activity", () => {

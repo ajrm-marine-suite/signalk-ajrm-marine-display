@@ -1,22 +1,13 @@
 import { currentGpsLossEvent } from "./alert-events.mjs";
-import {
-	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
-} from "./ajrm-marine-api-access.mjs";
-import {
-	gpsLossPausePath,
-	gpsLossPopupHtml,
-} from "./gps-loss-popup-state.mjs";
+import { gpsLossPopupHtml } from "./gps-loss-popup-state.mjs";
 
 export function createGpsLossPopupController({
 	modal,
 	messageElement,
 	pauseButton,
-	pluginId,
 	getEvents,
 	escapeHtml,
 	onPaused,
-	onError,
 }) {
 	let isOpen = false;
 	let closedEventId = null;
@@ -44,25 +35,10 @@ export function createGpsLossPopupController({
 
 	async function pause() {
 		const event = currentEvent();
-		try {
-			const response = await fetch(gpsLossPausePath(pluginId), {
-				credentials: "include",
-				method: "POST",
-				cache: "no-store",
-				headers: ajrmMarineAuthHeaders(),
-			});
-			await assertAisPlusResponseAllowed(response, "AJRM Marine GPS alarm");
-			if (!response.ok) {
-				throw new Error(`GPS alarm pause failed: ${response.status}`);
-			}
-			closedEventId = event?.id || closedEventId;
-			isOpen = false;
-			modal.hide();
-			await onPaused?.();
-		} catch (error) {
-			console.error("Error pausing lost GPS alarm", error);
-			onError?.();
-		}
+		closedEventId = event?.id || closedEventId;
+		isOpen = false;
+		modal.hide();
+		await onPaused?.();
 	}
 
 	function handleModalHidden() {

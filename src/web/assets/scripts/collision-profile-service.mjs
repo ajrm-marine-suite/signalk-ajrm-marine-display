@@ -10,7 +10,7 @@ import {
 } from "./collision-profile-routes.mjs";
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 
 export function createCollisionProfileService({
@@ -56,7 +56,7 @@ export function createCollisionProfileService({
 			}),
 		});
 		if (!response.ok) {
-			await assertAisPlusResponseAllowed(response, "AJRM Marine profiles");
+			await assertAjrmMarineResponseAllowed(response, "AJRM Marine profiles");
 			throw new Error(
 				`Error selecting Traffic profile. Response status: ${response.status} from ${response.url}`,
 			);

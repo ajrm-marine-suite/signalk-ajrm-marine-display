@@ -1,7 +1,5 @@
-import { assertAisPlusResponseAllowed } from "./ajrm-marine-api-access.mjs";
+import { assertAjrmMarineResponseAllowed } from "./ajrm-marine-api-access.mjs";
 import {
-	announcementLogPath,
-	announcementLogRequestOptions,
 	encounterSettingsPath,
 	encounterSettingsRequestOptions,
 	soundCheckPath,
@@ -14,7 +12,7 @@ import {
 
 async function ajrmMarineRequest({ fetchFn, path, options, label }) {
 	const response = await fetchFn(path, options);
-	await assertAisPlusResponseAllowed(response, label);
+	await assertAjrmMarineResponseAllowed(response, label);
 	return response;
 }
 
@@ -24,15 +22,6 @@ export function postSpeechOutputSettings({ fetchFn, pluginId, controls }) {
 		path: speechOutputSettingsPath(pluginId),
 		options: speechOutputSettingsRequestOptions(controls),
 		label: "AJRM Marine speech controls",
-	});
-}
-
-export function postAnnouncementLog({ fetchFn, pluginId, body }) {
-	return ajrmMarineRequest({
-		fetchFn,
-		path: announcementLogPath(pluginId),
-		options: announcementLogRequestOptions(body),
-		label: "AJRM Marine announcements",
 	});
 }
 

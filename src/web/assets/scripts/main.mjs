@@ -6,7 +6,7 @@ import "leaflet-easybutton";
 import defaultCollisionProfiles from "../defaultCollisionProfiles.json";
 import hornMp3Url from "../horn.mp3";
 import pmtilesUrl from "../ne_10m_land.pmtiles?url&no-inline";
-import { resumeAisPlusAccessRequestPolling } from "./ajrm-marine-api-access.mjs";
+import { resumeAjrmMarineAccessRequestPolling } from "./ajrm-marine-api-access.mjs";
 import { escapeHtml } from "./alert-events.mjs";
 import { DEFAULT_MAP_ZOOM, PLUGIN_ID } from "./app-constants.mjs";
 import { createAppDom } from "./app-dom.mjs";
@@ -71,7 +71,7 @@ let refreshController;
 let targetMapRenderer;
 
 setWindowStationaryAutomuteSpeed(window);
-resumeAisPlusAccessRequestPolling();
+resumeAjrmMarineAccessRequestPolling();
 
 const {
 	elements,

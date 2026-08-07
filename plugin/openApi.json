@@ -2,223 +2,52 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.6.32",
-    "description": "Display status, chart-webapp projections and display-only Signal K v2 route management backed by AJRM Marine Traffic and Notifications Plus."
+    "version": "0.7.0",
+    "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
-  "servers": [
-    {
-      "url": "/plugins/signalk-ajrm-marine-display"
-    }
-  ],
+  "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
   "paths": {
-    "/status": {
-      "get": {
-        "summary": "Get Display runtime status and browser defaults",
-        "responses": {
-          "200": {
-            "description": "Current Display plugin state"
-          }
-        }
-      }
-    },
-    "/getTargets": {
-      "get": {
-        "summary": "Get AJRM Marine Traffic targets projected for the Display webapp",
-        "responses": {
-          "200": {
-            "description": "Projected targets keyed by MMSI"
-          }
-        }
-      }
-    },
-    "/uiState": {
-      "get": {
-        "summary": "Get Display UI state projected from AJRM Marine Traffic, Notifications Plus and Audio",
-        "responses": {
-          "200": {
-            "description": "Current Display UI state"
-          }
-        }
-      }
-    },
-    "/refreshDiagnostics": {
-      "post": {
-        "summary": "Report a browser slow-refresh diagnostic sample through Signal K plugin debug logging",
-        "responses": {
-          "200": {
-            "description": "Diagnostic sample accepted"
-          }
-        }
-      }
-    },
+    "/status": { "get": { "summary": "Get Display runtime status and browser defaults", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/getTargets": { "get": { "summary": "Get Traffic targets projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/getCollisionProfiles": { "get": { "summary": "Get Traffic profile thresholds formatted for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/uiState": { "get": { "summary": "Get the consolidated Display UI projection", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/panelEvents": { "get": { "summary": "Get active alert-panel entries", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/alertEvents": { "get": { "summary": "Get active visual and browser-audio alert entries", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/announcementLog": { "get": { "summary": "Get provider-authored announcement history", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/browserSpeechEvents": { "get": { "summary": "Get the latest explicitly authorized browser-speech delivery", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/autoProfileStatus": { "get": { "summary": "Get Traffic Auto Profile state projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/debugControls": {
-      "get": {
-        "summary": "Get transient browser rendering debug controls",
-        "responses": {
-          "200": {
-            "description": "Current transient debug controls"
-          }
-        }
-      },
-      "post": {
-        "summary": "Update transient browser rendering debug controls",
-        "responses": {
-          "200": {
-            "description": "Debug controls updated"
-          }
-        }
-      }
+      "get": { "summary": "Get transient rendering debug controls", "responses": { "200": { "$ref": "#/components/responses/Ok" } } },
+      "post": { "summary": "Update transient rendering debug controls", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" } } }
     },
-    "/observations/status": {
-      "get": {
-        "summary": "Check whether an active AJRM Marine Capture voyage can accept observations",
-        "responses": {
-          "200": {
-            "description": "Capture, voyage and optional diagnostic-snapshot availability"
-          }
-        }
-      }
-    },
+    "/repeatIntervals": { "get": { "summary": "Get Display help repeat-interval overrides", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/routes": { "get": { "summary": "List the active route, Signal K route resources and configured Pi GPX files", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/import": { "post": { "summary": "Import a browser GPX route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/open-pi": { "post": { "summary": "Open a GPX route from the configured Pi directory", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/open-resource": { "post": { "summary": "Open a Signal K route resource", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/delete-resource": { "post": { "summary": "Delete one Signal K route resource", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/reverse": { "post": { "summary": "Reverse the displayed route order", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/save": { "post": { "summary": "Save or save-as the displayed route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/close": { "post": { "summary": "Close the displayed route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/routes/export": { "get": { "summary": "Download the active route as GPX 1.1", "responses": { "200": { "description": "GPX route document", "content": { "application/gpx+xml": {} } }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/harbourRegions": { "get": { "summary": "List harbour region resources projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
+    "/refreshDiagnostics": { "post": { "summary": "Submit an authenticated browser performance diagnostic", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "500": { "$ref": "#/components/responses/Error" } } } },
+    "/observations/status": { "get": { "summary": "Get current Capture voyage-observation capability", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
     "/observations": {
       "post": {
-        "summary": "Append a timestamped observation to the active voyage",
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "text",
-                  "includeSnapshot"
-                ],
-                "properties": {
-                  "text": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 2000
-                  },
-                  "includeSnapshot": {
-                    "type": "boolean",
-                    "description": "Request an AJRM Marine diagnostic snapshot at the same observation time."
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Observation saved by AJRM Marine Capture"
-          },
-          "409": {
-            "description": "No active voyage or observation could not be saved"
-          },
-          "503": {
-            "description": "AJRM Marine Capture observation support is unavailable"
-          }
-        }
+        "summary": "Append a timestamped observation to the active Capture voyage",
+        "security": [{ "signalk": ["readwrite"] }],
+        "requestBody": { "required": true, "content": { "application/json": { "schema": { "type": "object", "required": ["text"], "properties": { "text": { "type": "string", "minLength": 1, "maxLength": 2000 }, "includeSnapshot": { "type": "boolean" } } } } } },
+        "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" }, "503": { "$ref": "#/components/responses/Error" } }
       }
-    },
-    "/routes": {
-      "get": {
-        "summary": "List the active route, Signal K v2 route resources and GPX files in the configured Pi directory",
-        "responses": {
-          "200": {
-            "description": "Route manager state and available routes"
-          }
-        }
-      }
-    },
-    "/routes/import": {
-      "post": {
-        "summary": "Import and display a browser-supplied GPX 1.1 route",
-        "responses": {
-          "200": {
-            "description": "Imported route is active"
-          },
-          "409": {
-            "description": "GPX route could not be imported"
-          }
-        }
-      }
-    },
-    "/routes/open-pi": {
-      "post": {
-        "summary": "Open and display a GPX 1.1 route from the configured Pi directory",
-        "responses": {
-          "200": {
-            "description": "Pi route is active"
-          }
-        }
-      }
-    },
-    "/routes/open-resource": {
-      "post": {
-        "summary": "Open and display a Signal K v2 route resource",
-        "responses": {
-          "200": {
-            "description": "Signal K route resource is active"
-          }
-        }
-      }
-    },
-    "/routes/delete-resource": {
-      "post": {
-        "summary": "Delete a selected Signal K v2 route resource",
-        "description": "Deletes only the selected Signal K resource UUID. If it is the active displayed route, the route is also closed. Pi GPX files are not deleted.",
-        "responses": {
-          "200": {
-            "description": "Signal K route resource was deleted"
-          },
-          "409": {
-            "description": "Route was not found or could not be deleted"
-          }
-        }
-      }
-    },
-    "/routes/reverse": {
-      "post": {
-        "summary": "Toggle the active route coordinate and waypoint order",
-        "responses": {
-          "200": {
-            "description": "Reversed route is active"
-          }
-        }
-      }
-    },
-    "/routes/save": {
-      "post": {
-        "summary": "Save or save-as the active route to Signal K and the configured Pi GPX directory",
-        "responses": {
-          "200": {
-            "description": "Route was saved"
-          }
-        }
-      }
-    },
-    "/routes/close": {
-      "post": {
-        "summary": "Close the displayed route without changing the Signal K Course API",
-        "responses": {
-          "200": {
-            "description": "No route is active"
-          }
-        }
-      }
-    },
-    "/routes/export": {
-      "get": {
-        "summary": "Download the active route as OpenCPN-compatible GPX 1.1",
-        "responses": {
-          "200": {
-            "description": "GPX route document"
-          },
-          "409": {
-            "description": "No route is active"
-          }
-        }
-      }
+    }
+  },
+  "components": {
+    "securitySchemes": { "signalk": { "type": "http", "scheme": "bearer" } },
+    "responses": {
+      "Ok": { "description": "Successful response" },
+      "Forbidden": { "description": "Signal K read/write or administrator access required" },
+      "Error": { "description": "Operation failed" }
     }
   }
 }

@@ -1,6 +1,6 @@
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 
 export function voyageObservationStatusPath(_pluginId) {
@@ -58,7 +58,7 @@ export function createVoyageObservationController({
 				cache: "no-store",
 				headers: ajrmMarineAuthHeaders(),
 			});
-			await assertAisPlusResponseAllowed(
+			await assertAjrmMarineResponseAllowed(
 				response,
 				"AJRM Marine voyage observations",
 			);
@@ -106,7 +106,7 @@ export function createVoyageObservationController({
 						controls.includeSnapshot.checked,
 				}),
 			});
-			await assertAisPlusResponseAllowed(
+			await assertAjrmMarineResponseAllowed(
 				response,
 				"AJRM Marine voyage observations",
 			);

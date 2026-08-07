@@ -1,4 +1,4 @@
-import { speakAndLogBrowserSoundCheck } from "./browser-speech-actions.mjs";
+import { speakBrowserSoundCheck } from "./browser-speech-actions.mjs";
 import { shouldUseBrowserSpeech } from "./browser-speech-state.mjs";
 import { sendPiSoundCheck } from "./speech-output-requests.mjs";
 import {
@@ -28,9 +28,7 @@ export async function runSoundCheck({
 			windowObject,
 		})
 	) {
-		speakAndLogBrowserSoundCheck({
-			fetchFn,
-			pluginId,
+		speakBrowserSoundCheck({
 			message,
 			windowObject,
 			Utterance,

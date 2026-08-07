@@ -43,7 +43,7 @@ The Display plugin publishes:
   "sessionId": "uuid",
   "sequence": 1,
   "enabled": true,
-  "version": "2.0.0",
+  "version": "0.7.0",
   "defaults": {
     "refreshIntervalMs": 1000,
     "latitude": 56.45,
@@ -57,6 +57,10 @@ The Display plugin publishes:
 If this status is unavailable, the web app defaults to enabled so that it can
 still operate as a generic Signal K display.
 
+On plugin stop, Display publishes `null` at this path and removes its
+in-process API. Clients must not treat a previously cached status object as
+evidence that Display is still running.
+
 ## Ownership
 
 Display may calculate only visual geometry such as course-vector endpoints,
@@ -67,3 +71,11 @@ lifecycle, speech eligibility or audio ordering.
 AJRM Marine Traffic commands are invoked only when AJRM Marine Traffic advertises
 `commandsEnabled: true`. Provider-authored actions are rendered without
 interpreting notification prose.
+
+Every HTTP mutation requires an authenticated Signal K principal with
+`readwrite` or `admin` permission. Read routes remain available to normal
+Signal K webapp clients. The plugin OpenAPI document is the route inventory.
+
+AJRM Marine Vessel Database is deliberately not merged into Traffic. It owns
+durable vessel identity and classification; Traffic owns live observations,
+encounters and collision-risk state.

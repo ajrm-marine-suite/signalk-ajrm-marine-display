@@ -1,13 +1,6 @@
-import {
-	eventBrowserLogBody,
-	soundCheckBrowserLogBody,
-	speakBrowserMessage,
-} from "./browser-speech-state.mjs";
-import { postAnnouncementLog } from "./speech-output-requests.mjs";
+import { speakBrowserMessage } from "./browser-speech-state.mjs";
 
-export function speakAndLogBrowserSoundCheck({
-	fetchFn,
-	pluginId,
+export function speakBrowserSoundCheck({
 	message,
 	windowObject = globalThis.window,
 	Utterance = globalThis.SpeechSynthesisUtterance,
@@ -17,18 +10,10 @@ export function speakAndLogBrowserSoundCheck({
 		windowObject,
 		Utterance,
 	});
-	if (!spoken) return false;
-	postAnnouncementLog({
-		fetchFn,
-		pluginId,
-		body: soundCheckBrowserLogBody(message),
-	}).catch(() => {});
-	return true;
+	return spoken;
 }
 
-export function speakAndLogBrowserAlert({
-	fetchFn,
-	pluginId,
+export function speakBrowserAlert({
 	event,
 	windowObject = globalThis.window,
 	Utterance = globalThis.SpeechSynthesisUtterance,
@@ -38,11 +23,5 @@ export function speakAndLogBrowserAlert({
 		windowObject,
 		Utterance,
 	});
-	if (!spoken) return false;
-	postAnnouncementLog({
-		fetchFn,
-		pluginId,
-		body: eventBrowserLogBody(event),
-	}).catch(() => {});
-	return true;
+	return spoken;
 }

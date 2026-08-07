@@ -20,7 +20,7 @@ function harness(paths = {}, resources = {}, metadata = {}, appExtras = {}) {
     },
     ...appExtras,
   };
-  return { plugin: createPlugin(app), messages, statuses, debugMessages };
+  return { app, plugin: createPlugin(app), messages, statuses, debugMessages };
 }
 
 function routeHarness() {
@@ -290,6 +290,66 @@ test("plugin publishes disabled Display status when configured off", () => {
     statuses[0],
     new RegExp(`^Disabled by configuration v${packageInfo.version.replaceAll(".", "\\.")}$`),
   );
+});
+
+test("plugin retracts its status and runtime API when stopped", () => {
+  const { app, plugin, messages, statuses } = harness();
+
+  plugin.start({});
+  assert.equal(app.ajrmMarineDisplayApi?.pluginId, plugin.id);
+
+  plugin.stop();
+
+  const value = messages.at(-1).updates[0].values[0];
+  assert.equal(value.path, "plugins.ajrmMarineDisplay");
+  assert.equal(value.value, null);
+  assert.equal(app.ajrmMarineDisplayApi, undefined);
+  assert.equal(
+    globalThis[Symbol.for("mcdonaldajr.ajrmMarineDisplayApi")],
+    undefined,
+  );
+  assert.equal(statuses.at(-1), "Stopped");
+});
+
+test("Signal K API rejects unauthenticated mutations", async () => {
+  const { plugin } = harness();
+  const { router, routes } = routeHarness();
+  plugin.signalKApiRoutes(router);
+  let body;
+  let statusCode;
+
+  await routes.get("POST /ajrmMarineDisplay/debugControls")(
+    {
+      skIsAuthenticated: false,
+      body: { labels: false },
+    },
+    {
+      json(value) {
+        body = value;
+      },
+      status(value) {
+        statusCode = value;
+        return this;
+      },
+    },
+  );
+
+  assert.equal(statusCode, 403);
+  assert.equal(body.ok, false);
+  assert.match(body.error, /read\/write or admin access/);
+});
+
+test("OpenAPI documents every registered Signal K route", () => {
+  const { plugin } = harness();
+  const { router, routes } = routeHarness();
+  plugin.registerWithRouter(router);
+  const documented = new Set();
+  for (const [path, pathItem] of Object.entries(plugin.getOpenApi().paths)) {
+    for (const method of ["get", "post"]) {
+      if (pathItem[method]) documented.add(`${method.toUpperCase()} ${path}`);
+    }
+  }
+  assert.deepEqual(new Set(routes.keys()), documented);
 });
 
 test("Signal K API exposes AJRM Marine Traffic targets under ajrmMarineDisplay", () => {

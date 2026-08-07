@@ -1,4 +1,4 @@
-import { speakAndLogBrowserAlert } from "./browser-speech-actions.mjs";
+import { speakBrowserAlert } from "./browser-speech-actions.mjs";
 import {
 	browserSpeechBusy,
 	browserSpeechEventExpired,
@@ -99,9 +99,7 @@ export async function speakBrowserAlertsForOutput({
 			continue;
 		}
 		if (browserSpeechBusy(windowObject)) break;
-		const spoken = speakAndLogBrowserAlert({
-			fetchFn,
-			pluginId,
+		const spoken = speakBrowserAlert({
 			event,
 			windowObject,
 			Utterance,

@@ -1,7 +1,7 @@
 import { browserSpeechAvailable } from "./browser-speech-state.mjs";
 import {
 	ajrmMarineAuthHeaders,
-	assertAisPlusResponseAllowed,
+	assertAjrmMarineResponseAllowed,
 } from "./ajrm-marine-api-access.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 import {
@@ -68,7 +68,7 @@ export async function saveEncounterSettings({
 
 async function responseJson(response, label) {
 	if (!response?.ok) {
-		if (response) await assertAisPlusResponseAllowed(response, label);
+		if (response) await assertAjrmMarineResponseAllowed(response, label);
 		throw new Error(`${label} failed: ${response?.status ?? "no response"}`);
 	}
 	return response.json();
