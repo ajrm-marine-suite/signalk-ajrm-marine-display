@@ -1,5 +1,8 @@
 # AJRM Marine Display
 
+Version `0.6.32` refreshes embedded Help for the shared map controls, chart
+folders, route handling, voyage observations, and Capture-led architecture.
+
 Version `0.6.31` adds visible hover/focus help to every map control icon,
 including zoom, chart selection, chart cycling, follow and Display actions.
 
@@ -245,7 +248,7 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - GPX 1.1 import and export compatible with OpenCPN route extensions and with
   Savvy Navvy routes whose name is stored in GPX metadata and whose route
   points are unnamed.
-- Immediate announcement-feed updates from Notifications Plus audio delivery,
+- Immediate announcement-feed updates from AJRM Marine Notifications audio delivery,
   deduplicated when the same event later enters history.
 - Browser speech follows the provider's explicit audio-delivery flag, queues
   only one fresh utterance at a time, and discards/cancels browser speech while
@@ -271,7 +274,7 @@ and API data continue to provide own-vessel navigation, vessel positions,
 identity and chart resources. Targets cannot be assigned AJRM Marine Traffic safety
 state in that mode and must be treated as unassessed.
 
-If Notifications Plus or Audio is unavailable, chart and target operation
+If AJRM Marine Notifications or Audio is unavailable, chart and target operation
 continues with reduced alert or playback status.
 
 ## Configuration
@@ -317,7 +320,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.31 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.6.32 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

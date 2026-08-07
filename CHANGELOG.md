@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.6.32
+
+- Refresh embedded Help for shared map controls, nested chart folders, route
+  handling, voyage observations, vessel popups, SAR aircraft, and the
+  Capture-led recording/replay architecture.
+
 ## 0.6.31
 
 - Add visible hover/focus help to zoom, chart, follow and application map

@@ -27,7 +27,7 @@ For versioned projections, Display:
 - accepts only increasing `sequence` values within one session;
 - ignores unknown additive fields;
 - keeps cached target and chart presentation during temporary disconnection;
-- labels reduced operation visibly when AJRM Marine Traffic, Notifications Plus or Audio
+- labels reduced operation visibly when AJRM Marine Traffic, AJRM Marine Notifications or Audio
   projections are unavailable.
 
 ## Display status

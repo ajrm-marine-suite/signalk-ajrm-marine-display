@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.31";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.6.32";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.31</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.6.32</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1473,10 +1473,17 @@
               <p>
                 Display is deliberately lean: it draws the chart, shows targets,
                 presents active alerts, and offers the controls needed while
-                sailing. AJRM Marine Traffic, Notifications, Audio, Logger, and Voyage
-                Capture own their deeper settings and diagnostics.
+                sailing. AJRM Marine Traffic, Notifications, Audio, Capture,
+                Snapshot, and Voyage Viewer own their deeper settings and
+                diagnostics. The former standalone Logger is retired; Capture
+                now owns recording and replay.
               </p>
               <h6>Map controls</h6>
+              <p>
+                Hover a map icon, or move keyboard focus to it, to see its
+                purpose. The same tooltip convention is used by Display, DR
+                Plotter, Voyage Viewer, and Harbour Editor.
+              </p>
               <ul class="ajrm-marine-help-control-list">
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">
@@ -1539,6 +1546,12 @@
                   <span><strong>Help:</strong> opens this quick Display reference.</span>
                 </li>
               </ul>
+              <p>
+                <strong>Routes</strong> opens, imports, reverses, saves, and
+                closes GPX/Signal K routes. <strong>Voyage observation</strong>
+                records a timestamped skipper note in the active Capture voyage
+                and can attach Snapshot evidence when that service is available.
+              </p>
               <h6>Alerts shown by Display</h6>
               <p>
                 Alert severity, CPA/TCPA, profile choice, muting, and speech
@@ -1559,7 +1572,19 @@
                 Automatic after the last chart or when the map centre leaves
                 its coverage. Manual panning pauses following; press centre
                 vessel to follow own vessel again. OpenSeaMap is a transparent
-                seamark overlay and is kept above chart tiles.
+                seamark overlay and is kept above chart tiles. Expand
+                <strong>Chart folders</strong> beneath Auto Charts to enable or
+                disable complete Charts Provider Simple directory trees; nested
+                folders inherit a disabled parent.
+              </p>
+              <h6>Vessels and routes</h6>
+              <p>
+                Click own vessel for its navigation, GPS, route, and system
+                status; click another target for its AIS and encounter details.
+                Recognised SAR-aircraft MMSIs remain visible with an aircraft
+                symbol but are not treated as surface-vessel collision
+                candidates. A displayed route is a visual reference only unless
+                another explicitly configured Signal K service activates it.
               </p>
               <h6>After an update</h6>
               <p>
