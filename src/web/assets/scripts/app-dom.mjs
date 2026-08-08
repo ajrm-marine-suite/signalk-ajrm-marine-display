@@ -22,6 +22,11 @@ export function createAppDom() {
 		checkDarkMode: getRequiredElement("checkDarkMode"),
 		checkNoSleep: getRequiredElement("checkNoSleep"),
 		buttonEditProfiles: getRequiredElement("buttonEditProfiles"),
+		anchorControls: {
+			drop: getRequiredElement("buttonDropAnchor"),
+			clear: getRequiredElement("buttonClearAnchor"),
+			status: getRequiredElement("anchorActionStatus"),
+		},
 		errorMessage: getRequiredElement("errorMessage"),
 		alarmDiv: getRequiredElement("alarmDiv"),
 		offcanvasEditProfiles: getRequiredElement("offcanvasEditProfiles"),

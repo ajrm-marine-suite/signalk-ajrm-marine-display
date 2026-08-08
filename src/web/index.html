@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.4";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.5";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.4</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.5</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -851,6 +851,41 @@
                 <option value="coastal">Coastal</option>
                 <option value="offshore">Offshore</option>
               </select>
+            </div>
+            <div class="card mb-3">
+              <div class="card-body">
+                <h6 class="card-title">Anchor position</h6>
+                <p class="small text-body-secondary">
+                  Drop Anchor selects the Anchored profile and marks the current
+                  position with the present depth below keel. Un-anchor selects
+                  Coastal and removes the mark.
+                </p>
+                <div class="d-flex gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-primary flex-fill"
+                    id="buttonDropAnchor"
+                  >
+                    Drop Anchor
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-outline-primary flex-fill"
+                    id="buttonClearAnchor"
+                    hidden
+                  >
+                    Un-anchor
+                  </button>
+                </div>
+                <div
+                  class="form-text mt-2"
+                  id="anchorActionStatus"
+                  role="status"
+                  aria-live="polite"
+                >
+                  No anchor position marked
+                </div>
+              </div>
             </div>
             <div class="card mb-3">
               <ul class="list-group list-group-flush">
@@ -1539,7 +1574,7 @@
                       <path d="M8 5.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5" />
                     </svg>
                   </span>
-                  <span><strong>Profiles:</strong> selects the active AJRM Marine Traffic profile and adjusts current-profile sensitivity.</span>
+                  <span><strong>Profiles:</strong> selects the active AJRM Marine Traffic profile, adjusts current-profile sensitivity, and provides Drop Anchor/Un-anchor chart marking. Drop Anchor records the current position and depth below keel; Un-anchor selects Coastal.</span>
                 </li>
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">

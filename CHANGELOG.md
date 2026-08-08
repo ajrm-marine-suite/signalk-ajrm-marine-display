@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.7.5
+
+- Move Drop Anchor into Display's Profiles menu and select Traffic's Anchored
+  profile through its authoritative API.
+- Persist and display an anchor symbol at the recorded own-vessel position,
+  labelled with the depth below keel captured at the time of the drop.
+- Remove the marker automatically when Traffic leaves Anchored; **Un-anchor**
+  explicitly selects Coastal and removes it.
+
 ## 0.7.4
 
 - Shift own-vessel follow along the explicit Signal K COG so 66% of the visible

@@ -8,6 +8,7 @@ import hornMp3Url from "../horn.mp3";
 import pmtilesUrl from "../ne_10m_land.pmtiles?url&no-inline";
 import { resumeAjrmMarineAccessRequestPolling } from "./ajrm-marine-api-access.mjs";
 import { escapeHtml } from "./alert-events.mjs";
+import { createAnchorController } from "./anchor-controller.mjs";
 import { DEFAULT_MAP_ZOOM, PLUGIN_ID } from "./app-constants.mjs";
 import { createAppDom } from "./app-dom.mjs";
 import { createAppRuntimeState } from "./app-runtime-state.mjs";
@@ -190,6 +191,14 @@ const routeController = createRouteController({
 	storage: window.localStorage,
 });
 routeController.init();
+createAnchorController({
+	L,
+	map,
+	controls: elements.anchorControls,
+	fetchFn: fetch,
+	windowObject: window,
+	onProfileChanged: profileActions.refreshProfilesFromServer,
+}).init();
 if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 	startDisplayDebugControlPolling({
 		windowRef: window,

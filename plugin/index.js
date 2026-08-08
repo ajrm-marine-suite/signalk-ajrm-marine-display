@@ -21,6 +21,11 @@ const {
 } = require("./lib/compatibility");
 const { loadHarbourRegions } = require("./lib/harbour-regions");
 const { createRouteManager } = require("./lib/route-manager");
+const {
+  loadAnchorMark,
+  removeAnchorMark,
+  saveAnchorMark,
+} = require("./lib/anchor-mark");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
@@ -31,6 +36,7 @@ const AJRM_MARINE_CAPTURE_API_REGISTRY = Symbol.for(
 const AJRM_MARINE_DISPLAY_API_REGISTRY = Symbol.for(
   "mcdonaldajr.ajrmMarineDisplayApi",
 );
+const AJRM_MARINE_TRAFFIC_API_REGISTRY = Symbol.for("ajrmMarineTrafficApi");
 const DISTANCE_METADATA_PATHS = [
   "navigation.closestApproach.distance",
   "navigation.courseGreatCircle.distance",
@@ -69,6 +75,7 @@ module.exports = function ajrmMarineDisplay(app) {
   let debugControls = normalizeDebugControls({});
   let routeManager = null;
   let routeManagerReady = Promise.resolve();
+  let anchorMark = null;
   let running = false;
   let lifecycleGeneration = 0;
 
@@ -149,6 +156,7 @@ module.exports = function ajrmMarineDisplay(app) {
     lifecycleGeneration += 1;
     const generation = lifecycleGeneration;
     options = normalizeOptions(pluginOptions);
+    anchorMark = loadAnchorMark(app);
     routeManager = createRouteManager({
       resourcesApi: app.resourcesApi,
       routeDirectory: options.routes.directory,
@@ -172,6 +180,10 @@ module.exports = function ajrmMarineDisplay(app) {
       routes: {
         directory: options.routes.directory,
         active: null,
+      },
+      anchor: {
+        active: Boolean(anchorMark),
+        mark: anchorMark,
       },
       updatedAt: new Date().toISOString(),
     };
@@ -213,6 +225,7 @@ module.exports = function ajrmMarineDisplay(app) {
     status = null;
     routeManager = null;
     routeManagerReady = Promise.resolve(null);
+    anchorMark = null;
   };
 
   plugin.registerWithRouter = (router) => registerRoutes(router);
@@ -236,6 +249,21 @@ module.exports = function ajrmMarineDisplay(app) {
     router.get(route("/getCollisionProfiles"), (_req, res) =>
       res.json(profiles(defaultProfiles, currentProfile(), trafficProfiles())),
     );
+    router.get(route("/anchor"), (_req, res) => res.json(currentAnchorStatus()));
+    router.post?.(route("/anchor/drop"), write((_req, res) => {
+      try {
+        res.json(dropAnchor());
+      } catch (error) {
+        res.status(409).json({ ok: false, error: error.message });
+      }
+    }));
+    router.post?.(route("/anchor/clear"), write((_req, res) => {
+      try {
+        res.json(clearAnchor());
+      } catch (error) {
+        res.status(409).json({ ok: false, error: error.message });
+      }
+    }));
     router.get(route("/uiState"), (_req, res) => res.json(currentUiState()));
     router.get(route("/panelEvents"), (_req, res) =>
       res.json(panelEvents(brokerProjection())),
@@ -449,16 +477,114 @@ module.exports = function ajrmMarineDisplay(app) {
   }
 
   function currentUiState() {
-    return uiState({
-      trafficProjection: trafficTargets(),
-      capabilities: trafficCapabilities(),
-      brokerProjection: brokerProjection(),
-      audioStatus: valueOf(app.getSelfPath?.("plugins.ajrmMarineAudio")) || {},
-      audioPolicy: trafficAudioPolicy(),
-      autoProfile: trafficAutoProfile(),
-      self: selfVessel(),
-      refreshIntervalMs: options.defaults.refreshIntervalMs,
+    return {
+      ...uiState({
+        trafficProjection: trafficTargets(),
+        capabilities: trafficCapabilities(),
+        brokerProjection: brokerProjection(),
+        audioStatus: valueOf(app.getSelfPath?.("plugins.ajrmMarineAudio")) || {},
+        audioPolicy: trafficAudioPolicy(),
+        autoProfile: trafficAutoProfile(),
+        self: selfVessel(),
+        refreshIntervalMs: options.defaults.refreshIntervalMs,
+      }),
+      anchor: currentAnchorStatus(),
+    };
+  }
+
+  function currentAnchorStatus() {
+    const profile = explicitTrafficProfile();
+    if (anchorMark && profile && profile !== "anchor") {
+      anchorMark = null;
+      removeAnchorMark(app);
+      publishCurrentStatus();
+    }
+    return {
+      available: true,
+      active: Boolean(anchorMark && profile === "anchor"),
+      currentProfile: profile,
+      mark: anchorMark,
+    };
+  }
+
+  function dropAnchor() {
+    const position = valueOf(app.getSelfPath?.("navigation.position"));
+    if (!validPosition(position)) {
+      throw new Error("A valid own-vessel position is required to mark the anchor.");
+    }
+    const depthBelowKeelMeters = Number(
+      valueOf(app.getSelfPath?.("environment.depth.belowKeel")),
+    );
+    if (!Number.isFinite(depthBelowKeelMeters)) {
+      throw new Error("A current depth below keel reading is required to mark the anchor.");
+    }
+    const traffic = trafficApi();
+    if (typeof traffic?.setProfile !== "function") {
+      throw new Error("AJRM Marine Traffic profile control is unavailable.");
+    }
+    traffic.setProfile("anchor");
+    anchorMark = saveAnchorMark(app, {
+      position,
+      depthBelowKeelMeters,
+      droppedAt: new Date().toISOString(),
     });
+    publishCurrentStatus();
+    return { ok: true, ...currentAnchorStatus() };
+  }
+
+  function clearAnchor() {
+    const traffic = trafficApi();
+    if (typeof traffic?.setProfile !== "function") {
+      throw new Error("AJRM Marine Traffic profile control is unavailable.");
+    }
+    traffic.setProfile("coastal");
+    anchorMark = null;
+    removeAnchorMark(app);
+    publishCurrentStatus();
+    return { ok: true, ...currentAnchorStatus() };
+  }
+
+  function trafficApi() {
+    return app.ajrmMarineTrafficApi || globalThis[AJRM_MARINE_TRAFFIC_API_REGISTRY] || null;
+  }
+
+  function explicitTrafficProfile() {
+    const apiProfile = trafficApi()?.status?.()?.profiles?.current;
+    const projectionProfile =
+      trafficProfiles()?.current ||
+      trafficCapabilities()?.profile ||
+      trafficTargets()?.profile;
+    const profile = String(apiProfile || projectionProfile || "").trim().toLowerCase();
+    return ["anchor", "harbor", "coastal", "offshore"].includes(profile)
+      ? profile
+      : null;
+  }
+
+  function publishCurrentStatus() {
+    if (!status) return;
+    status = {
+      ...status,
+      sequence: Number(status.sequence || 0) + 1,
+      anchor: {
+        active: Boolean(anchorMark),
+        mark: anchorMark,
+      },
+      updatedAt: new Date().toISOString(),
+    };
+    publish(status);
+  }
+
+  function validPosition(position) {
+    const latitude = Number(position?.latitude);
+    const longitude = Number(position?.longitude);
+    return (
+      Number.isFinite(latitude) &&
+      latitude >= -90 &&
+      latitude <= 90 &&
+      Number.isFinite(longitude) &&
+      longitude >= -180 &&
+      longitude <= 180
+    );
   }
 
   function trafficTargets() {

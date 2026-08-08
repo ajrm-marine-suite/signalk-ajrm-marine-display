@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.7.5` moves **Drop Anchor** into the Profiles menu. It selects
+Traffic's Anchored profile, records the current own-vessel position and depth
+below keel, and places a persistent labelled anchor symbol on the chart.
+**Un-anchor** always selects Coastal and removes the marker; changing away from
+Anchored elsewhere removes it automatically.
+
 Version `0.7.4` improves own-vessel following by leaving 66% of the visible
 chart ahead along COG and 34% behind by default. The browser-local setting can
 be adjusted from 50-80% and is shared with DR Plotter. If COG is unavailable,

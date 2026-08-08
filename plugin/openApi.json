@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.7.4",
+    "version": "0.7.5",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
@@ -10,6 +10,9 @@
     "/status": { "get": { "summary": "Get Display runtime status and browser defaults", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/getTargets": { "get": { "summary": "Get Traffic targets projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/getCollisionProfiles": { "get": { "summary": "Get Traffic profile thresholds formatted for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/anchor": { "get": { "summary": "Get the persistent Display anchor mark and active Traffic profile", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/anchor/drop": { "post": { "summary": "Select Anchored and mark the current position and depth below keel", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
+    "/anchor/clear": { "post": { "summary": "Select Coastal and remove the anchor mark", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
     "/uiState": { "get": { "summary": "Get the consolidated Display UI projection", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/panelEvents": { "get": { "summary": "Get active alert-panel entries", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/alertEvents": { "get": { "summary": "Get active visual and browser-audio alert entries", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
