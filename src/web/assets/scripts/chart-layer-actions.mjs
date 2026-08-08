@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart layer in the AJRM Marine Display browser application.
+ */
+
 export { removeActiveBaseLayers } from "./chart-layer-base-actions.mjs";
 export { refreshAutoChartsAfterBaseLayerChange } from "./chart-layer-auto-actions.mjs";
 export {

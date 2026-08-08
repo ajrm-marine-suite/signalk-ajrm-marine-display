@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart map layer in the AJRM Marine Display browser application.
+ */
+
 import { createBaseMaps } from "./chart-base-map-factory.mjs";
 import { createProtomapsRules } from "./chart-protomaps-rules.mjs";
 import { createOpenSeaMapLayer } from "./open-sea-map-layer.mjs";

@@ -1,3 +1,7 @@
+/**
+ * Implements the app DOM responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as bootstrap from "bootstrap";
 
 export function getRequiredElement(id) {

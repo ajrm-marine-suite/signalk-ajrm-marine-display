@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart startup resolution in the AJRM Marine Display browser application.
+ */
+
 import { resolveChartStartupFromStorage } from "./chart-startup-actions.mjs";
 import {
 	CHART_STARTUP_DIAGNOSTIC_STEPS,

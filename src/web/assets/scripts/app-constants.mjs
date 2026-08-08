@@ -1,3 +1,7 @@
+/**
+ * Defines constants for app in the AJRM Marine Display browser application.
+ */
+
 export const DEFAULT_MAP_ZOOM = 12;
 export const DEFAULT_MAXIMUM_TARGET_RANGE = 50;
 export const METERS_PER_NM = 1852;

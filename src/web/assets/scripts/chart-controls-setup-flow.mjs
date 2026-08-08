@@ -1,3 +1,7 @@
+/**
+ * Coordinates control flow for chart controls setup in the AJRM Marine Display browser application.
+ */
+
 import { runChartControlSetupSteps } from "./chart-controls-setup-steps.mjs";
 import {
 	CHART_CONTROL_DIAGNOSTIC_STEPS,

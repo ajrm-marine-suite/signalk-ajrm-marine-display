@@ -1,3 +1,7 @@
+/**
+ * Implements the server API responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	ajrmMarineAuthHeaders,
 	assertAjrmMarineResponseAllowed,

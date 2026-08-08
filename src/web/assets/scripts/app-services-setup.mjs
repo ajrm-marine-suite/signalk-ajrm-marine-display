@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for app services in the AJRM Marine Display browser application.
+ */
+
 import { resolveAppServiceFactories } from "./app-service-factories.mjs";
 import { createAppServicesRuntime } from "./app-services-runtime.mjs";
 import {

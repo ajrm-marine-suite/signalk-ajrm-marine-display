@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for target support in the AJRM Marine Display browser application.
+ */
+
 import { createMapLabelCollisionController } from "./map-label-collision.mjs";
 import { createRangeRingsController } from "./range-rings.mjs";
 import { createSelectionMarkers } from "./selection-markers.mjs";

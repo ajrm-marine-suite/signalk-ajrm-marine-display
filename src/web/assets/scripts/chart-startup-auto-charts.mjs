@@ -1,3 +1,7 @@
+/**
+ * Implements the chart startup auto charts responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const AUTO_CHART_STARTUP_UPDATE_DELAYS_MS = [100, 500, 1500];
 export const AUTO_CHART_RESOURCE_RETRY_DELAYS_MS = [
 	1000,

@@ -1,3 +1,7 @@
+/**
+ * Validates chart leaflet layer in the AJRM Marine Display browser application.
+ */
+
 export const REQUIRED_LEAFLET_LAYER_METHODS = ["addTo", "remove"];
 
 export function isLeafletLayer(layer) {

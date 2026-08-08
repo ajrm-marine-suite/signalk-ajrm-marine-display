@@ -1,3 +1,7 @@
+/**
+ * Renders auto profile settings in the AJRM Marine Display browser application.
+ */
+
 import {
 	autoProfileEnabledFromSettings,
 	autoProfileStatusClasses,

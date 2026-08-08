@@ -1,3 +1,7 @@
+/**
+ * Implements the traffic target projection responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function applyTrafficTargetProjection({ targets, projection }) {
 	if (!projection || typeof projection !== "object") return 0;
 	let applied = 0;

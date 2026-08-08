@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for app service builder in the AJRM Marine Display browser application.
+ */
+
 export {
 	alertPopupServiceConfig,
 	speechOutputServiceConfig,

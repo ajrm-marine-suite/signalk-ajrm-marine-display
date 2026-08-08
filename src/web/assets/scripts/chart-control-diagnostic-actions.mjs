@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart control diagnostic in the AJRM Marine Display browser application.
+ */
+
 export {
 	createConfiguredChartLayerController,
 	createChartLayerControllerWithDiagnostics,

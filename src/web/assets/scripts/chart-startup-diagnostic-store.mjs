@@ -1,3 +1,7 @@
+/**
+ * Stores diagnostics for chart startup in the AJRM Marine Display browser application.
+ */
+
 export function safeTimestamp(now) {
 	try {
 		return now();

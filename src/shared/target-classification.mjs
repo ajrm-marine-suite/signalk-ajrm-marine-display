@@ -1,3 +1,7 @@
+/**
+ * Classifies target in the AJRM Marine Display.
+ */
+
 export const AIS_TARGET_KIND_VESSEL = "vessel";
 export const AIS_TARGET_KIND_BASE_STATION = "ais-base-station";
 export const AIS_TARGET_KIND_AID_TO_NAVIGATION = "aid-to-navigation";

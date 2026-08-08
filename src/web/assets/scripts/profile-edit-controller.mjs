@@ -1,3 +1,7 @@
+/**
+ * Coordinates profile edit in the AJRM Marine Display browser application.
+ */
+
 import { createProfileEditControllerRuntime } from "./profile-edit-controller-runtime.mjs";
 import { resetProfilesToServerDefaults as resetProfilesToServerDefaultsAction } from "./profile-edit-reset-defaults.mjs";
 import {

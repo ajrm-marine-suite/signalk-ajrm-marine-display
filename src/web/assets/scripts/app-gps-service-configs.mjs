@@ -1,3 +1,7 @@
+/**
+ * Builds service configuration for app GPS in the AJRM Marine Display browser application.
+ */
+
 export function gpsLossPopupConfig({
 	modals,
 	elements,

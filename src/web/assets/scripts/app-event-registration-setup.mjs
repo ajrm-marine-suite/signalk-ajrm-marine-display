@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for app event registration in the AJRM Marine Display browser application.
+ */
+
 export function registerConfiguredAppEventBindings({
 	registerAppEventBindings,
 	map,

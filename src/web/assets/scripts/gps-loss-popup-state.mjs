@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for GPS loss popup in the AJRM Marine Display browser application.
+ */
+
 export function gpsLossPopupHtml(event = {}, escapeHtml) {
 	return `<strong>${escapeHtml(
 		event.uiLabel || "Lost GPS",

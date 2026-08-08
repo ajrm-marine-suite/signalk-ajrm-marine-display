@@ -1,3 +1,7 @@
+/**
+ * Implements controls for chart cycle in the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_CYCLE_SHORTCUT_STORAGE_KEY,
 	chartCycleResultMessage,

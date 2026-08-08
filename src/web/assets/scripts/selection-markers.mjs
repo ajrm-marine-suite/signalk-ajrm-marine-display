@@ -1,3 +1,7 @@
+/**
+ * Implements the selection markers responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function createSelectionMarkers({ L, getBlueBoxIcon }) {
 	const blueBoxIcon = L.marker([], {
 		icon: getBlueBoxIcon(),

@@ -1,3 +1,7 @@
+/**
+ * Builds setup configuration for target support in the AJRM Marine Display browser application.
+ */
+
 import {
 	createVesselSizeCategoryResolver,
 	labelCollisionConfig,

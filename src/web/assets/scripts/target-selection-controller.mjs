@@ -1,3 +1,7 @@
+/**
+ * Coordinates target selection in the AJRM Marine Display browser application.
+ */
+
 import { showVesselDetailsAfterClosebyChooser as showClosebyDetailsAfterChooser } from "./target-selection-closeby-details.mjs";
 import { selectTargetFromClosebyList } from "./target-selection-closeby-list-click.mjs";
 import { showSelectedVesselDetails as showSelectedVesselDetailsForMarker } from "./target-selection-details.mjs";

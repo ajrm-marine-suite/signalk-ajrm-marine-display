@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart startup in the AJRM Marine Display browser application.
+ */
+
 export {
 	applyAutoChartsStartup,
 	AUTO_CHART_RESOURCE_RETRY_DELAYS_MS,

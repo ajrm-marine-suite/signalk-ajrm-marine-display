@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart leaflet layer in the AJRM Marine Display browser application.
+ */
+
 import {
 	createMvtChartLayer,
 	isMvtChart,

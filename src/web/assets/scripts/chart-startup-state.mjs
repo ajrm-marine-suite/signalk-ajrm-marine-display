@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for chart startup in the AJRM Marine Display browser application.
+ */
+
 import { NATURAL_EARTH_BASE_MAP_NAME } from "./chart-base-map-definitions.mjs";
 import {
 	AUTO_CHARTS_OVERLAY_NAME,

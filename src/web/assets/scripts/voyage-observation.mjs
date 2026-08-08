@@ -1,3 +1,7 @@
+/**
+ * Observes voyage in the AJRM Marine Display browser application.
+ */
+
 import {
 	ajrmMarineAuthHeaders,
 	assertAjrmMarineResponseAllowed,

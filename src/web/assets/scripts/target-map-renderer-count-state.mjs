@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target map renderer count in the AJRM Marine Display browser application.
+ */
+
 export function createTargetMapRendererCountState() {
 	let valid = 0;
 	let filtered = 0;

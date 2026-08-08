@@ -1,3 +1,7 @@
+/**
+ * Implements the map label collision responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as labelgun from "labelgun";
 
 export function createMapLabelCollisionController({

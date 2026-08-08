@@ -1,3 +1,7 @@
+/**
+ * Makes explicit decisions for map follow movement in the AJRM Marine Display browser application.
+ */
+
 export function mapCentersEqual(a, b, epsilon = 0.000001) {
 	if (!a || !b) return false;
 	return (

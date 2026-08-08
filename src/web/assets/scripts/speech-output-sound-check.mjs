@@ -1,3 +1,7 @@
+/**
+ * Implements the speech output sound check responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { speakBrowserSoundCheck } from "./browser-speech-actions.mjs";
 import { shouldUseBrowserSpeech } from "./browser-speech-state.mjs";
 import { sendPiSoundCheck } from "./speech-output-requests.mjs";

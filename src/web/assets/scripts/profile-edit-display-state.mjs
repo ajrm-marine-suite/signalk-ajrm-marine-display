@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for profile edit display in the AJRM Marine Display browser application.
+ */
+
 const METERS_PER_NM = 1852;
 
 export function distanceDisplayState(distance) {

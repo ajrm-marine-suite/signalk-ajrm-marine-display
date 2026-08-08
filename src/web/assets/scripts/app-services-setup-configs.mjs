@@ -1,3 +1,7 @@
+/**
+ * Builds setup configuration for app services in the AJRM Marine Display browser application.
+ */
+
 import { exposeAppWindowGlobals } from "./app-window-globals.mjs";
 import { getRequiredElementByDocument } from "./app-service-factories.mjs";
 

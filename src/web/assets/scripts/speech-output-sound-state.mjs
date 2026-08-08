@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for speech output sound in the AJRM Marine Display browser application.
+ */
+
 import { browserSpeechAvailable, speakBrowserMessage } from "./browser-speech-state.mjs";
 import { sendSoundStateAnnouncement } from "./speech-output-requests.mjs";
 import { soundStateAnnouncementMessage } from "./speech-output-ui-state.mjs";

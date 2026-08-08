@@ -1,3 +1,7 @@
+/**
+ * Coordinates control flow for auto chart runtime in the AJRM Marine Display browser application.
+ */
+
 export function autoChartPosition({ map, mapFollow, selfTarget }) {
 	return mapFollow?.getMapFollowSelf() && selfTarget?.isValid
 		? { lat: selfTarget.latitude, lng: selfTarget.longitude }

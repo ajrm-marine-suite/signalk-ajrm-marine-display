@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for map basics in the AJRM Marine Display browser application.
+ */
+
 import { createEasyButtonFactory } from "./easy-button-factory.mjs";
 import { labelLeafletZoomControls } from "@ajrm-marine/map-core";
 

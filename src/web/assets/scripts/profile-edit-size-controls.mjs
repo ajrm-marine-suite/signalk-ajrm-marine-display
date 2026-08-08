@@ -1,3 +1,7 @@
+/**
+ * Implements controls for profile edit size in the AJRM Marine Display browser application.
+ */
+
 import { vesselSizeConfigFromControls } from "./profile-edit-state.mjs";
 
 export function applyNormalizedVesselSizeConfig({

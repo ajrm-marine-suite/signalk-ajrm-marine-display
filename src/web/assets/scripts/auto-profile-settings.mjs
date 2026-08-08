@@ -1,3 +1,7 @@
+/**
+ * Implements the auto profile settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	autoProfileSettingsPath,
 	autoProfileStatusPath,

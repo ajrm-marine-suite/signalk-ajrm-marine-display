@@ -1,3 +1,7 @@
+/**
+ * Implements the feedback UI responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { feedbackAlertHtml } from "./feedback-state.mjs";
 
 export function createFeedbackController({

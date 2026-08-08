@@ -1,3 +1,7 @@
+/**
+ * Implements the profile edit save scheduler responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function createProfileEditSaveScheduler({
 	saveProfiles,
 	refresh,

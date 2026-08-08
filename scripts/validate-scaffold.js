@@ -1,3 +1,7 @@
+/**
+ * Implements the validate scaffold responsibilities of the AJRM Marine Display support tooling.
+ */
+
 const assert = require("node:assert/strict");
 const fs = require("node:fs");
 const path = require("node:path");

@@ -1,3 +1,7 @@
+/**
+ * Implements the target snapshot ingest responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	applySnapshotToTarget,
 	createTarget,

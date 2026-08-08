@@ -1,3 +1,7 @@
+/**
+ * Implements the app window globals responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const DEFAULT_STATIONARY_AUTOMUTE_SPEED = 0.35;
 
 export function exposeAppWindowGlobals({

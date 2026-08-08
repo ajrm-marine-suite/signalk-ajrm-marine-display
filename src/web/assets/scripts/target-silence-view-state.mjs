@@ -1,3 +1,7 @@
+/**
+ * Builds view state for target silence in the AJRM Marine Display browser application.
+ */
+
 import { muteToggleIconClass } from "./target-silence-state.mjs";
 
 export function applyGlobalSilenceButtonState({

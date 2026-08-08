@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target overlay silence in the AJRM Marine Display browser application.
+ */
+
 import { shouldShowTargetOverlay } from "./target-overlay-state.mjs";
 
 export function targetSilenceBadgeState({ target, selfMmsi }) {

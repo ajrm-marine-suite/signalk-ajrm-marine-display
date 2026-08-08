@@ -1,3 +1,7 @@
+/**
+ * Implements the chart folder groups responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const CHART_FOLDER_INPUT_NAME = "ajrm-marine-chart-folder";
 export const CHART_FOLDER_API_BASE = "/plugins/signalk-charts-provider-simple";
 

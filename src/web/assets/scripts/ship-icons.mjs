@@ -1,3 +1,7 @@
+/**
+ * Implements the ship icons responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const tugboatSvg = `<svg xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg" stroke-width="0.501" stroke-linejoin="bevel" fill-rule="evenodd" version="1.1" overflow="visible" viewBox="0 0 96 96" x="0px" y="0px">
 <g fill="none" stroke="currentcolor" font-family="Times New Roman" font-size="16" transform="scale(1 -1)">
 <g transform="translate(0 -96)">

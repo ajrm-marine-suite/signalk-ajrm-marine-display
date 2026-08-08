@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for target UI in the AJRM Marine Display browser application.
+ */
+
 import { resolveTargetUiFactories } from "./target-ui-factories.mjs";
 import { createTargetUiRuntime } from "./target-ui-runtime.mjs";
 

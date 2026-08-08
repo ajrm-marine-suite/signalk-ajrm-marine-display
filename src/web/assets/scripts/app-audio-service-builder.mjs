@@ -1,3 +1,7 @@
+/**
+ * Implements the app audio service builder responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	alertPopupServiceConfig,
 	speechOutputServiceConfig,

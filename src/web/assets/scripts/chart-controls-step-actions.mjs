@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart controls step in the AJRM Marine Display browser application.
+ */
+
 import {
 	applyChartStartupWithDiagnostics,
 	createChartLayerControllerWithDiagnostics,

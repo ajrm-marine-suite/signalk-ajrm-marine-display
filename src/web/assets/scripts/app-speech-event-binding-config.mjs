@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for app speech event binding in the AJRM Marine Display browser application.
+ */
+
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 
 export function speechSaveSettingControls(controls) {

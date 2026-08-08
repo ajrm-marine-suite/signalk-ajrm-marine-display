@@ -1,3 +1,7 @@
+/**
+ * Implements the target aging responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function ageOutTargets({
 	targets,
 	selfMmsi,

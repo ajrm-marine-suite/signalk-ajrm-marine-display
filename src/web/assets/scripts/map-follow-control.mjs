@@ -1,3 +1,7 @@
+/**
+ * Implements controls for map follow in the AJRM Marine Display browser application.
+ */
+
 import { recenterOnSelfTarget } from "./map-follow-action.mjs";
 import { mapFollowButtonState } from "./map-follow-state.mjs";
 import { setMapControlHoverHelp } from "@ajrm-marine/map-core";

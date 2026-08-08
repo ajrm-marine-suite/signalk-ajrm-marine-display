@@ -1,3 +1,7 @@
+/**
+ * Implements the target overlay CPA rings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { cpaLimitRingRadiusMeters } from "./target-overlay-state.mjs";
 
 export function createCpaLimitRingSet({

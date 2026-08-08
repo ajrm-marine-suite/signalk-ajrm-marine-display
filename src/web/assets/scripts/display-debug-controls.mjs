@@ -1,3 +1,7 @@
+/**
+ * Implements controls for display debug in the AJRM Marine Display browser application.
+ */
+
 const DEFAULT_POLL_INTERVAL_MS = 2000;
 const CONTROLS_PATH = "/signalk/v1/api/ajrmMarineDisplay/debugControls";
 

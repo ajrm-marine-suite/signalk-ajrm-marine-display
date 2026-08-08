@@ -1,3 +1,7 @@
+/**
+ * Provides actions for target selection modal in the AJRM Marine Display browser application.
+ */
+
 import { positionMapModal } from "./map-modal-position.mjs";
 
 export function showSelectedVesselModal({

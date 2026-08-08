@@ -1,3 +1,7 @@
+/**
+ * Implements the target icon cache responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function targetIconCacheKey({
 	target = {},
 	selfMmsi = "",

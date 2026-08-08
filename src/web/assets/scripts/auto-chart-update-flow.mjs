@@ -1,3 +1,7 @@
+/**
+ * Coordinates control flow for auto chart update in the AJRM Marine Display browser application.
+ */
+
 import {
 	clearAutoChartLayer,
 	hasActiveAutoChartLayer,

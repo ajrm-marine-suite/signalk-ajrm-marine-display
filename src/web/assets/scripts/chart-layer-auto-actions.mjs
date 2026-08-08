@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart layer auto in the AJRM Marine Display browser application.
+ */
+
 export function updateEnabledAutoCharts(autoCharts) {
 	autoCharts.resetFallback();
 	autoCharts.update();

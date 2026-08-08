@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for main target runtime in the AJRM Marine Display browser application.
+ */
+
 export { mainTargetSupportConfig } from "./main-target-support-config.mjs";
 export {
 	mainTargetUiCollectionsConfig,

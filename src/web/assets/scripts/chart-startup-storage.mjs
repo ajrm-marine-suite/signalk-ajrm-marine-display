@@ -1,3 +1,7 @@
+/**
+ * Persists chart startup in the AJRM Marine Display browser application.
+ */
+
 import { resolveChartStartupState } from "./chart-startup-state.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 

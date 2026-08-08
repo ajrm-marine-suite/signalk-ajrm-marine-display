@@ -1,3 +1,7 @@
+/**
+ * Implements the GPS status indicator responsibilities of the AJRM Marine Display browser application.
+ */
+
 const DEFAULT_STATUS_URL = "/plugins/signalk-ajrm-marine-gps-integrity/status";
 const DEFAULT_FALLBACK_STATUS_URL = "/signalk/v1/api/vessels/self";
 const DEFAULT_FALLBACK_MAX_AGE_MS = 30_000;

@@ -1,3 +1,7 @@
+/**
+ * Coordinates chart layer in the AJRM Marine Display browser application.
+ */
+
 import {
 	selectChartBaseLayer,
 	setChartOverlayLayer,

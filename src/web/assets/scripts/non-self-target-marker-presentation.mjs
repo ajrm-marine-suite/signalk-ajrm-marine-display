@@ -1,3 +1,7 @@
+/**
+ * Implements the non self target marker presentation responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	targetCountContribution,
 	targetTooltipHtml,

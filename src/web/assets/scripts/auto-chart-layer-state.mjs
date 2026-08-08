@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for auto chart layer in the AJRM Marine Display browser application.
+ */
+
 import { isLeafletLayer } from "./chart-leaflet-layer-factory.mjs";
 
 export function createAutoChartLayerState() {

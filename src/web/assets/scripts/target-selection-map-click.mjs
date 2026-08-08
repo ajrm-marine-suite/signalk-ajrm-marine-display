@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection map click responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { clearSelectedBoatMarker } from "./target-selection-clear.mjs";
 
 export function clearSelectedTargetFromMapClick({

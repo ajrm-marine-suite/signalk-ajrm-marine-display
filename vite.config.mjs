@@ -1,3 +1,7 @@
+/**
+ * Configures the production Vite build for AJRM Marine Display.
+ */
+
 import { defineConfig } from "vite";
 
 // https://vite.dev/config/

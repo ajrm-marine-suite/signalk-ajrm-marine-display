@@ -1,3 +1,7 @@
+/**
+ * Implements controls for cursor position in the AJRM Marine Display browser application.
+ */
+
 import {
 	COORDINATE_FORMAT_STORAGE_KEY,
 	formatLatLon,

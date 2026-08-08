@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for main event binding in the AJRM Marine Display browser application.
+ */
+
 import { registerConfiguredAppEventBindings } from "./app-event-registration-setup.mjs";
 import { mainEventBindingConfig } from "./main-event-binding-configs.mjs";
 

@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection table row responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function selectTargetFromTableRow({
 	eventTarget,
 	boatMarkers,

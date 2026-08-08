@@ -1,3 +1,7 @@
+/**
+ * Implements the speech output browser alerts responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { speakBrowserAlert } from "./browser-speech-actions.mjs";
 import {
 	browserSpeechBusy,

@@ -1,3 +1,7 @@
+/**
+ * Provides actions for profile in the AJRM Marine Display browser application.
+ */
+
 export function createProfileActions({
 	profileService,
 	getProfiles,

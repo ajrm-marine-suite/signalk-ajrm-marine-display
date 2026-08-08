@@ -1,3 +1,7 @@
+/**
+ * Builds service configuration for app audio in the AJRM Marine Display browser application.
+ */
+
 export function speechOutputServiceConfig({
 	window,
 	pluginId,

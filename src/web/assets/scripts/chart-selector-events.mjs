@@ -1,3 +1,7 @@
+/**
+ * Implements the chart selector events responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	handlePanelChange,
 	hidePanel,

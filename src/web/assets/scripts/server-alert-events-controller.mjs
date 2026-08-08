@@ -1,3 +1,7 @@
+/**
+ * Coordinates server alert events in the AJRM Marine Display browser application.
+ */
+
 import { applyServerAlertEventsToTargets } from "./server-alert-event-application.mjs";
 import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 import { alertEventsPath } from "./server-alert-events-routes.mjs";

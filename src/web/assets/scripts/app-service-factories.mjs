@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for app service in the AJRM Marine Display browser application.
+ */
+
 import { createAppHttp } from "./app-http.mjs";
 import { createAlertPopupController } from "./alert-popup.mjs";
 import { createAutoProfileSettingsController } from "./auto-profile-settings.mjs";

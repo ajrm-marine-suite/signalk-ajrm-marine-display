@@ -1,3 +1,7 @@
+/**
+ * Implements the self TCPA guide settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const SELF_TCPA_GUIDE_DEFAULTS = Object.freeze({
 	mode: "course",
 	selfIcon: "rings",

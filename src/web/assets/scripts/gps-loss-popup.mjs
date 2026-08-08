@@ -1,3 +1,7 @@
+/**
+ * Implements the GPS loss popup responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { currentGpsLossEvent } from "./alert-events.mjs";
 import { gpsLossPopupHtml } from "./gps-loss-popup-state.mjs";
 

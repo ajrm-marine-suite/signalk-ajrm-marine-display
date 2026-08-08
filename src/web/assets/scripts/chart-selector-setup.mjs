@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for chart selector in the AJRM Marine Display browser application.
+ */
+
 import {
 	AUTO_CHARTS_OVERLAY_NAME,
 	HARBOUR_LIMITS_OVERLAY_NAME,

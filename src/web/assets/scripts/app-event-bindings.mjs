@@ -1,3 +1,7 @@
+/**
+ * Binds events for app in the AJRM Marine Display browser application.
+ */
+
 import { registerProfileEventBindings } from "./app-profile-event-bindings.mjs";
 import { registerMapFollowMoveEvents } from "./map-follow-events.mjs";
 import { registerSpeechEventBindings } from "./app-speech-event-bindings.mjs";

@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for profile edit range control in the AJRM Marine Display browser application.
+ */
+
 import {
 	tickToDistance,
 	tickToSpeed,

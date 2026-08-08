@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for map runtime in the AJRM Marine Display browser application.
+ */
+
 import { createAutoChartController } from "./auto-chart-controller.mjs";
 import { createChartMapLayers } from "./chart-map-layer-factories.mjs";
 import { createMapFollowController } from "./map-follow-control.mjs";

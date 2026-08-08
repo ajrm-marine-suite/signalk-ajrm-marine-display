@@ -1,3 +1,7 @@
+/**
+ * Implements controls for target silence global in the AJRM Marine Display browser application.
+ */
+
 import {
 	hasSilencedTargets,
 	hasUnsilencedAlertTargets,

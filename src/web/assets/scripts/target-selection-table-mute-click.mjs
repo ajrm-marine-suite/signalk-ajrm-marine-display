@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection table mute click responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { toggleTargetSilenceFromTable } from "./target-selection-actions.mjs";
 
 export function handleTargetTableMuteClick({

@@ -1,3 +1,7 @@
+/**
+ * Implements the display control icons responsibilities of the AJRM Marine Display browser application.
+ */
+
 function iconSvg(paths, label) {
 	return `<svg class="ajrm-marine-control-icon" viewBox="0 0 16 16" width="1em" height="1em" aria-label="${label}" role="img" fill="currentColor" focusable="false">${paths}</svg>`;
 }

@@ -1,3 +1,7 @@
+/**
+ * Handles events for chart layer in the AJRM Marine Display browser application.
+ */
+
 import {
 	isAutoChartsOverlay,
 	isHarbourLimitsOverlay,

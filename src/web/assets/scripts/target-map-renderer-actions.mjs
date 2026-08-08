@@ -1,3 +1,7 @@
+/**
+ * Provides actions for target map renderer in the AJRM Marine Display browser application.
+ */
+
 import { renderTargetCounts } from "./target-counts.mjs";
 
 export function renderRendererTargetCounts({ countState, countElements }) {

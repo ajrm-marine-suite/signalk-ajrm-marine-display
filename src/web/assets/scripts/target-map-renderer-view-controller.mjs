@@ -1,3 +1,7 @@
+/**
+ * Coordinates view rendering for target map renderer in the AJRM Marine Display browser application.
+ */
+
 import { updateRendererSelectedVesselDetails } from "./target-map-renderer-selected-details.mjs";
 import {
 	drawRendererRangeRings,

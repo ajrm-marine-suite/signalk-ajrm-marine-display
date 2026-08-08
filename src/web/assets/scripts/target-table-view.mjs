@@ -1,3 +1,7 @@
+/**
+ * Renders target table in the AJRM Marine Display browser application.
+ */
+
 import { renderTargetTable, targetTableRenderKey } from "./target-table.mjs";
 import { getTargetSvg } from "./target-svg-selector.mjs";
 

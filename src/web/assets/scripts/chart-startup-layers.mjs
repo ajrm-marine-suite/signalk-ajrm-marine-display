@@ -1,3 +1,7 @@
+/**
+ * Implements the chart startup layers responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 
 export function startupBaseLayer({ baseMaps, baseLayerName }) {

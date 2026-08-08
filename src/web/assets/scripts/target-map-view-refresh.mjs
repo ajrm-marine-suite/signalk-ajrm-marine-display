@@ -1,3 +1,7 @@
+/**
+ * Implements the target map view refresh responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function refreshMapViewForSelfTarget({
 	selfTarget,
 	map,

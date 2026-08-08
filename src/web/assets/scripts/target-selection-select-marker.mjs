@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection select marker responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { applyBoatMarkerSelection } from "./target-selection-actions.mjs";
 import { shouldSelectBoatMarker } from "./target-selection-state.mjs";
 

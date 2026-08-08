@@ -1,3 +1,7 @@
+/**
+ * Provides controller helpers for auto chart in the AJRM Marine Display browser application.
+ */
+
 import { createAutoChartLayerState } from "./auto-chart-layer-state.mjs";
 import { createChartLeafletLayer } from "./chart-leaflet-layer-factory.mjs";
 

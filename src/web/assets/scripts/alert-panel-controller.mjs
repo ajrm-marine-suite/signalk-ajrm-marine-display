@@ -1,3 +1,7 @@
+/**
+ * Coordinates alert panel in the AJRM Marine Display browser application.
+ */
+
 import {
 	AJRM_MARINE_LATEST_UI_STATE_KEY,
 	AJRM_MARINE_UI_STATE_EVENT,

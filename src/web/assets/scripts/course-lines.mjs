@@ -1,3 +1,7 @@
+/**
+ * Implements the course lines responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { projectedLocation } from "./map-geometry.mjs";
 
 export function setSelectedCourseLine({

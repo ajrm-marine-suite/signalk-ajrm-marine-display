@@ -1,3 +1,7 @@
+/**
+ * Provides actions for target map renderer view in the AJRM Marine Display browser application.
+ */
+
 import { updateTargetTableView } from "./target-table-view.mjs";
 
 export function updateRendererTargetTable({

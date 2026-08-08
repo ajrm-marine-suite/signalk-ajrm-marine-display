@@ -1,3 +1,7 @@
+/**
+ * Implements the target table responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { escapeHtml } from "./alert-events.mjs";
 import { compareTargetRows, targetTableRowClass } from "./target-table-state.mjs";
 

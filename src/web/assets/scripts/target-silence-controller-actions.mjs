@@ -1,3 +1,7 @@
+/**
+ * Provides actions for target silence controller in the AJRM Marine Display browser application.
+ */
+
 export async function applyTargetSilenceServerTargets({
 	serverTargets,
 	updateTargetFromServer,

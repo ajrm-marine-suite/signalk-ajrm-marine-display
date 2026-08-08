@@ -1,3 +1,7 @@
+/**
+ * Implements the target SVG selector responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as targetSvgs from "./ship-icons.mjs";
 import {
 	AIS_TARGET_KIND_SAR_AIRCRAFT,

@@ -1,3 +1,7 @@
+/**
+ * Implements the profile settings normalize responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function finiteOr(value, fallback = 0) {
 	const parsed = Number(value);
 	return Number.isFinite(parsed) ? parsed : fallback;

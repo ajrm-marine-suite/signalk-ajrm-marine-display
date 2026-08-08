@@ -1,3 +1,7 @@
+/**
+ * Implements the selected vessel details responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	classARowsHidden,
 	selectedVesselAlertState,

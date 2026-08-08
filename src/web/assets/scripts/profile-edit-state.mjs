@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for profile edit in the AJRM Marine Display browser application.
+ */
+
 export function selectedVesselSize(sizeControls) {
 	return sizeControls.category.value || "small";
 }

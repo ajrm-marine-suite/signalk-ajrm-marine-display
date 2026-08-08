@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for target renderer in the AJRM Marine Display browser application.
+ */
+
 export function targetRendererCountElements(elements) {
 	return {
 		total: elements.totalTargetCountUI,

@@ -1,3 +1,7 @@
+/**
+ * Coordinates auto chart in the AJRM Marine Display browser application.
+ */
+
 import {
 	createAutoChartControllerParts,
 	ensureAutoChartGroupVisible,

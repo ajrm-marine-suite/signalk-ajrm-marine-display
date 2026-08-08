@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart base map in the AJRM Marine Display browser application.
+ */
+
 import {
 	BASE_MAP_LAYER_SPECS,
 	NATURAL_EARTH_MAX_DATA_ZOOM,

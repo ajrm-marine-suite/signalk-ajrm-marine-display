@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for map display support in the AJRM Marine Display browser application.
+ */
+
 import { createDisplaySettingsController } from "./display-settings.mjs";
 import { createHarbourDisplayController } from "./harbour-display.mjs";
 

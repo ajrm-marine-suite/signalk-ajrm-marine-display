@@ -1,3 +1,7 @@
+/**
+ * Implements the AIS station icons responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { createAisDivIcon } from "./ais-icon-utils.mjs";
 
 function getStationIconSize(isLarge) {

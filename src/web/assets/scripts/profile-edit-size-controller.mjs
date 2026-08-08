@@ -1,3 +1,7 @@
+/**
+ * Coordinates profile edit size in the AJRM Marine Display browser application.
+ */
+
 import { updateControllerSizeControls } from "./profile-edit-controller-state.mjs";
 import { saveVesselSizeConfigFromControls } from "./profile-edit-size-controls.mjs";
 

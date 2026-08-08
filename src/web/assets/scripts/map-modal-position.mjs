@@ -1,3 +1,7 @@
+/**
+ * Implements the map modal position responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function positionMapModal({ map, latLng, modalId, mapElementId = "map" }) {
 	const clickedLocationInPixels = map.latLngToContainerPoint(latLng);
 	const mapWidthInPixels = document.getElementById(mapElementId).clientWidth;

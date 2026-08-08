@@ -1,3 +1,7 @@
+/**
+ * Implements the server alert event application responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function alertEventsByMmsi(events) {
 	const byMmsi = new Map();
 	for (const event of events || []) {

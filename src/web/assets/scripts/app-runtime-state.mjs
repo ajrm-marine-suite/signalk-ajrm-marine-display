@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for app runtime in the AJRM Marine Display browser application.
+ */
+
 export function createAppRuntimeState() {
 	let collisionProfiles;
 	let selfMmsi;

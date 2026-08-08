@@ -1,3 +1,7 @@
+/**
+ * Coordinates route in the AJRM Marine Display browser application.
+ */
+
 import {
 	activeRouteFingerprint,
 	normalizeRouteStyle,

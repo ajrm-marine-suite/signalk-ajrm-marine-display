@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart control selector in the AJRM Marine Display browser application.
+ */
+
 import { createConfiguredChartSelector } from "./chart-selector-setup.mjs";
 import {
 	CHART_CONTROL_DIAGNOSTIC_STEPS,

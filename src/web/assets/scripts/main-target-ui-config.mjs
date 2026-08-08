@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for main target UI in the AJRM Marine Display browser application.
+ */
+
 import {
 	AGE_OUT_OLD_TARGETS,
 	COURSE_PROJECTION_MINUTES,

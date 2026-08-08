@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart raster layer in the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_LAYER_Z_INDEX,
 	CHART_TILE_MAX_ZOOM,

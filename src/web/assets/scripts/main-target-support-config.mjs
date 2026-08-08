@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for main target support in the AJRM Marine Display browser application.
+ */
+
 import {
 	METERS_PER_NM,
 	PLUGIN_ID,

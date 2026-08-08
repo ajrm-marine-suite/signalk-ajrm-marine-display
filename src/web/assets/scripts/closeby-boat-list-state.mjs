@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for closeby boat list in the AJRM Marine Display browser application.
+ */
+
 export function closebyBoatListClasses({ index, alarmState } = {}) {
 	const classes = ["list-group-item", "list-group-item-action"];
 	if (index === 0) classes.push("active");

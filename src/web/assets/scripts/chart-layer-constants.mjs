@@ -1,3 +1,7 @@
+/**
+ * Defines constants for chart layer in the AJRM Marine Display browser application.
+ */
+
 export const CHART_TILE_MAX_ZOOM = 22;
 export const CHART_LAYER_Z_INDEX = 650;
 export const SEAMARK_LAYER_Z_INDEX = 750;

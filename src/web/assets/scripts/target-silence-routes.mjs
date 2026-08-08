@@ -1,3 +1,7 @@
+/**
+ * Defines API routes and access helpers for target silence in the AJRM Marine Display browser application.
+ */
+
 export function getTargetsPath(_pluginId, timestamp = Date.now()) {
 	return `/signalk/v1/api/ajrmMarineDisplay/getTargets?ts=${timestamp}`;
 }

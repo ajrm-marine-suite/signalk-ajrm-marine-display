@@ -1,3 +1,7 @@
+/**
+ * Implements the profile settings targets responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { normalizeVesselSizeConfig } from "./profile-settings-normalize.mjs";
 
 export function vesselSizeCategory(target, vesselSizeConfig) {

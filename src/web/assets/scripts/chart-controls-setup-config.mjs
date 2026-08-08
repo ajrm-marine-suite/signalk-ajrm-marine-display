@@ -1,3 +1,7 @@
+/**
+ * Builds setup configuration for chart controls in the AJRM Marine Display browser application.
+ */
+
 import { resolveChartControlFactories } from "./chart-control-factories.mjs";
 import { createOverlayMaps } from "./chart-control-overlays.mjs";
 import {

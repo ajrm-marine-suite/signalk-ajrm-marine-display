@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for main map display chart in the AJRM Marine Display browser application.
+ */
+
 import { createConfiguredChartControls } from "./chart-controls-setup.mjs";
 import { createConfiguredMapDisplaySupport } from "./map-display-support-setup.mjs";
 

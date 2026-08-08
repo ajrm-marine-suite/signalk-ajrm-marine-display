@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for main event binding in the AJRM Marine Display browser application.
+ */
+
 import { registerAppEventBindings } from "./app-event-bindings.mjs";
 
 export function mainEventBindingState({ state, mapFollow }) {

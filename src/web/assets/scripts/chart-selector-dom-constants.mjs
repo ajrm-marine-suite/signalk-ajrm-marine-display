@@ -1,3 +1,7 @@
+/**
+ * Defines constants for chart selector DOM in the AJRM Marine Display browser application.
+ */
+
 export const CHART_SELECTOR_CONTAINER_CLASS =
 	"leaflet-bar ajrm-marine-chart-selector";
 export const CHART_SELECTOR_BUTTON_CLASS = "ajrm-marine-chart-selector-button";

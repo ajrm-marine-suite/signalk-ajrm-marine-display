@@ -1,3 +1,7 @@
+/**
+ * Implements the target silence controller commands responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	silencedAlertMessage,
 	unsilencedTargetMessage,

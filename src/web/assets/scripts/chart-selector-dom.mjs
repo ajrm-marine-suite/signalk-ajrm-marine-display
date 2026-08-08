@@ -1,3 +1,7 @@
+/**
+ * Implements the chart selector DOM responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_SELECTOR_BUTTON_CLASS,
 	CHART_SELECTOR_BUTTON_LABEL,

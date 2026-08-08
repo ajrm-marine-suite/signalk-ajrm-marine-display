@@ -1,3 +1,7 @@
+/**
+ * Provides actions for browser speech in the AJRM Marine Display browser application.
+ */
+
 import { speakBrowserMessage } from "./browser-speech-state.mjs";
 
 export function speakBrowserSoundCheck({

@@ -1,3 +1,7 @@
+/**
+ * Implements the coordinate format responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const COORDINATE_FORMAT_STORAGE_KEY =
 	"ajrmMarineDisplayCoordinateFormat";
 

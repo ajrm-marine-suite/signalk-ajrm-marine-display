@@ -1,3 +1,7 @@
+/**
+ * Implements the chart resource bounds values responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const CHART_BOUNDS_SOURCE_GETTERS = [
 	(chart) => chart?.bounds,
 	(chart) => chart?.boundingBox,

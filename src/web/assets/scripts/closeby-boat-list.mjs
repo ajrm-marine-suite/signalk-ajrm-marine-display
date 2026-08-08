@@ -1,3 +1,7 @@
+/**
+ * Implements the closeby boat list responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	closebyBoatListClasses,
 	distancePixels,

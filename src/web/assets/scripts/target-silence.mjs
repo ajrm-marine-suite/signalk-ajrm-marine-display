@@ -1,3 +1,7 @@
+/**
+ * Implements the target silence responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	applyInitialTargetMuteData,
 	applyServerTargetMuteState,

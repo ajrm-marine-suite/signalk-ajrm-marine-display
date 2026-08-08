@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for main core in the AJRM Marine Display browser application.
+ */
+
 import {
 	mainServicesConfig,
 	mainStartupDataConfig,

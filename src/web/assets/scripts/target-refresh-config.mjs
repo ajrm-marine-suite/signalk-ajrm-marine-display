@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for target refresh in the AJRM Marine Display browser application.
+ */
+
 export function targetRefreshConfig({
 	pluginId,
 	map,

@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for display settings in the AJRM Marine Display browser application.
+ */
+
 export const DARK_MAP_FILTER =
 	"invert(1) hue-rotate(180deg) brightness(0.8) contrast(1.2)";
 

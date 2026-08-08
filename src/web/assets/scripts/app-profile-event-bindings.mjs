@@ -1,3 +1,7 @@
+/**
+ * Binds events for app profile in the AJRM Marine Display browser application.
+ */
+
 import {
 	distanceRangeControls,
 	profileEventElements,

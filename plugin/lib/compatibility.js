@@ -1,3 +1,7 @@
+/**
+ * Implements the compatibility responsibilities of the AJRM Marine Display Signal K server.
+ */
+
 "use strict";
 
 function valueOf(value) {

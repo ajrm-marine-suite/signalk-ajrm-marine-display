@@ -1,3 +1,7 @@
+/**
+ * Provides actions for map follow in the AJRM Marine Display browser application.
+ */
+
 export function recenterOnSelfTarget({
 	map,
 	buttonMap,

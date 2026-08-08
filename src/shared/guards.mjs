@@ -1,3 +1,7 @@
+/**
+ * Implements the guards responsibilities of the AJRM Marine Display.
+ */
+
 export function isPresent(value) {
 	return value !== null && value !== undefined;
 }

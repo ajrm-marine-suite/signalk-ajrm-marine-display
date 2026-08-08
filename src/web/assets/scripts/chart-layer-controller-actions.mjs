@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart layer controller in the AJRM Marine Display browser application.
+ */
+
 import {
 	ensureLayerAdded,
 	ensureLayerRemoved,

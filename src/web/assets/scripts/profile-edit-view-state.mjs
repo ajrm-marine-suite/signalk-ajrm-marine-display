@@ -1,3 +1,7 @@
+/**
+ * Builds view state for profile edit in the AJRM Marine Display browser application.
+ */
+
 import {
 	distanceToTick,
 	speedToTick,

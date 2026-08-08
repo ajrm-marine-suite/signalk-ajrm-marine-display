@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target table in the AJRM Marine Display browser application.
+ */
+
 export function targetSortNumber(value) {
 	return typeof value === "number" && Number.isFinite(value) ? value : Infinity;
 }

@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for app initial settings in the AJRM Marine Display browser application.
+ */
+
 export function storedTrue(storage, key) {
 	return storage.getItem(key) === "true";
 }

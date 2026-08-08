@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for app startup data in the AJRM Marine Display browser application.
+ */
+
 import { bootstrapApp } from "./app-bootstrap.mjs";
 import { loadInitialAppSettings } from "./app-initial-settings.mjs";
 import { loadStartupData } from "./startup-data-service.mjs";

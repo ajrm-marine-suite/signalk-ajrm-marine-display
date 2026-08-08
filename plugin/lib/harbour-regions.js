@@ -1,3 +1,7 @@
+/**
+ * Implements the harbour regions responsibilities of the AJRM Marine Display Signal K server.
+ */
+
 "use strict";
 
 function normalizeRegionCollection(value) {

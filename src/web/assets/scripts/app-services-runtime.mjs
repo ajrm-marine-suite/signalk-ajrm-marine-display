@@ -1,3 +1,7 @@
+/**
+ * Implements the app services runtime responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	createAudioAlertServices,
 	createCoreAppServices,

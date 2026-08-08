@@ -1,3 +1,7 @@
+/**
+ * Implements the UI state projection reader responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { uiStatePath } from "./ui-state-routes.mjs";
 
 export function uiStateObjectProjection(key) {

@@ -1,3 +1,7 @@
+/**
+ * Implements the chart resource URL responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const CHART_URL_FIELDS = ["tilemapUrl", "url", "tileUrl", "href"];
 
 export function chartUrl(chart) {

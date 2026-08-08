@@ -1,3 +1,7 @@
+/**
+ * Implements controls for chart selector in the AJRM Marine Display browser application.
+ */
+
 import { createChartSelectorElements } from "./chart-selector-dom.mjs";
 import { bindChartSelectorEvents } from "./chart-selector-events.mjs";
 import { updateChartSelectorPanel } from "./chart-selector-update.mjs";

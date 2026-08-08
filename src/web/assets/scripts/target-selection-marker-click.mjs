@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection marker click responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	findClosebyBoatMarkers,
 	renderClosebyBoatList,

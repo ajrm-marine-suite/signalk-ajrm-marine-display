@@ -1,3 +1,7 @@
+/**
+ * Coordinates speech output mute in the AJRM Marine Display browser application.
+ */
+
 import { muteStatusText } from "./speech-output-state.mjs";
 import { applyMuteButtonState } from "./speech-output-view-state.mjs";
 

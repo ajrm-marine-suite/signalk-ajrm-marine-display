@@ -1,3 +1,7 @@
+/**
+ * Implements the alert events responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function currentGpsLossEvent(events) {
 	return events.find((event) => event?.category === "gps");
 }

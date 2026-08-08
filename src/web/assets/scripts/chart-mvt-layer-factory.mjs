@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart MVT layer in the AJRM Marine Display browser application.
+ */
+
 import { CHART_LAYER_Z_INDEX } from "./chart-layer-constants.mjs";
 
 export function isMvtChart(chart) {

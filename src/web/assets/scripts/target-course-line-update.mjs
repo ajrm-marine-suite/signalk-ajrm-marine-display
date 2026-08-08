@@ -1,3 +1,7 @@
+/**
+ * Updates target course line in the AJRM Marine Display browser application.
+ */
+
 import {
 	clearCourseLine,
 	setProjectedCourseLine,

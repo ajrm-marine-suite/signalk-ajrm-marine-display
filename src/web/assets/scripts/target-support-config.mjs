@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for target support in the AJRM Marine Display browser application.
+ */
+
 import { getBlueBoxIcon } from "./ais-icons.mjs";
 import { criteriaForSize } from "./profile-settings.mjs";
 

@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for target silence in the AJRM Marine Display browser application.
+ */
+
 import { createTargetSilenceController } from "./target-silence.mjs";
 
 export function createConfiguredTargetSilenceController({

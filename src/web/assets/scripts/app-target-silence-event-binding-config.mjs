@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for app target silence event binding in the AJRM Marine Display browser application.
+ */
+
 export const TARGET_SILENCE_CONTROL_IDS = {
 	targetListPanel: "offcanvasTargetList",
 	popupSilenceAll: "buttonMuteAllAlarms",

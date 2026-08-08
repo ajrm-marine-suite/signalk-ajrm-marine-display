@@ -1,3 +1,7 @@
+/**
+ * Implements the app bootstrap responsibilities of the AJRM Marine Display browser application.
+ */
+
 export async function bootstrapApp({
 	pluginId,
 	collisionProfileService,

@@ -1,3 +1,7 @@
+/**
+ * Implements controls for speech output in the AJRM Marine Display browser application.
+ */
+
 import { speakBrowserAlertsForOutput } from "./speech-output-browser-alerts.mjs";
 import {
 	ajrmMarineAuthHeaders,

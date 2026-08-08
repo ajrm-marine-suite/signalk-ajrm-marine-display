@@ -1,3 +1,7 @@
+/**
+ * Implements the profile edit reset defaults responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	resetProfilesErrorMessage,
 	resetProfilesPath,

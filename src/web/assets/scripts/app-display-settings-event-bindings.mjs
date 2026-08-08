@@ -1,3 +1,7 @@
+/**
+ * Binds events for app display settings in the AJRM Marine Display browser application.
+ */
+
 import { GPS_LOSS_CONTROL_IDS } from "./app-display-settings-event-binding-config.mjs";
 
 export function registerDisplaySettingsEventBindings({

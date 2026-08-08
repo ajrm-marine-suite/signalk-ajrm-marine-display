@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for feedback in the AJRM Marine Display browser application.
+ */
+
 export function feedbackAlertHtml(message, type) {
 	return [
 		`<div class="alert alert-${type} alert-dismissible" role="alert">`,

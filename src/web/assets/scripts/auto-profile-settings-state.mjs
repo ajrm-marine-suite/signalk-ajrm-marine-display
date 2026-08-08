@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for auto profile settings in the AJRM Marine Display browser application.
+ */
+
 export function autoProfileEnabledFromSettings(settings) {
 	return settings?.enabled !== false;
 }

@@ -1,3 +1,7 @@
+/**
+ * Binds events for app target selection in the AJRM Marine Display browser application.
+ */
+
 import { targetSelectionElements } from "./app-target-selection-event-binding-config.mjs";
 
 export function registerTargetSelectionEventBindings({

@@ -1,3 +1,7 @@
+/**
+ * Implements the profile settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 export {
 	finiteOr,
 	normalizeCollisionProfiles,

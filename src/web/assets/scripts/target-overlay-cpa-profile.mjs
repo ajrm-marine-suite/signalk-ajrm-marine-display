@@ -1,3 +1,7 @@
+/**
+ * Implements the target overlay CPA profile responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function targetCpaRingProfile({
 	target,
 	collisionProfiles,

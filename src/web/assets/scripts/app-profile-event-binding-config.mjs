@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for app profile event binding in the AJRM Marine Display browser application.
+ */
+
 export const PROFILE_EVENT_CONTROL_IDS = {
 	profilesPanel: "offcanvasProfiles",
 	resetSensitivity: "buttonResetSensitivity",

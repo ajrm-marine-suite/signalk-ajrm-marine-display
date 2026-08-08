@@ -1,3 +1,7 @@
+/**
+ * Builds service configuration for app profile in the AJRM Marine Display browser application.
+ */
+
 export function autoProfileSettingsServiceConfig({
 	pluginId,
 	window,

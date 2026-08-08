@@ -1,3 +1,7 @@
+/**
+ * Implements the harbour display responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as L from "leaflet";
 import {
 	boundsIntersect,

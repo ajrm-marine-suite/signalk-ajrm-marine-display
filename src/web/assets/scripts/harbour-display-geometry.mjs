@@ -1,3 +1,7 @@
+/**
+ * Calculates geometry for harbour display in the AJRM Marine Display browser application.
+ */
+
 export function harbourDisplayName(name) {
 	return String(name || "").replace(/^Harbour:\s*/i, "");
 }

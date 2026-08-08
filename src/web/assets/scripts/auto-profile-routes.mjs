@@ -1,3 +1,7 @@
+/**
+ * Defines API routes and access helpers for auto profile in the AJRM Marine Display browser application.
+ */
+
 export function autoProfileSettingsPath(_pluginId) {
 	return `/plugins/signalk-ajrm-marine-traffic/commands/auto-profile`;
 }

@@ -1,3 +1,7 @@
+/**
+ * Publishes app UI state in the AJRM Marine Display browser application.
+ */
+
 export const AJRM_MARINE_UI_STATE_EVENT = "ajrm-marine-ui-state";
 export const AJRM_MARINE_LATEST_UI_STATE_KEY = "ajrmMarineLatestUiState";
 

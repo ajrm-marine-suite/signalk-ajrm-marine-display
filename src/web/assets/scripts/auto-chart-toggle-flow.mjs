@@ -1,3 +1,7 @@
+/**
+ * Coordinates control flow for auto chart toggle in the AJRM Marine Display browser application.
+ */
+
 import { clearAutoChartLayer } from "./auto-chart-layer-state.mjs";
 
 export function applyAutoChartToggle({

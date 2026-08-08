@@ -1,3 +1,7 @@
+/**
+ * Selects chart resource in the AJRM Marine Display browser application.
+ */
+
 import { chartBounds } from "./chart-resource-bounds.mjs";
 import { chartZoom } from "./chart-resource-url.mjs";
 

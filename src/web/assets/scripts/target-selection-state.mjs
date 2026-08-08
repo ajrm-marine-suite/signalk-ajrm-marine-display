@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target selection in the AJRM Marine Display browser application.
+ */
+
 export function shouldSelectBoatMarker({
 	markerMmsi,
 	selectedVesselMmsi,

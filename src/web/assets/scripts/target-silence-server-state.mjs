@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target silence server in the AJRM Marine Display browser application.
+ */
+
 export function applyServerTargetMuteState({
 	targets,
 	serverTarget,

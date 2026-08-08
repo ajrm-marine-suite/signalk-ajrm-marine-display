@@ -1,3 +1,7 @@
+/**
+ * Builds service configuration for app core in the AJRM Marine Display browser application.
+ */
+
 export function coreFeedbackConfig({ elements, modals }) {
 	return {
 		alertPlaceholder: elements.alertPlaceholder,

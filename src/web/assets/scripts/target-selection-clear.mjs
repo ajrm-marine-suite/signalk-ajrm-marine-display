@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection clear responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function clearSelectedBoatMarker({
 	map,
 	targets,

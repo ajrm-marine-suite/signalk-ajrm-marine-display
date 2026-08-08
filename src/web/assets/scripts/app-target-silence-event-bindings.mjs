@@ -1,3 +1,7 @@
+/**
+ * Binds events for app target silence in the AJRM Marine Display browser application.
+ */
+
 import { targetSilenceElements } from "./app-target-silence-event-binding-config.mjs";
 
 export function registerTargetSilenceEventBindings({ document, targetSilence }) {

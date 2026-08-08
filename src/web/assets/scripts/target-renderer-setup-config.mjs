@@ -1,3 +1,7 @@
+/**
+ * Builds setup configuration for target renderer in the AJRM Marine Display browser application.
+ */
+
 import { targetRendererConfig } from "./target-ui-config.mjs";
 
 export function configuredTargetRendererConfig({

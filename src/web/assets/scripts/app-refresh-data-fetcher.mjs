@@ -1,3 +1,7 @@
+/**
+ * Implements the app refresh data fetcher responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { atonsApiPath, vesselsApiPath } from "./app-refresh-routes.mjs";
 
 export function createRefreshDataFetcher({ getHttpResponse }) {

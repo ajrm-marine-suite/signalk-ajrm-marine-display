@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for refresh controller in the AJRM Marine Display browser application.
+ */
+
 import { createAppRefreshController } from "./app-refresh-controller.mjs";
 
 export function createConfiguredRefreshController({

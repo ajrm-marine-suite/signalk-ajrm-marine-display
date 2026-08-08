@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target silence in the AJRM Marine Display browser application.
+ */
+
 export function hasUnsilencedAlertTargets({ alertEvents, targets }) {
 	return alertEvents.some((event) => {
 		const target = targets.get(String(event.mmsi || ""));

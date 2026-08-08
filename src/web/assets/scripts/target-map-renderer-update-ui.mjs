@@ -1,3 +1,7 @@
+/**
+ * Implements the target map renderer update UI responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { refreshMapViewForSelfTarget } from "./target-map-view-refresh.mjs";
 import { renderRendererTargetCounts } from "./target-map-renderer-actions.mjs";
 import { displayDebugControls } from "./display-debug-controls.mjs";

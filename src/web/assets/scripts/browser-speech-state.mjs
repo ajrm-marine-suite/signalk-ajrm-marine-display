@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for browser speech in the AJRM Marine Display browser application.
+ */
+
 export function browserSpeechAvailable(windowObject = globalThis.window) {
 	return Boolean(windowObject && "speechSynthesis" in windowObject);
 }

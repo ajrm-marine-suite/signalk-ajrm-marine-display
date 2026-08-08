@@ -1,3 +1,7 @@
+/**
+ * Coordinates view rendering for target silence in the AJRM Marine Display browser application.
+ */
+
 import { updateGlobalTargetSilenceControls } from "./target-silence-global-controls.mjs";
 import { applyMuteToggleIcon } from "./target-silence-view-state.mjs";
 

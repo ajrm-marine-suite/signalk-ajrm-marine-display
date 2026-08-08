@@ -1,3 +1,7 @@
+/**
+ * Implements the DOM listener groups responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function addInputListeners(elements, handler) {
 	addEventListeners(elements, "input", handler);
 }

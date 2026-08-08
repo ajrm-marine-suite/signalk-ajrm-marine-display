@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for target overlay in the AJRM Marine Display browser application.
+ */
+
 import { isCollisionCandidateTarget } from "../../../shared/target-classification.mjs";
 
 export function shouldShowTargetOverlay({ target, selfMmsi }) {

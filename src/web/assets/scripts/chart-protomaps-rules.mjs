@@ -1,3 +1,7 @@
+/**
+ * Implements the chart protomaps rules responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as basemaps from "@protomaps/basemaps";
 
 export function createProtomapsRules(protomapsL) {

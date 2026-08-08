@@ -1,3 +1,7 @@
+/**
+ * Implements the routes responsibilities of the AJRM Marine Display Signal K server.
+ */
+
 "use strict";
 
 const { randomUUID } = require("node:crypto");

@@ -1,3 +1,7 @@
+/**
+ * Provides actions for profile edit sensitivity in the AJRM Marine Display browser application.
+ */
+
 export function applyProfileSensitivityChange({
 	profiles,
 	sensitivityControls,

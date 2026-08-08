@@ -1,3 +1,7 @@
+/**
+ * Implements the target overlay silence badge responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function createSilenceBadgeMarker({
 	latitude,
 	longitude,

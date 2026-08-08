@@ -1,3 +1,7 @@
+/**
+ * Renders route in the AJRM Marine Display browser application.
+ */
+
 export const DEFAULT_ROUTE_STYLE = Object.freeze({
 	color: "#ff7a00",
 	weight: 4,

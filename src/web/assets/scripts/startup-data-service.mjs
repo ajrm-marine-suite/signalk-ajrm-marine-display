@@ -1,3 +1,7 @@
+/**
+ * Provides services for startup data in the AJRM Marine Display browser application.
+ */
+
 import {
 	chartResourcesPath,
 	selfVesselPath,

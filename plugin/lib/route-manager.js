@@ -1,3 +1,7 @@
+/**
+ * Manages route in the AJRM Marine Display Signal K server.
+ */
+
 "use strict";
 
 const fs = require("node:fs");

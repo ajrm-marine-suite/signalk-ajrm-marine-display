@@ -1,3 +1,7 @@
+/**
+ * Implements the range control scales responsibilities of the AJRM Marine Display browser application.
+ */
+
 const METERS_PER_NM = 1852;
 const METER_DISTANCE_STEP = 25;
 const LAST_METER_DISTANCE_TICK = Math.round(

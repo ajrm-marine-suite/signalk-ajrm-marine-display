@@ -1,3 +1,7 @@
+/**
+ * Owns controller state for profile edit in the AJRM Marine Display browser application.
+ */
+
 import {
 	profileSensitivityControlValues,
 	selectedProfileCriteriaForDataset,

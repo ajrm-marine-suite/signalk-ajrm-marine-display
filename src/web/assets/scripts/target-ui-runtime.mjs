@@ -1,3 +1,7 @@
+/**
+ * Implements the target UI runtime responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	configuredTargetRefreshConfig,
 	configuredTargetRendererConfig,

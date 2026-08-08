@@ -1,3 +1,7 @@
+/**
+ * Implements the target footprint display responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { footprintLatLngs } from "../../../shared/vessel-footprint.mjs";
 
 export function updateTargetFootprintDisplay({

@@ -1,3 +1,7 @@
+/**
+ * Implements the map follow events responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { shouldPauseFollowAfterMove } from "./map-follow-movement-decision.mjs";
 import { displayDebugControls } from "./display-debug-controls.mjs";
 

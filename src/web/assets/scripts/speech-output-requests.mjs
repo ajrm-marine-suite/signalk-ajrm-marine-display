@@ -1,3 +1,7 @@
+/**
+ * Implements the speech output requests responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { assertAjrmMarineResponseAllowed } from "./ajrm-marine-api-access.mjs";
 import {
 	encounterSettingsPath,

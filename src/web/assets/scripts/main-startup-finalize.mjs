@@ -1,3 +1,7 @@
+/**
+ * Implements the main startup finalize responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { initializeProfileEditView } from "./app-profile-edit-startup.mjs";
 import { startAppRefreshLoop } from "./app-refresh-loop.mjs";
 import { registerMainAppEventBindings } from "./main-event-binding-setup.mjs";

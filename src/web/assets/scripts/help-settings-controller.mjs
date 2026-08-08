@@ -1,3 +1,7 @@
+/**
+ * Coordinates help settings in the AJRM Marine Display browser application.
+ */
+
 import {
 	AJRM_MARINE_LATEST_UI_STATE_KEY,
 } from "./app-ui-state-publisher.mjs";

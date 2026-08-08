@@ -1,3 +1,7 @@
+/**
+ * Coordinates runtime behaviour for profile edit in the AJRM Marine Display browser application.
+ */
+
 import { createProfileEditRangeHandlers } from "./profile-edit-range-handlers.mjs";
 import { createProfileEditSaveScheduler } from "./profile-edit-save-scheduler.mjs";
 import { createProfileEditSensitivityController } from "./profile-edit-sensitivity-controller.mjs";

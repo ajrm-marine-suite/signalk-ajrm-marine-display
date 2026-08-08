@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for chart control in the AJRM Marine Display browser application.
+ */
+
 import { createChartLayerController } from "./chart-layer-controller.mjs";
 import { createChartSelectorControl } from "./chart-selector-control.mjs";
 import { applyChartStartup } from "./chart-startup-apply.mjs";

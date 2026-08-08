@@ -1,3 +1,7 @@
+/**
+ * Orders chart layer in the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_LAYER_Z_INDEX,
 	SEAMARK_LAYER_Z_INDEX,

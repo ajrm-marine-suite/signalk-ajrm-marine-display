@@ -1,3 +1,7 @@
+/**
+ * Provides actions for target selection in the AJRM Marine Display browser application.
+ */
+
 import { setAlarmIsMutedPath } from "./target-silence-routes.mjs";
 import { previousSelectedVesselMmsi as selectedBeforeChange } from "./target-selection-state.mjs";
 

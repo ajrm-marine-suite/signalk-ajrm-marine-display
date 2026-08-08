@@ -1,3 +1,7 @@
+/**
+ * Implements the target map renderer single target responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { updateTargetCourseLine } from "./target-course-line-update.mjs";
 import { updateTargetFootprintDisplay } from "./target-footprint-display.mjs";
 import { displayDebugControls } from "./display-debug-controls.mjs";

@@ -1,3 +1,7 @@
+/**
+ * Coordinates app refresh in the AJRM Marine Display browser application.
+ */
+
 import { ingestRawVesselData } from "./target-snapshot-ingest.mjs";
 import {
 	applyConnectionStatusControls,

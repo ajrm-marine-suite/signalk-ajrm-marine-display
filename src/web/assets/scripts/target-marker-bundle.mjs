@@ -1,3 +1,7 @@
+/**
+ * Implements the target marker bundle responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function createTargetMarkerBundle({
 	L,
 	map,

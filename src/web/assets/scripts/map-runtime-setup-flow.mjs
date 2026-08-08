@@ -1,3 +1,7 @@
+/**
+ * Coordinates control flow for map runtime setup in the AJRM Marine Display browser application.
+ */
+
 export {
 	autoChartPosition,
 	createAutoChartPositionGetter,

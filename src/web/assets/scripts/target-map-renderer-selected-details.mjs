@@ -1,3 +1,7 @@
+/**
+ * Implements the target map renderer selected details responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { activateBootstrapTooltips } from "./bootstrap-tooltips.mjs";
 import { renderSelectedVesselDetails } from "./selected-vessel-details.mjs";
 

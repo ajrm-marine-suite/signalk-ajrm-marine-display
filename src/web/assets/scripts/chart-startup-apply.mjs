@@ -1,3 +1,7 @@
+/**
+ * Implements the chart startup apply responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_STARTUP_DIAGNOSTIC_STEPS,
 	chartMapNames,

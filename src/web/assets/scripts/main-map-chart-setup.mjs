@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for main map chart in the AJRM Marine Display browser application.
+ */
+
 import {
 	createConfiguredAutoChartRuntime,
 	createConfiguredMapBasics,

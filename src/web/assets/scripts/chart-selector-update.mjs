@@ -1,3 +1,7 @@
+/**
+ * Updates chart selector in the AJRM Marine Display browser application.
+ */
+
 import {
 	updateBaseLayerInputs,
 	updateOverlayInputs,

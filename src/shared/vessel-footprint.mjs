@@ -1,3 +1,7 @@
+/**
+ * Implements the vessel footprint responsibilities of the AJRM Marine Display.
+ */
+
 export const DEFAULT_GPS_FROM_BOW_FRACTION = 0.75;
 export const DEFAULT_CLASS_A_GPS_FROM_BOW_FRACTION = 0.85;
 export const DEFAULT_BEAM_TO_LENGTH_RATIO = 0.15;

@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for alert popup in the AJRM Marine Display browser application.
+ */
+
 export function alertPopupClass(uiSeverity) {
 	return uiSeverity === "danger" ? "alert-danger" : "alert-warning";
 }

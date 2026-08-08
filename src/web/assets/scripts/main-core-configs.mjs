@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for main core in the AJRM Marine Display browser application.
+ */
+
 import { PLUGIN_ID } from "./app-constants.mjs";
 
 export function setWindowStationaryAutomuteSpeed(window, value = 0.35) {

@@ -1,3 +1,7 @@
+/**
+ * Coordinates profile edit sensitivity in the AJRM Marine Display browser application.
+ */
+
 import {
 	applySensitivityFromControls,
 	resetProfileSensitivity,

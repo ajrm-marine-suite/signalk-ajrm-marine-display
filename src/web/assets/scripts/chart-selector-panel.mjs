@@ -1,3 +1,7 @@
+/**
+ * Implements the chart selector panel responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_BASEMAP_INPUT_NAME,
 	CHART_OVERLAY_INPUT_NAME,

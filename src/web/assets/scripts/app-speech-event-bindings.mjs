@@ -1,3 +1,7 @@
+/**
+ * Binds events for app speech in the AJRM Marine Display browser application.
+ */
+
 import {
 	speechAutomuteControl,
 	speechAudioModeControls,

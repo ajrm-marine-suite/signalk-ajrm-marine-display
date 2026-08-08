@@ -1,3 +1,7 @@
+/**
+ * Renders target map in the AJRM Marine Display browser application.
+ */
+
 import * as L from "leaflet";
 import * as aisIcons from "./ais-icons.mjs";
 import {

@@ -1,3 +1,7 @@
+/**
+ * Implements the speech output save settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { browserSpeechAvailable } from "./browser-speech-state.mjs";
 import {
 	ajrmMarineAuthHeaders,

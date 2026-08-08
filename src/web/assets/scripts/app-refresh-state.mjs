@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for app refresh in the AJRM Marine Display browser application.
+ */
+
 import {
 	connectionHintsUiStateProjection,
 	dataHealthUiStateProjection,

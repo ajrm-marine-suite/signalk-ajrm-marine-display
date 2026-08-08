@@ -1,3 +1,7 @@
+/**
+ * Implements the app core service builder responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	coreFeedbackConfig,
 	coreHttpConfig,

@@ -1,3 +1,7 @@
+/**
+ * Builds setup configuration for target refresh in the AJRM Marine Display browser application.
+ */
+
 import { targetRefreshConfig } from "./target-ui-config.mjs";
 
 export function configuredTargetRefreshConfig({

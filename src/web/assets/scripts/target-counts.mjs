@@ -1,3 +1,7 @@
+/**
+ * Implements the target counts responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { countText } from "./target-counts-state.mjs";
 
 export function renderTargetCounts({

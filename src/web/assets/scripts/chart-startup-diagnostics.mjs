@@ -1,3 +1,7 @@
+/**
+ * Implements the chart startup diagnostics responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	appendChartDiagnosticEntry,
 	safeTimestamp,

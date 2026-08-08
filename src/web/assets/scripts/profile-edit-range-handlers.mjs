@@ -1,3 +1,7 @@
+/**
+ * Handles events for profile edit range in the AJRM Marine Display browser application.
+ */
+
 import {
 	distanceRangeControlState,
 	speedRangeControlState,

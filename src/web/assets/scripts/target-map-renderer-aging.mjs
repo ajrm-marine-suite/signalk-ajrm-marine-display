@@ -1,3 +1,7 @@
+/**
+ * Implements the target map renderer aging responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { ageOutTargets, removeTargetArtifacts } from "./target-aging.mjs";
 import { createSelectedTargetAgedOutHandler } from "./target-map-renderer-actions.mjs";
 

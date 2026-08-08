@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection closeby details responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function showVesselDetailsAfterClosebyChooser({
 	boatMarker,
 	closebyModalElement,

@@ -1,3 +1,7 @@
+/**
+ * Implements the chart controls setup steps responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	applyChartStartupSetupStep,
 	chartControlSetupResult,

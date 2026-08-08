@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for easy button in the AJRM Marine Display browser application.
+ */
+
 function iconHtml(icon) {
 	return `<span class="${String(icon).replaceAll('"', "&quot;")}"></span>`;
 }

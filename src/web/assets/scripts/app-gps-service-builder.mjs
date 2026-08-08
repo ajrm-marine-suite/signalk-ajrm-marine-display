@@ -1,3 +1,7 @@
+/**
+ * Implements the app GPS service builder responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	gpsLossPopupConfig,
 	serverAlertEventsConfig,

@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection details responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function showSelectedVesselDetails({
 	boatMarker,
 	positionModalWindow,

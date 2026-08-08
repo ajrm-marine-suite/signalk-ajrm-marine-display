@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for map runtime in the AJRM Marine Display browser application.
+ */
+
 import {
 	addChartScaleControl,
 	chartScaleControlOptions,

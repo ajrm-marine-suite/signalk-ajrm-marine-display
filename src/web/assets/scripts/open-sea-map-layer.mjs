@@ -1,3 +1,7 @@
+/**
+ * Implements the open sea map layer responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_TILE_MAX_ZOOM,
 	SEAMARK_LAYER_Z_INDEX,

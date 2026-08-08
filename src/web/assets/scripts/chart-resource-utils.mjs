@@ -1,3 +1,7 @@
+/**
+ * Provides utility operations for chart resource in the AJRM Marine Display browser application.
+ */
+
 export {
 	chartBounds,
 	chartBoundsCandidates,

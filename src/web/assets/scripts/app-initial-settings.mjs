@@ -1,3 +1,7 @@
+/**
+ * Implements the app initial settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	speechOutputDefaultsFromServer,
 	storedNotFalse,

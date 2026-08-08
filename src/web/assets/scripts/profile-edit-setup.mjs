@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for profile edit in the AJRM Marine Display browser application.
+ */
+
 import { createProfileEditController } from "./profile-edit-controller.mjs";
 
 function getRequiredElement(id) {

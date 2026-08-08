@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for selected vessel in the AJRM Marine Display browser application.
+ */
+
 export function selectedVesselAlertState(target) {
 	if (target.alarmState === "danger") {
 		return {

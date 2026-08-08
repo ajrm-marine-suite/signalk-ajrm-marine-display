@@ -1,3 +1,7 @@
+/**
+ * Defines the data model for target in the AJRM Marine Display.
+ */
+
 import { applyTargetClassification } from "./target-classification.mjs";
 import { countryForMmsi } from "./mmsi-mid-decoder.mjs";
 

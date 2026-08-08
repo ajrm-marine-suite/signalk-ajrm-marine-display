@@ -1,3 +1,7 @@
+/**
+ * Implements the target presentation responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function targetIconPresentation({ target, selectedVesselMmsi }) {
 	if (target.mmsi === selectedVesselMmsi) {
 		return { color: "blue", isLarge: true };

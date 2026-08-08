@@ -1,3 +1,7 @@
+/**
+ * Implements the map toolbar buttons responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
 import { setMapControlHoverHelp } from "@ajrm-marine/map-core";
 

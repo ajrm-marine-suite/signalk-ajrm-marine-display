@@ -1,3 +1,7 @@
+/**
+ * Calculates geometry for display target in the AJRM Marine Display browser application.
+ */
+
 const EARTH_RADIUS_METRES = 6371000;
 
 import { formatCoordinate } from "./coordinate-format.mjs";

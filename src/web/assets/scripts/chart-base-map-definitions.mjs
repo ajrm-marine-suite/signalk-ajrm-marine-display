@@ -1,3 +1,7 @@
+/**
+ * Defines chart base map in the AJRM Marine Display browser application.
+ */
+
 export const BASE_MAP_LAYER_SPECS = [
 	{
 		name: "Empty",

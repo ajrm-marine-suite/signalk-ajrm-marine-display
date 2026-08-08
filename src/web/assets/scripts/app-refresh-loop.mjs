@@ -1,3 +1,7 @@
+/**
+ * Implements the app refresh loop responsibilities of the AJRM Marine Display browser application.
+ */
+
 export function startAppRefreshLoop({
 	refreshController,
 	intervalMs = 1000,

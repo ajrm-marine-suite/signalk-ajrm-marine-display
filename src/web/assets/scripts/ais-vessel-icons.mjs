@@ -1,3 +1,7 @@
+/**
+ * Implements the AIS vessel icons responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { toDegrees } from "../../../shared/angles.mjs";
 import { createAisDivIcon } from "./ais-icon-utils.mjs";
 

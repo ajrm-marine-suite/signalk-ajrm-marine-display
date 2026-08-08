@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for target support in the AJRM Marine Display browser application.
+ */
+
 import {
 	configuredLabelCollisionConfig,
 	configuredRangeRingsConfig,

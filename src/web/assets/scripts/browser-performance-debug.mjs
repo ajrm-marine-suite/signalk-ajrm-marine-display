@@ -1,3 +1,7 @@
+/**
+ * Implements the browser performance debug responsibilities of the AJRM Marine Display browser application.
+ */
+
 const DEFAULT_INTERVAL_MS = 1000;
 const DEFAULT_EVENT_LOOP_LAG_MS = 250;
 const DEFAULT_FRAME_GAP_MS = 250;

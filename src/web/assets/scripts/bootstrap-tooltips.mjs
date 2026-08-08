@@ -1,3 +1,7 @@
+/**
+ * Implements the bootstrap tooltips responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as bootstrap from "bootstrap";
 
 export function activateBootstrapTooltips({

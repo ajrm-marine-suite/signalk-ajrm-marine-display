@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart control toolbar startup in the AJRM Marine Display browser application.
+ */
+
 import {
 	CHART_CONTROL_DIAGNOSTIC_STEPS,
 	recordChartDiagnostic,

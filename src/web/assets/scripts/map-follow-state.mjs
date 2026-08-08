@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for map follow in the AJRM Marine Display browser application.
+ */
+
 import { DISPLAY_CONTROL_ICONS } from "./display-control-icons.mjs";
 
 export function mapFollowButtonState(following) {

@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for chart controls in the AJRM Marine Display browser application.
+ */
+
 import { resolveConfiguredChartControlInputs } from "./chart-controls-setup-config.mjs";
 import { createChartStartupDiagnostics } from "./chart-startup-diagnostics.mjs";
 import { runConfiguredChartControlSetup } from "./chart-controls-setup-flow.mjs";

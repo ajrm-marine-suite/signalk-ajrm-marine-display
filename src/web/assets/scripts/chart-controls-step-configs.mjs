@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for chart controls step in the AJRM Marine Display browser application.
+ */
+
 export function chartLayerSetupStepConfig({
 	createLayerController,
 	map,

@@ -1,3 +1,7 @@
+/**
+ * Implements the chart startup sequence responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	addStartupOverlay,
 	applyAutoChartsStartup,

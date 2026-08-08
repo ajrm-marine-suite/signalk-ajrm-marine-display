@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for app event binding in the AJRM Marine Display browser application.
+ */
+
 export function chartLayerEventBindingConfig({ map, actions }) {
 	return {
 		map,

@@ -1,3 +1,7 @@
+/**
+ * Implements the chart resource bounds responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { chartBoundsCandidates } from "./chart-resource-bounds-candidates.mjs";
 
 export { chartBoundsSource, rawBoundsValues } from "./chart-resource-bounds-values.mjs";

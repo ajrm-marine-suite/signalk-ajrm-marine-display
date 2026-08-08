@@ -1,3 +1,7 @@
+/**
+ * Implements the target icon resolver responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	AIS_TARGET_KIND_SAR_AIRCRAFT,
 	classifyAisTarget,

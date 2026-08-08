@@ -1,3 +1,7 @@
+/**
+ * Provides services for collision profile in the AJRM Marine Display browser application.
+ */
+
 import {
 	normalizeCollisionProfiles as normalizeCollisionProfilesWithDefaults,
 	normalizeVesselSizeConfig as normalizeVesselSizeConfigWithDefaults,

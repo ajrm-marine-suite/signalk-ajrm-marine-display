@@ -1,3 +1,7 @@
+/**
+ * Implements the target overlays responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as L from "leaflet";
 import {
 	createCpaLimitRingSet,

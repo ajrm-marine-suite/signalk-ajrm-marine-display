@@ -1,3 +1,7 @@
+/**
+ * Implements the target silence requests responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	getTargetsPath,
 	setAlarmIsMutedPath,

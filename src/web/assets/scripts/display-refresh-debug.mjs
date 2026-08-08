@@ -1,3 +1,7 @@
+/**
+ * Implements the display refresh debug responsibilities of the AJRM Marine Display browser application.
+ */
+
 const DEFAULT_HISTORY_LIMIT = 120;
 const DEFAULT_SLOW_REFRESH_MS = 750;
 const DEFAULT_REPORT_INTERVAL_MS = 15000;

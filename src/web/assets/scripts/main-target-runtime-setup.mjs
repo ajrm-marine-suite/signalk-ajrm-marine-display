@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for main target runtime in the AJRM Marine Display browser application.
+ */
+
 import {
 	mainTargetSupportConfig,
 	mainTargetUiCollectionsConfig,

@@ -1,3 +1,7 @@
+/**
+ * Implements the app service builders responsibilities of the AJRM Marine Display browser application.
+ */
+
 export {
 	alertPopupServiceConfig,
 	autoProfileSettingsServiceConfig,

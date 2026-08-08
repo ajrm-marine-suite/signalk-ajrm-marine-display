@@ -1,3 +1,7 @@
+/**
+ * Implements the target selection closeby list click responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { boatMarkerFromClosebyListClick } from "./closeby-boat-list.mjs";
 
 export function selectTargetFromClosebyList({

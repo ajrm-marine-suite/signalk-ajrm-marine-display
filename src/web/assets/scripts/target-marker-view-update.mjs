@@ -1,3 +1,7 @@
+/**
+ * Updates target marker view in the AJRM Marine Display browser application.
+ */
+
 export function updateTargetMarkerView({
 	boatMarker,
 	target,

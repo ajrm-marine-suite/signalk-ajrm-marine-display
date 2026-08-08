@@ -1,3 +1,7 @@
+/**
+ * Owns state and transitions for speech output UI in the AJRM Marine Display browser application.
+ */
+
 import { ajrmMarineAuthHeaders } from "./ajrm-marine-api-access.mjs";
 
 export const SOUND_CHECK_MESSAGE = "Sound Check. Testing 1, 2, 3.";

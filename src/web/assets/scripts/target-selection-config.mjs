@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for target selection in the AJRM Marine Display browser application.
+ */
+
 export function targetSelectionConfig({
 	pluginId,
 	map,

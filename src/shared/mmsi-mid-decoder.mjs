@@ -1,3 +1,7 @@
+/**
+ * Implements the MMSI MID decoder responsibilities of the AJRM Marine Display.
+ */
+
 export const mmsiMidToCountry = new Map([
 	["401", { code: "AF", name: "Afghanistan" }],
 	["201", { code: "AL", name: "Albania" }],

@@ -1,3 +1,7 @@
+/**
+ * Provides actions for chart layer overlay in the AJRM Marine Display browser application.
+ */
+
 export const OPEN_SEA_MAP_OVERLAY_NAME = "OpenSeaMap";
 export const AUTO_CHARTS_OVERLAY_NAME = "Auto Charts";
 export const HARBOUR_LIMITS_OVERLAY_NAME = "Harbour Limits";

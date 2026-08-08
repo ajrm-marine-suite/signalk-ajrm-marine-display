@@ -1,3 +1,7 @@
+/**
+ * Calculates geometry for map in the AJRM Marine Display browser application.
+ */
+
 import { toDegrees, toRadians } from "../../../shared/angles.mjs";
 
 export function projectedLocation(start, bearingRadians, distanceMeters) {

@@ -1,3 +1,7 @@
+/**
+ * Builds view state for speech output in the AJRM Marine Display browser application.
+ */
+
 import { muteButtonState } from "./speech-output-state.mjs";
 
 export function applyMuteButtonState({ mutedControl, muteButton }) {

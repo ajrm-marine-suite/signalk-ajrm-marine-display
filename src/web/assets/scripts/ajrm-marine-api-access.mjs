@@ -1,3 +1,7 @@
+/**
+ * Provides access to AJRM marine API in the AJRM Marine Display browser application.
+ */
+
 const LOGIN_STATUS_URLS = ["/skServer/loginStatus", "/loginStatus"];
 const ACCESS_REQUEST_URL = "/signalk/v1/access/requests";
 const ACCESS_TOKEN_STORAGE_KEY = "ajrmMarine.accessToken";

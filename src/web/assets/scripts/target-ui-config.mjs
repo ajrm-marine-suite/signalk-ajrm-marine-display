@@ -1,3 +1,7 @@
+/**
+ * Builds configuration for target UI in the AJRM Marine Display browser application.
+ */
+
 export { targetRefreshConfig } from "./target-refresh-config.mjs";
 export {
 	targetRendererConfig,

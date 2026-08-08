@@ -1,3 +1,7 @@
+/**
+ * Implements the settings storage keys responsibilities of the AJRM Marine Display browser application.
+ */
+
 export const SETTINGS_STORAGE_KEYS = Object.freeze({
 	autoCharts: "checkAutoCharts",
 	chartCycleShortcut: "chartCycleShortcut",

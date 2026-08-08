@@ -1,3 +1,7 @@
+/**
+ * Implements the self TCPA guide lines responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { projectedLocation } from "./map-geometry.mjs";
 import { criteriaForSize } from "./profile-settings.mjs";
 import {

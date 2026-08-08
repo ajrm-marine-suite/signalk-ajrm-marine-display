@@ -1,3 +1,7 @@
+/**
+ * Implements the alert popup responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	alertPopupClass,
 	alertPopupMessage,

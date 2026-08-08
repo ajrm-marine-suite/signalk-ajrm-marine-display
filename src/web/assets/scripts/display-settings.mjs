@@ -1,3 +1,7 @@
+/**
+ * Implements the display settings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import NoSleep from "nosleep.js";
 import {
 	colorModeState,

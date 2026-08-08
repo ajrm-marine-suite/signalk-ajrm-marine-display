@@ -1,3 +1,7 @@
+/**
+ * Processes profile edit range in the AJRM Marine Display browser application.
+ */
+
 import { applyRangeControlDisplay } from "./profile-edit-view-state.mjs";
 
 export function processProfileRangeControl({

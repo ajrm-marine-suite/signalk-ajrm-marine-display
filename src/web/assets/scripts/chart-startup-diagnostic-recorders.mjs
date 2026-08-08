@@ -1,3 +1,7 @@
+/**
+ * Records diagnostics for chart startup in the AJRM Marine Display browser application.
+ */
+
 export function recordChartDiagnostic(diagnostics, step, details = {}) {
 	try {
 		diagnostics?.record?.(step, details);

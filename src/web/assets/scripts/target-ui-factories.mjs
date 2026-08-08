@@ -1,3 +1,7 @@
+/**
+ * Creates runtime objects for target UI in the AJRM Marine Display browser application.
+ */
+
 import { getRequiredElementByDocument } from "./app-service-factories.mjs";
 import { createConfiguredRefreshController } from "./refresh-controller-setup.mjs";
 import { createTargetMapRenderer } from "./target-map-renderer.mjs";

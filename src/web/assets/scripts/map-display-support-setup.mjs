@@ -1,3 +1,7 @@
+/**
+ * Wires runtime dependencies for map display support in the AJRM Marine Display browser application.
+ */
+
 import { resolveMapDisplaySupportFactories } from "./map-display-support-factories.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 

@@ -1,3 +1,7 @@
+/**
+ * Implements the app profile edit service builder responsibilities of the AJRM Marine Display browser application.
+ */
+
 import {
 	autoProfileSettingsServiceConfig,
 	profileActionSetServiceConfig,

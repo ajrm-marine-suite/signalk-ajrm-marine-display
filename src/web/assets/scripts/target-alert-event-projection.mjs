@@ -1,3 +1,7 @@
+/**
+ * Implements the target alert event projection responsibilities of the AJRM Marine Display browser application.
+ */
+
 import { serverEventToAlarmState } from "./alert-events.mjs";
 
 export function resetTargetAlertDisplayState(target) {

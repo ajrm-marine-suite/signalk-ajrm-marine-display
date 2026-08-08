@@ -1,3 +1,7 @@
+/**
+ * Implements the range rings responsibilities of the AJRM Marine Display browser application.
+ */
+
 import * as L from "leaflet";
 
 export function createRangeRingsController({ map, metersPerNm, leaflet = L }) {
