@@ -78,7 +78,7 @@ test("own-vessel details hide collision-only controls and identify the vessel", 
 	renderSelectedVesselDetails({
 		target: {
 			mmsi: "235900003",
-			name: "Wind Singer",
+			name: "Example Vessel",
 			isValid: true,
 			sogFormatted: "5.0 kn",
 			cogFormatted: "123°",
@@ -93,7 +93,7 @@ test("own-vessel details hide collision-only controls and identify the vessel", 
 	});
 
 	assert.equal(muteUpdates, 0);
-	assert.equal(elements.get("target.name").textContent, "Wind Singer");
+	assert.equal(elements.get("target.name").textContent, "Example Vessel");
 	assert.equal(elements.get("target.sogFormatted").textContent, "5.0 kn");
 	assert.equal(elements.get("selectedVesselOwnBadge").classes.has("d-none"), false);
 	assert.equal(elements.get("selectedVesselAlert").classes.has("d-none"), true);
