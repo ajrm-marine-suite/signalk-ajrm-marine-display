@@ -31,6 +31,8 @@ export function createDisplaySettingsControls(elements = {}, mapControls = {}) {
 		controls.selfIconFillColor = mapControls.selfIconFillColor;
 		controls.selfIconScalePercent = mapControls.selfIconScalePercent;
 		controls.selfIconScaleValue = mapControls.selfIconScaleValue;
+		controls.mapFollowLookAheadPercent = mapControls.mapFollowLookAheadPercent;
+		controls.mapFollowLookAheadValue = mapControls.mapFollowLookAheadValue;
 		controls.selfTcpaGuideMode = mapControls.selfTcpaGuideMode;
 		controls.selfTcpaGuideLargeColor = mapControls.selfTcpaGuideLargeColor;
 		controls.selfTcpaGuideMediumColor = mapControls.selfTcpaGuideMediumColor;

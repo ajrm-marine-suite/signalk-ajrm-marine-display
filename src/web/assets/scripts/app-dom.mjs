@@ -112,6 +112,8 @@ export function createAppDom() {
 		selfIconFillColor: getRequiredElement("colorSelfIconFill"),
 		selfIconScalePercent: getRequiredElement("rangeSelfIconScale"),
 		selfIconScaleValue: getRequiredElement("selfIconScaleValue"),
+		mapFollowLookAheadPercent: getRequiredElement("rangeMapFollowLookAhead"),
+		mapFollowLookAheadValue: getRequiredElement("mapFollowLookAheadValue"),
 		selfTcpaGuideMode: getRequiredElement("selectSelfTcpaGuideMode"),
 		selfTcpaGuideLargeColor: getRequiredElement("colorSelfTcpaGuideLarge"),
 		selfTcpaGuideMediumColor: getRequiredElement("colorSelfTcpaGuideMedium"),

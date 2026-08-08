@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.4
+
+- Shift own-vessel follow along the explicit Signal K COG so 66% of the visible
+  chart is ahead and 34% behind by default.
+- Add a browser setting for 50-80% chart space ahead, shared with DR Plotter.
+- Keep own vessel exactly centred whenever COG is unavailable.
+- Adopt AJRM Marine Map Core 0.7.2 for the common look-ahead calculation.
+
 ## 0.7.3
 
 - Add concise purpose headers to every maintained runtime module so its role is

@@ -2,6 +2,8 @@
  * Implements the target map view refresh responsibilities of the AJRM Marine Display browser application.
  */
 
+import { mapFollowCenterForTarget } from "./map-follow-look-ahead.mjs";
+
 export function refreshMapViewForSelfTarget({
 	selfTarget,
 	map,
@@ -19,7 +21,7 @@ export function refreshMapViewForSelfTarget({
 		if (shouldFollow && !disableMapPanTo) {
 			try {
 				setDisableMoveend(true);
-				map.panTo([selfTarget.latitude, selfTarget.longitude], {
+				map.panTo(mapFollowCenterForTarget({ map, target: selfTarget }), {
 					animate: false,
 				});
 			} finally {

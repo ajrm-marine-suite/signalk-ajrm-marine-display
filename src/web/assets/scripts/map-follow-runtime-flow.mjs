@@ -9,6 +9,7 @@ export function createMapFollowRuntime({
 	autoCharts,
 	getSelfTarget,
 	setDisableMoveend,
+	storage,
 }) {
 	return createMapFollow({
 		easyButton,
@@ -16,5 +17,6 @@ export function createMapFollowRuntime({
 		autoCharts,
 		getSelfTarget,
 		setDisableMoveend,
+		storage,
 	});
 }

@@ -73,6 +73,7 @@ export function createConfiguredAutoChartRuntime({
 		autoCharts,
 		getSelfTarget,
 		setDisableMoveend,
+		storage,
 	});
 
 	return {

@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.3";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.4";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.3</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.4</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1353,6 +1353,28 @@
                         </div>
                       </div>
                       <div class="mb-3">
+                        <div class="d-flex justify-content-between gap-2">
+                          <label class="form-label" for="rangeMapFollowLookAhead">
+                            Chart space ahead while following
+                          </label>
+                          <output id="mapFollowLookAheadValue" for="rangeMapFollowLookAhead">
+                            66% ahead / 34% behind
+                          </output>
+                        </div>
+                        <input
+                          class="form-range"
+                          type="range"
+                          id="rangeMapFollowLookAhead"
+                          min="50"
+                          max="80"
+                          step="1"
+                          value="66"
+                        />
+                        <div class="form-text">
+                          While following, shifts the chart centre ahead along COG so more of the route ahead is visible. At 50% the vessel is centred. If COG is unavailable, the vessel remains centred.
+                        </div>
+                      </div>
+                      <div class="mb-3">
                         <label class="form-label" for="selectSelfTcpaGuideMode">
                           Projected track display
                         </label>
@@ -1481,7 +1503,7 @@
                       <path d="M14.082 2.182a.5.5 0 0 1 .103.557l-5.5 12a.5.5 0 0 1-.95-.084L6.57 9.43 1.345 8.265a.5.5 0 0 1-.084-.95l12-5.5a.5.5 0 0 1 .821.367" />
                     </svg>
                   </span>
-                  <span><strong>Centre vessel:</strong> recentres on own vessel and resumes following.</span>
+                  <span><strong>Centre vessel:</strong> resumes following, with configurable chart space ahead along COG.</span>
                 </li>
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">
@@ -1561,7 +1583,10 @@
                 selection remains through zoom and overzoom, then returns to
                 Automatic after the last chart or when the map centre leaves
                 its coverage. Manual panning pauses following; press centre
-                vessel to follow own vessel again. OpenSeaMap is a transparent
+                vessel to follow own vessel again. By default, following keeps
+                66% of the visible chart ahead along COG and 34% behind; adjust
+                this under Settings &gt; Own-vessel appearance. Without COG the
+                vessel is centred. OpenSeaMap is a transparent
                 seamark overlay and is kept above chart tiles. Expand
                 <strong>Chart folders</strong> beneath Auto Charts to enable or
                 disable complete Charts Provider Simple directory trees; nested

@@ -2,6 +2,8 @@
  * Provides actions for map follow in the AJRM Marine Display browser application.
  */
 
+import { mapFollowCenterForTarget } from "./map-follow-look-ahead.mjs";
+
 export function recenterOnSelfTarget({
 	map,
 	buttonMap,
@@ -9,6 +11,7 @@ export function recenterOnSelfTarget({
 	getSelfTarget,
 	setDisableMoveend,
 	setMapFollowSelf,
+	getLookAheadPercent,
 }) {
 	const selfTarget = getSelfTarget();
 	if (!selfTarget?.isValid) return;
@@ -16,7 +19,12 @@ export function recenterOnSelfTarget({
 	try {
 		setMapFollowSelf(true);
 		setDisableMoveend(true);
-		(buttonMap || map).panTo([selfTarget.latitude, selfTarget.longitude], {
+		const activeMap = buttonMap || map;
+		activeMap.panTo(mapFollowCenterForTarget({
+			map: activeMap,
+			target: selfTarget,
+			lookAheadPercent: getLookAheadPercent?.(),
+		}), {
 			animate: false,
 		});
 		autoCharts.update();

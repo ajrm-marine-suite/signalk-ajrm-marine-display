@@ -10,6 +10,10 @@ import {
 } from "./display-settings-state.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 import {
+	loadMapFollowLookAheadPercent,
+	saveMapFollowLookAheadPercent,
+} from "./map-follow-look-ahead.mjs";
+import {
 	loadSelfTcpaGuideSettings,
 	saveSelfTcpaGuideSettings,
 } from "./self-tcpa-guide-settings.mjs";
@@ -31,6 +35,7 @@ export function createDisplaySettingsController({
 		);
 		configureNoSleep();
 		applySelfTcpaGuideSettings();
+		applyMapFollowLookAheadSetting();
 		applyColorMode();
 		controls.noSleep.addEventListener("change", configureNoSleep);
 		controls.darkMode.addEventListener("change", applyColorMode);
@@ -40,6 +45,10 @@ export function createDisplaySettingsController({
 		controls.selfIconScalePercent?.addEventListener(
 			"input",
 			saveSelfTcpaGuideControls,
+		);
+		controls.mapFollowLookAheadPercent?.addEventListener(
+			"input",
+			saveMapFollowLookAheadControl,
 		);
 		controls.fullScreen.addEventListener("change", toggleFullscreen);
 		document.addEventListener("fullscreenchange", fullscreenchangeHandler);
@@ -101,6 +110,22 @@ export function createDisplaySettingsController({
 		updateSelfIconScaleLabel(settings.selfIconScalePercent);
 	}
 
+	function applyMapFollowLookAheadSetting() {
+		if (!controls.mapFollowLookAheadPercent) return;
+		const value = loadMapFollowLookAheadPercent();
+		controls.mapFollowLookAheadPercent.value = String(value);
+		updateMapFollowLookAheadLabel(value);
+	}
+
+	function saveMapFollowLookAheadControl() {
+		if (!controls.mapFollowLookAheadPercent) return;
+		const value = saveMapFollowLookAheadPercent(
+			controls.mapFollowLookAheadPercent.value,
+		);
+		controls.mapFollowLookAheadPercent.value = String(value);
+		updateMapFollowLookAheadLabel(value);
+	}
+
 	function selfTcpaGuideControls() {
 		return [
 			controls.selfIconVariant,
@@ -117,6 +142,12 @@ export function createDisplaySettingsController({
 	function updateSelfIconScaleLabel(value) {
 		if (controls.selfIconScaleValue) {
 			controls.selfIconScaleValue.textContent = `${value}%`;
+		}
+	}
+
+	function updateMapFollowLookAheadLabel(value) {
+		if (controls.mapFollowLookAheadValue) {
+			controls.mapFollowLookAheadValue.textContent = `${value}% ahead / ${100 - value}% behind`;
 		}
 	}
 
@@ -137,11 +168,13 @@ export function createDisplaySettingsController({
 
 	return {
 		applyColorMode,
+		applyMapFollowLookAheadSetting,
 		applySelfTcpaGuideSettings,
 		configureNoSleep,
 		fullscreenchangeHandler,
 		init,
 		saveSelfTcpaGuideControls,
+		saveMapFollowLookAheadControl,
 		toggleFullscreen,
 	};
 }

@@ -46,3 +46,24 @@ test("refreshMapViewForSelfTarget clears range rings when debug control disables
 		["updateHarbourDisplay"],
 	]);
 });
+
+test("refreshMapViewForSelfTarget uses COG look-ahead while following", () => {
+	const { args, calls } = setup();
+	args.shouldFollow = true;
+	args.selfTarget.cog = 0;
+	args.map = {
+		getSize: () => ({ x: 1000, y: 600 }),
+		getZoom: () => 12,
+		project: () => ({ x: 5000, y: 4000 }),
+		unproject: (point) => point,
+		panTo: (...values) => calls.push(["panTo", values]),
+	};
+
+	refreshMapViewForSelfTarget(args);
+
+	assert.deepEqual(calls.slice(0, 3), [
+		["setDisableMoveend", true],
+		["panTo", [{ x: 5000, y: 3904 }, { animate: false }]],
+		["setDisableMoveend", false],
+	]);
+});

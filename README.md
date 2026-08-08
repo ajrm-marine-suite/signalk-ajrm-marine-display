@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.7.4` improves own-vessel following by leaving 66% of the visible
+chart ahead along COG and 34% behind by default. The browser-local setting can
+be adjusted from 50-80% and is shared with DR Plotter. If COG is unavailable,
+the vessel stays centred.
+
 Version `0.7.0` is the reviewed Signal K contract baseline. Display now sends
 Traffic, Notifications and Audio controls directly to their authoritative
 plugins, authenticates every mutation, documents every registered route in
@@ -247,7 +252,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - A visible Cycle chart button and configurable browser-local shortcut for
   choosing among overlapping charts without changing other Display clients.
 - OpenSeaMap seamarks.
-- Own-vessel follow/recentre and manual chart browsing.
+- Own-vessel follow/recentre with configurable COG look-ahead, plus manual
+  chart browsing.
 - Evidence-backed Class A/Class B AIS vessel symbols, an explicit unknown-class
   symbol, and base-station, AtoN and special-safety target symbols.
 - Browser-local own-vessel icon style, heading/COG direction, colour, and

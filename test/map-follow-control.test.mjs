@@ -29,13 +29,14 @@ function fakeEasyButtonFactory() {
 	};
 }
 
-function setup({ selfTarget } = {}) {
+function setup({ selfTarget, mapOverrides = {}, storage } = {}) {
 	const easyButtons = fakeEasyButtonFactory();
 	const map = {
 		pans: [],
 		panTo(position, options) {
 			this.pans.push({ position, options });
 		},
+		...mapOverrides,
 	};
 	const autoCharts = {
 		updates: 0,
@@ -52,6 +53,7 @@ function setup({ selfTarget } = {}) {
 		setDisableMoveend: (value) => {
 			disableMoveendValues.push(value);
 		},
+		storage,
 	});
 	return { autoCharts, controller, disableMoveendValues, easyButtons, map };
 }
@@ -73,6 +75,31 @@ test("map follow control starts in following state and can show paused state", (
 	assert.equal(button.attributes["data-ajrm-map-help"], "Follow paused. Click to centre own vessel");
 	assert.match(button.innerHTML, /ajrm-marine-control-icon/);
 	assert.match(button.innerHTML, /Paused/);
+});
+
+test("clicking follow applies the configured COG look-ahead", () => {
+	const values = new Map([["ajrmMarineMapFollowLookAheadPercent", "66"]]);
+	const { easyButtons, map } = setup({
+		selfTarget: {
+			isValid: true,
+			latitude: 53.75,
+			longitude: -4.7,
+			cog: Math.PI / 2,
+		},
+		storage: { getItem: (key) => values.get(key) ?? null },
+		mapOverrides: {
+			getSize: () => ({ x: 1000, y: 600 }),
+			getZoom: () => 12,
+			project: () => ({ x: 5000, y: 4000 }),
+			unproject: (point) => point,
+		},
+	});
+
+	easyButtons.buttons[0].action(null, map);
+
+	assert.equal(map.pans.length, 1);
+	assert.ok(Math.abs(map.pans[0].position.x - 5160) < 1e-9);
+	assert.ok(Math.abs(map.pans[0].position.y - 4000) < 1e-9);
 });
 
 test("clicking follow recentres on valid own vessel and refreshes auto charts", () => {

@@ -3,6 +3,7 @@
  */
 
 import { recenterOnSelfTarget } from "./map-follow-action.mjs";
+import { loadMapFollowLookAheadPercent } from "./map-follow-look-ahead.mjs";
 import { mapFollowButtonState } from "./map-follow-state.mjs";
 import { setMapControlHoverHelp } from "@ajrm-marine/map-core";
 
@@ -12,6 +13,7 @@ export function createMapFollowController({
 	autoCharts,
 	getSelfTarget,
 	setDisableMoveend,
+	storage = globalThis.localStorage,
 }) {
 	let mapFollowSelf = true;
 	let centerVesselButton;
@@ -40,6 +42,7 @@ export function createMapFollowController({
 			getSelfTarget,
 			setDisableMoveend,
 			setMapFollowSelf,
+			getLookAheadPercent: () => loadMapFollowLookAheadPercent(storage),
 		});
 	}).addTo(map);
 	updateMapFollowButton();
