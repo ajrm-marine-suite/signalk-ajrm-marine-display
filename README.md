@@ -1,5 +1,9 @@
 # AJRM Marine Display
 
+Version `0.7.6` disables chart cycling, including its keyboard shortcut, while
+Auto Charts is off. This keeps the control state consistent across all AJRM
+chart applications and prevents an irrelevant chart-name banner.
+
 Version `0.7.5` moves **Drop Anchor** into the Profiles menu. It selects
 Traffic's Anchored profile, records the current own-vessel position and depth
 below keel, and places a persistent labelled anchor symbol on the chart.

@@ -79,6 +79,7 @@ export function createChartToolbarSetupStep({
 	easyButton,
 	offcanvas,
 	document,
+	autoCharts,
 	diagnostics,
 }) {
 	createChartToolbarWithDiagnostics({
@@ -87,6 +88,7 @@ export function createChartToolbarSetupStep({
 		easyButton,
 		offcanvas,
 		document,
+		autoCharts,
 		diagnostics,
 	});
 }

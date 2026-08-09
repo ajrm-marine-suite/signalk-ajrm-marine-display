@@ -32,6 +32,8 @@ test("chart cycle shortcut is browser-local and ignored while typing", () => {
 		},
 	};
 	const button = {
+		disabled: false,
+		setAttribute() {},
 		addEventListener(type, listener) {
 			listeners[`button:${type}`] = listener;
 		},
@@ -43,6 +45,7 @@ test("chart cycle shortcut is browser-local and ignored while typing", () => {
 	let cycles = 0;
 	const controls = createChartCycleControls({
 		autoCharts: {
+			enabled: true,
 			cycleChart() {
 				cycles += 1;
 				return { mode: "manual", chart: { name: "Test" }, index: 1, total: 1 };
@@ -87,4 +90,40 @@ test("chart cycle shortcut is browser-local and ignored while typing", () => {
 	assert.equal(controls.shortcut, "Z");
 	assert.equal(stored.get("chartCycleShortcut"), "Z");
 	assert.equal(normalizeChartCycleShortcut(""), "C");
+});
+
+test("chart cycle mouse and keyboard controls are disabled with Auto Charts", () => {
+	const listeners = {};
+	let enabledListener;
+	let cycles = 0;
+	let prevented = false;
+	const button = {
+		disabled: false,
+		setAttribute() {},
+		addEventListener(type, listener) { listeners[type] = listener; },
+	};
+	const autoCharts = {
+		enabled: false,
+		cycleChart() { cycles += 1; return { mode: "manual", chart: { name: "Test" } }; },
+		onEnabledChange(listener) { enabledListener = listener; listener(this.enabled); },
+	};
+	const controls = createChartCycleControls({
+		autoCharts,
+		button,
+		document: { addEventListener: (_type, listener) => { listeners.keydown = listener; } },
+		storage: { getItem: () => "c" },
+	});
+	controls.init();
+	assert.equal(button.disabled, true);
+	listeners.click();
+	listeners.keydown({ key: "c", target: { tagName: "DIV" }, preventDefault: () => { prevented = true; } });
+	assert.equal(cycles, 0);
+	assert.equal(prevented, false);
+
+	autoCharts.enabled = true;
+	enabledListener(true);
+	assert.equal(button.disabled, false);
+	listeners.keydown({ key: "c", target: { tagName: "DIV" }, preventDefault: () => { prevented = true; } });
+	assert.equal(cycles, 1);
+	assert.equal(prevented, true);
 });

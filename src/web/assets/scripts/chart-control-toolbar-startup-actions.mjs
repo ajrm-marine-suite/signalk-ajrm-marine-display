@@ -13,6 +13,7 @@ export function createChartToolbarWithDiagnostics({
 	easyButton,
 	offcanvas,
 	document,
+	autoCharts,
 	diagnostics,
 }) {
 	createConfiguredChartToolbar({
@@ -21,6 +22,7 @@ export function createChartToolbarWithDiagnostics({
 		easyButton,
 		offcanvas,
 		document,
+		autoCharts,
 	});
 	recordChartDiagnostic(
 		diagnostics,
@@ -34,8 +36,9 @@ export function createConfiguredChartToolbar({
 	easyButton,
 	offcanvas,
 	document,
+	autoCharts,
 }) {
-	createToolbar({ map, easyButton, offcanvas, document });
+	createToolbar({ map, easyButton, offcanvas, autoCharts, document });
 }
 
 export function applyChartStartupWithDiagnostics({

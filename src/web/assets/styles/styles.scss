@@ -299,6 +299,12 @@ button.easy-button-button .button-state {
   min-height: 24px;
 }
 
+button.easy-button-button:disabled,
+button.easy-button-button.leaflet-disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
 .leaflet-touch .leaflet-control-layers-toggle {
   background-image: unset;
   width: 45px;

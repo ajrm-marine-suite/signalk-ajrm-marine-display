@@ -58,6 +58,7 @@ export function createMapToolbarButtons({
 	map,
 	easyButton,
 	offcanvas,
+	autoCharts,
 	document = globalThis.document,
 }) {
 	const buttons = mapToolbarButtonSpecs({ offcanvas, document }).map((spec) => {
@@ -65,6 +66,18 @@ export function createMapToolbarButtons({
 		setMapControlHoverHelp(control?.button, spec.title);
 		return control;
 	});
+	const cycleControl = buttons[0];
+	const syncCycleButton = (enabled = autoCharts?.enabled !== false) => {
+		if (!cycleControl?.button) return;
+		cycleControl.button.disabled = !enabled;
+		cycleControl.button.classList?.toggle("leaflet-disabled", !enabled);
+		setMapControlHoverHelp(
+			cycleControl.button,
+			enabled ? "Cycle chart" : "Turn on Auto Charts to cycle charts",
+		);
+	};
+	autoCharts?.onEnabledChange?.(syncCycleButton);
+	syncCycleButton();
 
 	return { buttons };
 }

@@ -112,3 +112,29 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 		],
 	);
 });
+
+test("map toolbar disables its chart-cycle button with Auto Charts", () => {
+	let enabledListener;
+	const controls = [];
+	const autoCharts = {
+		enabled: false,
+		onEnabledChange(listener) { enabledListener = listener; listener(this.enabled); },
+	};
+	createMapToolbarButtons({
+		map: {},
+		easyButton: () => {
+			const control = {
+				button: { classList: { toggle() {} }, setAttribute() {}, removeAttribute() {} },
+				addTo() { return this; },
+			};
+			controls.push(control);
+			return control;
+		},
+		offcanvas: {},
+		autoCharts,
+		document: { getElementById: () => null },
+	});
+	assert.equal(controls[0].button.disabled, true);
+	enabledListener(true);
+	assert.equal(controls[0].button.disabled, false);
+});

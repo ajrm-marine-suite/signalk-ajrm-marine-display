@@ -86,6 +86,7 @@ export function runChartControlSetupSteps({
 			easyButton,
 			offcanvas,
 			document,
+			autoCharts,
 			diagnostics,
 		}),
 	);

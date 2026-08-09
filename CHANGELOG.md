@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.6
+
+- Disable the chart-cycle toolbar button and keyboard shortcut whenever Auto
+  Charts is off, without displaying a misleading chart-cycle banner.
+
 ## 0.7.5
 
 - Move Drop Anchor into Display's Profiles menu and select Traffic's Anchored

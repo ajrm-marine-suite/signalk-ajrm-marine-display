@@ -60,6 +60,7 @@ export function chartToolbarSetupStepConfig({
 	easyButton,
 	offcanvas,
 	document,
+	autoCharts,
 	diagnostics,
 }) {
 	return {
@@ -68,6 +69,7 @@ export function chartToolbarSetupStepConfig({
 		easyButton,
 		offcanvas,
 		document,
+		autoCharts,
 		diagnostics,
 	};
 }

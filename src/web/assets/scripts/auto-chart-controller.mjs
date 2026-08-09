@@ -28,6 +28,7 @@ export function createAutoChartController({
 	storage = globalThis.localStorage,
 }) {
 	let enabled = true;
+	const enabledListeners = new Set();
 	const chartList = createAutoChartList(charts);
 	const chartCycle = createChartCycleState();
 	const { group, layerState, makeChartLayer } =
@@ -120,6 +121,7 @@ export function createAutoChartController({
 			storageKey: SETTINGS_STORAGE_KEYS.autoCharts,
 			update,
 		});
+		for (const listener of enabledListeners) listener(enabled);
 	}
 
 	return {
@@ -127,6 +129,11 @@ export function createAutoChartController({
 		cycleChart,
 		ensureVisible,
 		keepOnTop,
+		onEnabledChange(listener) {
+			enabledListeners.add(listener);
+			listener(enabled);
+			return () => enabledListeners.delete(listener);
+		},
 		refreshCharts,
 		resetFallback,
 		toggle,

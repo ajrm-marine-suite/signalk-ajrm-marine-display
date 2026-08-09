@@ -26,6 +26,15 @@ export function createChartCycleControls({
 	);
 	let hideTimer = null;
 
+	function syncEnabled(enabled = autoCharts?.enabled !== false) {
+		if (!button) return;
+		button.disabled = !enabled;
+		button.setAttribute?.(
+			"aria-label",
+			enabled ? "Cycle overlapping charts" : "Turn on Auto Charts to cycle charts",
+		);
+	}
+
 	function showStatus(message) {
 		if (!statusElement) return;
 		statusElement.textContent = message;
@@ -35,6 +44,7 @@ export function createChartCycleControls({
 	}
 
 	function cycle() {
+		if (autoCharts?.enabled === false) return null;
 		const result = autoCharts?.cycleChart?.() ?? null;
 		showStatus(chartCycleResultMessage(result));
 		return result;
@@ -48,8 +58,8 @@ export function createChartCycleControls({
 
 	function keydownHandler(event) {
 		if (!isChartCycleShortcutEvent(event, storage)) return;
+		if (!cycle()) return;
 		event.preventDefault?.();
-		cycle();
 	}
 
 	function init() {
@@ -59,6 +69,8 @@ export function createChartCycleControls({
 		}
 		button?.addEventListener("click", cycle);
 		document?.addEventListener?.("keydown", keydownHandler);
+		autoCharts?.onEnabledChange?.(syncEnabled);
+		syncEnabled();
 	}
 
 	return {
@@ -67,6 +79,7 @@ export function createChartCycleControls({
 		keydownHandler,
 		saveShortcut,
 		showStatus,
+		syncEnabled,
 		get shortcut() {
 			return shortcut;
 		},

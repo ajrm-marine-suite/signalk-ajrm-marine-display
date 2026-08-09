@@ -406,6 +406,7 @@ test("chart setup config helpers keep step argument bundles explicit", () => {
 			easyButton: { name: "easy" },
 			offcanvas: { name: "offcanvas" },
 			document: { name: "document" },
+			autoCharts: common.autoCharts,
 			diagnostics: common.diagnostics,
 		}),
 		{
@@ -414,6 +415,7 @@ test("chart setup config helpers keep step argument bundles explicit", () => {
 			easyButton: { name: "easy" },
 			offcanvas: { name: "offcanvas" },
 			document: { name: "document" },
+			autoCharts: common.autoCharts,
 			diagnostics: common.diagnostics,
 		},
 	);
