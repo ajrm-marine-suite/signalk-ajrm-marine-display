@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.8
+
+- Darken the retained last-fix own-vessel marker so it remains clearly visible
+  over detailed chart artwork while preserving the red no-GPS cross.
+- Persist the last valid live own-vessel fix in browser storage so the marked
+  position survives a hard refresh during GPS loss; replay fixes are excluded.
+
 ## 0.7.7
 
 - Retain own vessel at its last valid live position when Signal K keeps the

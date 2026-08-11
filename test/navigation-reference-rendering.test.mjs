@@ -101,7 +101,7 @@ test("heading-oriented own icon becomes neutral when heading and COG are unavail
 	assert.match(icon.options.html, /<circle/);
 });
 
-test("stale own-vessel icon keeps its last direction and uses grey styling", () => {
+test("stale own-vessel icon keeps its last direction and uses dark grey styling", () => {
 	const icon = getSelfIcon(
 		{
 			isStale: true,
@@ -114,8 +114,8 @@ test("stale own-vessel icon keeps its last direction and uses grey styling", () 
 	);
 
 	assert.match(icon.options.html, /rotate\(90 /);
-	assert.match(icon.options.html, /fill="#9ca3af"/);
-	assert.match(icon.options.html, /stroke="#6b7280"/);
+	assert.match(icon.options.html, /fill="#374151"/);
+	assert.match(icon.options.html, /stroke="#111827"/);
 	assert.match(icon.options.html, /stroke="#dc2626"/);
 	assert.doesNotMatch(icon.options.html, /fill="#ff00ff"/);
 });

@@ -43,6 +43,7 @@ export function createAppRefreshController({
 	publishUiState = publishUiStateToWindow,
 	projectionFallbackEnabled = defaultProjectionFallbackEnabled,
 	refreshDebug = createDisplayRefreshDebug(),
+	lastFixStorage = globalThis.localStorage,
 }) {
 	let lastAlarmTime;
 	let lastSuccessfulConnectionAt = null;
@@ -91,6 +92,8 @@ export function createAppRefreshController({
 					targetMaxAge,
 					selfMmsi: getSelfMmsi(),
 					removeMissing: replayStatus.active === true,
+					lastFixStorage,
+					storedSelfFixEnabled: replayStatus.active !== true,
 				}),
 			);
 			if (removedMmsis.length > 0) {

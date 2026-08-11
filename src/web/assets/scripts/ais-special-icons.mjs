@@ -85,7 +85,7 @@ export function getSelfIcon(
 	const headingDegrees = toDegrees(resolveSelfIconDirection(target, orientation));
 	const hasDirection = Number.isFinite(headingDegrees);
 	const stale = target?.isStale === true || target?.isLost === true;
-	const displayFillColor = stale ? "#9ca3af" : fillColor;
+	const displayFillColor = stale ? "#374151" : fillColor;
 	const displayVariant =
 		hasDirection || !DIRECTIONAL_SELF_ICON_VARIANTS.has(variant)
 			? variant
@@ -120,7 +120,7 @@ export function getSelfIcon(
         <g
             fill-opacity=0
             stroke-width=${strokeWidth}
-            stroke="${stale ? "#6b7280" : "gray"}"
+			stroke="${stale ? "#111827" : "gray"}"
             stroke-opacity=1
 		>
 			${shape}

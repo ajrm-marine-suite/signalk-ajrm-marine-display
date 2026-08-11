@@ -1,7 +1,11 @@
 # AJRM Marine Display
 
-Version `0.7.7` restores last-known-position display after live GPS loss and
-adds an unmistakable stale-fix marker. Version `0.7.6` disables chart cycling,
+Version `0.7.8` makes the retained live GPS last-fix vessel marker substantially
+darker against chart artwork and retains it across a hard browser refresh.
+Replay positions are not written to that live last-fix cache. Version `0.7.7`
+restores last-known-position display after live GPS loss and adds an
+unmistakable stale-fix marker. Version
+`0.7.6` disables chart cycling,
 including its keyboard shortcut, while
 Auto Charts is off. This keeps the control state consistent across all AJRM
 chart applications and prevents an irrelevant chart-name banner.
@@ -116,7 +120,7 @@ AJRM Marine Capture so a replay can restore the same route timeline.
 
 Version `0.7.7` restores last-fix retention for the live Signal K GPS-loss shape
 where the own-vessel context remains but `navigation.position` becomes null or
-is removed. Display keeps the chart at the last fix and leaves a dimmed grey
+is removed. Display keeps the chart at the last fix and leaves a dark-grey
 own-vessel icon there with a red cross and **LAST FIX — NO GPS** tooltip. SOG,
 COG, heading and course projection are cleared so the retained marker cannot be
 mistaken for a continuing position estimate. The older stale/absent-context
