@@ -22,11 +22,24 @@ export function ingestRawVesselData({
 		const vessel = vessels[vesselId];
 		const targetId = vesselTargetId(vessel, vesselId);
 		const previous = targets.get(targetId);
-		const target = applySnapshotToTarget(
+		let target = applySnapshotToTarget(
 			previous ? { ...previous } : createTarget(targetId),
 			vessel,
 			vesselId,
 		);
+		if (targetId === selfMmsi && !hasPosition(target) && hasPosition(previous)) {
+			target = staleSelfTarget({
+				...target,
+				latitude: previous.latitude,
+				longitude: previous.longitude,
+				lastSeenDate: previous.lastSeenDate,
+				lastKnownCog: previous.lastKnownCog,
+				lastKnownHdg: previous.lastKnownHdg,
+			});
+			targets.set(targetId, target);
+			freshMmsis.add(targetId);
+			continue;
+		}
 
 		const lastSeen = Math.round((Date.now() - target.lastSeenDate) / 1000);
 		if (lastSeen >= targetMaxAge) {
@@ -41,6 +54,14 @@ export function ingestRawVesselData({
 		freshMmsis.add(target.mmsi);
 		if (target.mmsi === selfMmsi) rememberSelfDirection(target, previous);
 		targets.set(target.mmsi, target);
+	}
+	if (
+		selfMmsi &&
+		!freshMmsis.has(selfMmsi) &&
+		hasPosition(targets.get(selfMmsi))
+	) {
+		targets.set(selfMmsi, staleSelfTarget(targets.get(selfMmsi)));
+		freshMmsis.add(selfMmsi);
 	}
 
 	if (removeMissing) {

@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.7
+
+- Retain own vessel at its last valid live position when Signal K keeps the
+  self context but clears `navigation.position` after GPS loss.
+- Keep the chart at that last fix, clear motion/course projection, dim the
+  marker, and add an explicit red cross plus **LAST FIX — NO GPS** tooltip.
+- Add regression coverage for the live null-position snapshot shape.
+
 ## 0.7.6
 
 - Disable the chart-cycle toolbar button and keyboard shortcut whenever Auto

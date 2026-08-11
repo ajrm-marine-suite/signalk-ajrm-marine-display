@@ -144,6 +144,90 @@ test("replay cleanup retains own vessel at its last position and removes other t
 	assert.equal(targets.has("235900010"), false);
 });
 
+test("live GPS loss retains the last fix when the own-vessel context remains", () => {
+	const timestamp = new Date().toISOString();
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.21616, longitude: -5.56725 },
+						timestamp,
+					},
+					courseOverGroundTrue: { value: Math.PI / 2 },
+					headingTrue: { value: Math.PI / 3 },
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+	});
+
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				name: { value: "Example Yacht" },
+				navigation: {
+					position: { value: null },
+					speedOverGround: { value: null },
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+	});
+
+	const self = targets.get("self");
+	assert.equal(self.name, "Example Yacht");
+	assert.equal(self.latitude, 56.21616);
+	assert.equal(self.longitude, -5.56725);
+	assert.equal(self.lastSeenDate.toISOString(), timestamp);
+	assert.equal(self.isStale, true);
+	assert.equal(self.isLost, true);
+	assert.equal(self.sog, undefined);
+	assert.equal(self.cog, undefined);
+	assert.equal(self.hdg, undefined);
+	assert.equal(self.lastKnownCog, Math.PI / 2);
+	assert.equal(self.lastKnownHdg, Math.PI / 3);
+});
+
+test("live GPS loss retains the last fix when the own-vessel context disappears", () => {
+	const timestamp = new Date().toISOString();
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.21616, longitude: -5.56725 },
+						timestamp,
+					},
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+	});
+
+	ingestRawVesselData({
+		vessels: {},
+		targets,
+		targetMaxAge: 30,
+		selfMmsi: "self",
+		removeMissing: false,
+	});
+
+	const self = targets.get("self");
+	assert.equal(self.latitude, 56.21616);
+	assert.equal(self.longitude, -5.56725);
+	assert.equal(self.isStale, true);
+	assert.equal(self.isLost, true);
+});
+
 test("a fresh Display page can render a stale Signal K own-vessel position", () => {
 	const targets = new Map();
 	ingestRawVesselData({

@@ -105,6 +105,15 @@ export function getSelfIcon(
 		strokeWidth,
 		variant: displayVariant,
 	});
+	const staleOverlay = stale
+		? `<path
+			d="M7,7 L${baseBoxSize - 7},${baseBoxSize - 7} M${baseBoxSize - 7},7 L7,${baseBoxSize - 7}"
+			stroke="#dc2626"
+			stroke-width="3"
+			stroke-linecap="round"
+			fill="none"
+		/>`
+		: "";
 
 	const SVGIcon = `
     <svg width="${boxSize}px" height="${boxSize}px" viewBox="0 0 ${baseBoxSize} ${baseBoxSize}" pointerEvents="none">
@@ -113,10 +122,11 @@ export function getSelfIcon(
             stroke-width=${strokeWidth}
             stroke="${stale ? "#6b7280" : "gray"}"
             stroke-opacity=1
-        >
-            ${shape}
-        </g>
-    </svg>`;
+		>
+			${shape}
+		</g>
+		${staleOverlay}
+	</svg>`;
 
 	return createAisDivIcon({ html: SVGIcon, boxSize });
 }

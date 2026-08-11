@@ -1,7 +1,11 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { targetIconPresentation } from "../src/web/assets/scripts/target-presentation.mjs";
+import {
+	targetIconPresentation,
+	targetTooltipHtml,
+	targetTooltipSignature,
+} from "../src/web/assets/scripts/target-presentation.mjs";
 
 test("targetIconPresentation keeps normal other vessels black", () => {
 	assert.deepEqual(
@@ -11,6 +15,18 @@ test("targetIconPresentation keeps normal other vessels black", () => {
 		}),
 		{ color: "black", isLarge: false },
 	);
+});
+
+test("stale own-vessel tooltip identifies a last fix rather than a current position", () => {
+	const target = {
+		name: "Example Yacht",
+		isLost: true,
+		sogFormatted: "---",
+		cpaFormatted: "---",
+		tcpaFormatted: "---",
+	};
+	assert.match(targetTooltipHtml(target), /LAST FIX — NO GPS/);
+	assert.match(targetTooltipSignature(target), /last-fix/);
 });
 
 test("targetIconPresentation keeps selected and alert vessels prominent", () => {

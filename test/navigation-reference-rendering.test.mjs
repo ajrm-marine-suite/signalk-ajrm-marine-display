@@ -116,6 +116,7 @@ test("stale own-vessel icon keeps its last direction and uses grey styling", () 
 	assert.match(icon.options.html, /rotate\(90 /);
 	assert.match(icon.options.html, /fill="#9ca3af"/);
 	assert.match(icon.options.html, /stroke="#6b7280"/);
+	assert.match(icon.options.html, /stroke="#dc2626"/);
 	assert.doesNotMatch(icon.options.html, /fill="#ff00ff"/);
 });
 

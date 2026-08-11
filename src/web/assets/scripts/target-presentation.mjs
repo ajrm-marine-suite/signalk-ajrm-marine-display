@@ -16,7 +16,10 @@ export function targetIconPresentation({ target, selectedVesselMmsi }) {
 }
 
 export function targetTooltipHtml(target) {
-	let tooltipText = `${target.name}${target.alarmIsMuted ? ' <span class="badge text-bg-secondary">Silenced</span>' : ""}<br/>`;
+	const lastFixBadge = target.isStale || target.isLost
+		? ' <span class="badge text-bg-danger">LAST FIX — NO GPS</span>'
+		: "";
+	let tooltipText = `${target.name}${lastFixBadge}${target.alarmIsMuted ? ' <span class="badge text-bg-secondary">Silenced</span>' : ""}<br/>`;
 	if (target.sog > 0.1) {
 		tooltipText += `${target.sogFormatted} `;
 	}
@@ -35,6 +38,7 @@ export function targetTooltipSignature(target) {
 	const showTcpa = target.tcpa > 0 && target.tcpa < 3600;
 	return [
 		target.name || "",
+		target.isStale || target.isLost ? "last-fix" : "current-fix",
 		target.alarmIsMuted ? "1" : "0",
 		showSog ? target.sogFormatted || "" : "",
 		showCpa ? target.cpaFormatted || "" : "",
