@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.7.9
+
+- Add an explicit transient route-selection runtime contract for Simulator GPX routes.
+- Keep Simulator-selected routes out of saved Signal K resources until explicitly saved.
+
 ## 0.7.8
 
 - Darken the retained last-fix own-vessel marker so it remains clearly visible

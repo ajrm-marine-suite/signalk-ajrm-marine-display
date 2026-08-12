@@ -125,6 +125,18 @@ function createRouteManager({
     });
   }
 
+  async function openExternal({ resource, fileName = null, source = "external" } = {}) {
+    return setActive({
+      resourceId: null,
+      resource: normalizeRouteResource(resource),
+      fileName,
+      source,
+      routeIndex: 0,
+      routeCount: 1,
+      reversed: false,
+    });
+  }
+
   async function reverse() {
     if (!active) throw new Error("Open a route before reversing it");
     active = {
@@ -293,6 +305,7 @@ function createRouteManager({
     init,
     list,
     listPiFiles,
+    openExternal,
     openPi,
     openResource,
     restore,

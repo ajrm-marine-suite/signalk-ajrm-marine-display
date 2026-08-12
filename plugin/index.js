@@ -206,6 +206,12 @@ module.exports = function ajrmMarineDisplay(app) {
           ? routeManager?.restore(snapshot, { notify: false }) || null
           : null;
       },
+      async selectTransientRoute({ resource, fileName = null, source = "external" } = {}) {
+        await routeManagerReady;
+        return running && generation === lifecycleGeneration
+          ? routeManager?.openExternal({ resource, fileName, source }) || null
+          : null;
+      },
     };
     app.ajrmMarineDisplayApi = api;
     globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY] = api;

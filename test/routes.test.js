@@ -98,6 +98,15 @@ test("route manager saves GPX on the Pi and persists active route state", async 
     onSelection: async (selection) => selections.push(selection),
   });
   await manager.init();
+  const transient = await manager.openExternal({
+    resource: parseGpxRoutes(OPENCPN_GPX)[0],
+    fileName: "Simulator route.gpx",
+    source: "ajrm-marine-simulator",
+  });
+  assert.equal(transient.resourceId, null);
+  assert.equal(transient.source, "ajrm-marine-simulator");
+  assert.equal(resources.size, 0);
+
   const imported = await manager.importGpx({
     xml: OPENCPN_GPX,
     fileName: "Test passage.gpx",
@@ -120,7 +129,7 @@ test("route manager saves GPX on the Pi and persists active route state", async 
   await manager.reverse();
   const saved = await manager.save({ saveAs: false });
   assert.equal(resources.get(saved.resourceId).feature.properties.coordinatesMeta[0].name, "Finish");
-  assert.equal(selections.length, 4);
+  assert.equal(selections.length, 5);
 
   const reloaded = createRouteManager({
     resourcesApi,

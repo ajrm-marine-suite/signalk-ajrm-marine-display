@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.7.9` adds a narrow runtime route-selection contract used by AJRM
+Marine Simulator. A Simulator GPX selection becomes Display's active transient
+route without creating or duplicating a saved Signal K route; it remains
+available to Capture and can still be saved deliberately through Display.
+
 Version `0.7.8` makes the retained live GPS last-fix vessel marker substantially
 darker against chart artwork and retains it across a hard browser refresh.
 Replay positions are not written to that live last-fix cache. Version `0.7.7`
