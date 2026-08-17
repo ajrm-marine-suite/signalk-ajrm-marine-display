@@ -10,6 +10,7 @@ import {
 	routeSummary,
 } from "./route-rendering.mjs";
 import { filterRoutesForBounds } from "./route-viewport-filter.mjs";
+import { indexDeviceRouteFiles } from "./device-route-files.mjs";
 
 const API_BASE = "/signalk/v1/api/ajrmMarineDisplay/routes";
 const ROUTE_COLOR_KEY = "ajrmMarineDisplay.route.color";
@@ -32,6 +33,7 @@ export function createRouteController({
 	let fingerprint = "none";
 	let busy = false;
 	let latestResponse = null;
+	let deviceRoutes = [];
 
 	function init() {
 		applyStoredStyle();
@@ -54,7 +56,8 @@ export function createRouteController({
 		controls.save.addEventListener("click", () => save(false));
 		controls.saveAs.addEventListener("click", () => save(true));
 		controls.close.addEventListener("click", () => action("close", {}, "Closing route…"));
-		controls.browserFile.addEventListener("change", rememberBrowserFile);
+		controls.browserFiles.addEventListener("change", () => loadDeviceFiles(controls.browserFiles.files));
+		controls.browserDirectory.addEventListener("change", () => loadDeviceFiles(controls.browserDirectory.files));
 		controls.onlyCurrentChartArea.addEventListener("change", updateViewportFilter);
 		map.on?.("moveend", () => {
 			if (controls.onlyCurrentChartArea.checked && latestResponse) populateLists(latestResponse);
@@ -98,28 +101,46 @@ export function createRouteController({
 	}
 
 	async function importBrowserFile() {
-		const file = controls.browserFile.files?.[0];
-		if (!file) {
-			setStatus("Choose a GPX file first.", true);
+		const selected = deviceRoutes.find((route) => route.id === controls.browserRoute.value);
+		if (!selected) {
+			setStatus("Choose a route from this device first.", true);
 			return;
 		}
-		setBusy(true, "Reading GPX file…");
+		setBusy(true, "Opening GPX route…");
 		try {
-			const gpx = await file.text();
 			const response = await request("/import", {
 				method: "POST",
 				body: JSON.stringify({
-					gpx,
-					fileName: file.name,
-					routeIndex: 0,
+					gpx: selected.gpx,
+					fileName: selected.fileName,
+					routeIndex: selected.routeIndex,
 					saveToPi: controls.saveImportedToPi.checked,
 				}),
 			});
-			storage?.setItem?.(LAST_BROWSER_FILE_KEY, file.name);
+			storage?.setItem?.(LAST_BROWSER_FILE_KEY, selected.fileName);
 			applyActive(response.active, { fit: true });
 			await refresh({ fit: false });
 			setStatus(`${response.active.resource.name} imported and opened.`);
 		} catch (error) {
+			setStatus(error.message, true);
+		} finally {
+			setBusy(false);
+		}
+	}
+
+	async function loadDeviceFiles(files) {
+		setBusy(true, "Reading route files from this device…");
+		try {
+			const result = await indexDeviceRouteFiles(files);
+			deviceRoutes = result.routes;
+			populateLists(latestResponse || {});
+			const invalid = result.errors.length ? ` ${result.errors.length} invalid file${result.errors.length === 1 ? " was" : "s were"} skipped.` : "";
+			setStatus(`Found ${result.routes.length} route${result.routes.length === 1 ? "" : "s"} in ${result.files} GPX file${result.files === 1 ? "" : "s"}.${invalid}`,
+				result.routes.length === 0,
+			);
+		} catch (error) {
+			deviceRoutes = [];
+			populateLists(latestResponse || {});
 			setStatus(error.message, true);
 		} finally {
 			setBusy(false);
@@ -211,14 +232,23 @@ export function createRouteController({
 		const bounds = map.getBounds?.();
 		const allPiFiles = response.piFiles || [];
 		const allResources = response.resources || [];
+		const allDeviceRoutes = deviceRoutes;
 		const piFiles = filterRoutesForBounds(allPiFiles, bounds, filterEnabled);
 		const resources = filterRoutesForBounds(allResources, bounds, filterEnabled);
+		const visibleDeviceRoutes = filterRoutesForBounds(allDeviceRoutes, bounds, filterEnabled);
 		populateSelect(
 			controls.piFile,
 			piFiles,
 			(file) => file.fileName,
 			(file) => file.fileName,
 			"No GPX files on the Pi",
+		);
+		populateSelect(
+			controls.browserRoute,
+			visibleDeviceRoutes,
+			(route) => route.id,
+			(route) => `${route.name} (${route.points} points · ${route.devicePath})`,
+			filterEnabled ? "No selected device routes cross this chart area" : "Choose GPX files or a route folder",
 		);
 		populateSelect(
 			controls.resource,
@@ -234,8 +264,9 @@ export function createRouteController({
 		controls.openPi.disabled = !controls.piFile.value;
 		controls.openResource.disabled = !controls.resource.value;
 		controls.deleteResource.disabled = !controls.resource.value;
+		controls.openBrowser.disabled = !controls.browserRoute.value;
 		controls.viewportFilterHelp.textContent = filterEnabled
-			? `Showing ${piFiles.length} of ${allPiFiles.length} Pi files and ${resources.length} of ${allResources.length} Signal K routes that cross this chart area.`
+			? `Showing ${piFiles.length} of ${allPiFiles.length} Pi files, ${resources.length} of ${allResources.length} Signal K routes, and ${visibleDeviceRoutes.length} of ${allDeviceRoutes.length} selected device routes that cross this chart area.`
 			: "Includes every route. Enable this filter to show routes with a waypoint or route leg in the current chart area.";
 	}
 
@@ -255,13 +286,11 @@ export function createRouteController({
 		if (entries.some((entry) => value(entry) === selected)) select.value = selected;
 	}
 
-	function rememberBrowserFile() {
-		const file = controls.browserFile.files?.[0];
-		if (file) storage?.setItem?.(LAST_BROWSER_FILE_KEY, file.name);
+	function updateBrowserFileHelp() {
 		const previous = storage?.getItem?.(LAST_BROWSER_FILE_KEY);
 		controls.browserFileHelp.textContent = previous
-			? `Last selected on this device: ${previous}. Your browser controls which local folder opens next.`
-			: "Supports OpenCPN, Savvy Navvy and standard GPX 1.1 route files.";
+			? `Last opened from this device: ${previous}. For browser security, select files or the route folder again after reloading the page.`
+			: "Select several GPX files or an entire folder. Supports OpenCPN, Savvy Navvy and standard GPX 1.1 routes.";
 	}
 
 	function applyStoredStyle() {
@@ -273,7 +302,7 @@ export function createRouteController({
 		styleControls.width.value = String(style.weight);
 		styleControls.widthValue.textContent = `${style.weight} px`;
 		controls.onlyCurrentChartArea.checked = storage?.getItem?.(VIEWPORT_FILTER_KEY) === "true";
-		rememberBrowserFile();
+		updateBrowserFileHelp();
 	}
 
 	function updateStyle() {
@@ -306,8 +335,12 @@ export function createRouteController({
 	function setBusy(value, message = "") {
 		busy = value;
 		if (message) setStatus(message);
-		for (const control of [controls.openPi, controls.openResource, controls.deleteResource, controls.openBrowser, controls.save, controls.saveAs, controls.close]) {
-			control.disabled = value || (!active && [controls.save, controls.saveAs, controls.close].includes(control));
+		controls.openPi.disabled = value || !controls.piFile.value;
+		controls.openResource.disabled = value || !controls.resource.value;
+		controls.deleteResource.disabled = value || !controls.resource.value;
+		controls.openBrowser.disabled = value || !controls.browserRoute.value;
+		for (const control of [controls.save, controls.saveAs, controls.close]) {
+			control.disabled = value || !active;
 		}
 	}
 

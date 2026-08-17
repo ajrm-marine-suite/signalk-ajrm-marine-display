@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.7.11` extends current-chart-area route filtering to GPX files on the
+browser device. The device tab can index several selected GPX files or an
+entire selected folder, list every route within them, and update the filtered
+list locally as the chart moves. Browsers require the folder to be selected
+again after a page reload; web pages cannot silently retain filesystem access.
+
 Version `0.7.10` adds an optional current-chart-area filter to the route picker.
 It finds routes with a waypoint in view and routes whose legs cross the visible
 chart even when both endpoints are outside. Pi GPX geometry is cached in memory
@@ -304,7 +310,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
   that cross the current chart area.
 - GPX 1.1 import and export compatible with OpenCPN route extensions and with
   Savvy Navvy routes whose name is stored in GPX metadata and whose route
-  points are unnamed.
+  points are unnamed. The browser can index multiple selected files or a whole
+  selected device folder before filtering and opening a route.
 - Immediate announcement-feed updates from AJRM Marine Notifications audio delivery,
   deduplicated when the same event later enters history.
 - Browser speech follows the provider's explicit audio-delivery flag, queues

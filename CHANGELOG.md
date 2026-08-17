@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.7.11
+
+- Extend current-chart-area filtering to GPX routes on the browser device.
+- Allow selecting several GPX files or a whole local folder, including files
+  containing more than one route, before choosing which route to open.
+- Keep local route indexing and map-move filtering in the browser without
+  repeated uploads or server requests.
+
 ## 0.7.10
 
 - Add an optional route-picker filter for Pi GPX files and Signal K routes that
