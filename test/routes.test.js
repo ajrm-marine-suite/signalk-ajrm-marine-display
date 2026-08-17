@@ -5,7 +5,7 @@ const fs = require("node:fs");
 const os = require("node:os");
 const path = require("node:path");
 const test = require("node:test");
-const { createRouteManager } = require("../plugin/lib/route-manager");
+const { createRouteManager, routeSpatialSummary } = require("../plugin/lib/route-manager");
 const {
   normalizeRouteResource,
   parseGpxRoutes,
@@ -81,6 +81,14 @@ test("Signal K route normalization rejects invalid geometry and strips third coo
   assert.deepEqual(route.feature.geometry.coordinates, [[-5, 56], [-5.1, 56.1]]);
 });
 
+test("route spatial summaries retain route points and bounds", () => {
+  const route = parseGpxRoutes(OPENCPN_GPX)[0];
+  assert.deepEqual(routeSpatialSummary(route), {
+    coordinates: [[-5.1, 56.1], [-5.2, 56.2]],
+    bounds: { west: -5.2, south: 56.1, east: -5.1, north: 56.2 },
+  });
+});
+
 test("route manager saves GPX on the Pi and persists active route state", async () => {
   const root = await fs.promises.mkdtemp(path.join(os.tmpdir(), "ajrm-routes-"));
   const resources = new Map();
@@ -125,7 +133,19 @@ test("route manager saves GPX on the Pi and persists active route state", async 
     manager.save({ saveAs: true, name: "test PASSAGE" }),
     /unique route name/,
   );
-  assert.equal((await manager.listPiFiles())[0].fileName, "Test passage.gpx");
+  const [piFile] = await manager.listPiFiles();
+  assert.equal(piFile.fileName, "Test passage.gpx");
+  assert.deepEqual(piFile.spatial.coordinates, [[-5.1, 56.1], [-5.2, 56.2]]);
+  assert.deepEqual((await manager.list())[0].spatial, piFile.spatial);
+  const changedGpx = OPENCPN_GPX.replace('lat="56.1" lon="-5.1"', 'lat="56.4" lon="-5.4"');
+  const changedFile = path.join(root, "routes", "Test passage.gpx");
+  await fs.promises.writeFile(changedFile, changedGpx, "utf8");
+  const changedTime = new Date(Date.now() + 2000);
+  await fs.promises.utimes(changedFile, changedTime, changedTime);
+  assert.deepEqual((await manager.listPiFiles())[0].spatial.coordinates, [
+    [-5.4, 56.4],
+    [-5.2, 56.2],
+  ]);
   await manager.reverse();
   const saved = await manager.save({ saveAs: false });
   assert.equal(resources.get(saved.resourceId).feature.properties.coordinatesMeta[0].name, "Finish");

@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.7.10` adds an optional current-chart-area filter to the route picker.
+It finds routes with a waypoint in view and routes whose legs cross the visible
+chart even when both endpoints are outside. Pi GPX geometry is cached in memory
+by file size and modification time, so unchanged files are not repeatedly
+parsed and no sidecar summary files need to be managed.
+
 Version `0.7.9` adds a narrow runtime route-selection contract used by AJRM
 Marine Simulator. A Simulator GPX selection becomes Display's active transient
 route without creating or duplicating a saved Signal K route; it remains
@@ -294,7 +300,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
 - Global mute and stationary automute controls backed by AJRM Marine Traffic Audio Policy.
 - Harbour Limits loaded directly from Signal K region resources.
 - Display-only Signal K v2 routes with configurable colour and width,
-  direction arrows, and a reversible route order.
+  direction arrows, a reversible route order, and optional filtering to routes
+  that cross the current chart area.
 - GPX 1.1 import and export compatible with OpenCPN route extensions and with
   Savvy Navvy routes whose name is stored in GPX metadata and whose route
   points are unnamed.

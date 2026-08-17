@@ -22,6 +22,7 @@ function createRouteManager({
   now = () => new Date().toISOString(),
 } = {}) {
   let active = null;
+  const piSpatialCache = new Map();
 
   async function init() {
     const saved = await readJson(stateFile);
@@ -51,6 +52,7 @@ function createRouteManager({
         : 0,
       timestamp: value?.timestamp || null,
       source: value?.$source || null,
+      spatial: routeSpatialSummary(value),
     })).sort((left, right) => left.name.localeCompare(right.name));
   }
 
@@ -59,16 +61,40 @@ function createRouteManager({
       .readdir(routeDirectory, { withFileTypes: true })
       .catch((error) => (error.code === "ENOENT" ? [] : Promise.reject(error)));
     const files = [];
+    const present = new Set();
     for (const entry of entries) {
       if (!entry.isFile() || !entry.name.toLowerCase().endsWith(".gpx")) continue;
-      const info = await fs.promises.stat(path.join(routeDirectory, entry.name));
+      const filePath = path.join(routeDirectory, entry.name);
+      const info = await fs.promises.stat(filePath);
+      present.add(entry.name);
       files.push({
         fileName: entry.name,
         bytes: info.size,
         modifiedAt: new Date(info.mtimeMs).toISOString(),
+        spatial: await piRouteSpatialSummary(filePath, entry.name, info),
       });
     }
+    for (const fileName of piSpatialCache.keys()) {
+      if (!present.has(fileName)) piSpatialCache.delete(fileName);
+    }
     return files.sort((left, right) => right.modifiedAt.localeCompare(left.modifiedAt));
+  }
+
+  async function piRouteSpatialSummary(filePath, fileName, info) {
+    const cacheKey = `${info.size}:${info.mtimeMs}`;
+    const cached = piSpatialCache.get(fileName);
+    if (cached?.cacheKey === cacheKey) return cached.spatial;
+    let spatial = null;
+    try {
+      const xml = await fs.promises.readFile(filePath, "utf8");
+      spatial = routeSpatialSummary(parseGpxRoutes(xml, { fileName })[0]);
+    } catch {
+      // Keep an unreadable GPX visible in the unfiltered list; opening it will
+      // provide the detailed parser error. It cannot qualify for map filtering.
+      spatial = null;
+    }
+    piSpatialCache.set(fileName, { cacheKey, spatial });
+    return spatial;
   }
 
   async function importGpx({ xml, fileName, routeIndex = 0, saveToPi = false } = {}) {
@@ -318,6 +344,30 @@ function routeNameKey(value) {
   return String(value || "").normalize("NFC").trim().toLocaleLowerCase("en");
 }
 
+function routeSpatialSummary(route) {
+  const coordinates = route?.feature?.geometry?.coordinates;
+  if (!Array.isArray(coordinates)) return null;
+  const points = coordinates
+    .filter((point) =>
+      Array.isArray(point) &&
+      Number.isFinite(Number(point[0])) &&
+      Number.isFinite(Number(point[1])))
+    .map((point) => [Number(point[0]), Number(point[1])]);
+  if (points.length < 2) return null;
+  return {
+    coordinates: points,
+    bounds: points.reduce(
+      (bounds, [longitude, latitude]) => ({
+        west: Math.min(bounds.west, longitude),
+        south: Math.min(bounds.south, latitude),
+        east: Math.max(bounds.east, longitude),
+        north: Math.max(bounds.north, latitude),
+      }),
+      { west: Infinity, south: Infinity, east: -Infinity, north: -Infinity },
+    ),
+  };
+}
+
 function normalizeActive(value) {
   return {
     contract: "ajrm-marine-display-active-route-v1",
@@ -385,5 +435,6 @@ module.exports = {
   createRouteManager,
   normalizeActive,
   routeNameKey,
+  routeSpatialSummary,
   safeGpxName,
 };

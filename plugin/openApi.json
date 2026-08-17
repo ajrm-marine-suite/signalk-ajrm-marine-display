@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.7.9",
+    "version": "0.7.10",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
@@ -24,7 +24,7 @@
       "post": { "summary": "Update transient rendering debug controls", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" } } }
     },
     "/repeatIntervals": { "get": { "summary": "Get Display help repeat-interval overrides", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
-    "/routes": { "get": { "summary": "List the active route, Signal K route resources and configured Pi GPX files", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
+    "/routes": { "get": { "summary": "List the active route plus compact spatial summaries for Signal K routes and configured Pi GPX files", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
     "/routes/import": { "post": { "summary": "Import a browser GPX route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
     "/routes/open-pi": { "post": { "summary": "Open a GPX route from the configured Pi directory", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
     "/routes/open-resource": { "post": { "summary": "Open a Signal K route resource", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },

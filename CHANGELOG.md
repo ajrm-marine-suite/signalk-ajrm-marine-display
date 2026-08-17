@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.7.10
+
+- Add an optional route-picker filter for Pi GPX files and Signal K routes that
+  have a waypoint in, or a route leg crossing, the current chart area.
+- Cache Pi GPX spatial summaries in memory by file size and modification time,
+  reparsing only new or changed files without creating sidecar files.
+
 ## 0.7.9
 
 - Add an explicit transient route-selection runtime contract for Simulator GPX routes.

@@ -9,11 +9,13 @@ import {
 	routeLatLngs,
 	routeSummary,
 } from "./route-rendering.mjs";
+import { filterRoutesForBounds } from "./route-viewport-filter.mjs";
 
 const API_BASE = "/signalk/v1/api/ajrmMarineDisplay/routes";
 const ROUTE_COLOR_KEY = "ajrmMarineDisplay.route.color";
 const ROUTE_WIDTH_KEY = "ajrmMarineDisplay.route.width";
 const LAST_BROWSER_FILE_KEY = "ajrmMarineDisplay.route.lastBrowserFile";
+const VIEWPORT_FILTER_KEY = "ajrmMarineDisplay.route.onlyCurrentChartArea";
 
 export function createRouteController({
 	L,
@@ -29,6 +31,7 @@ export function createRouteController({
 	let active = null;
 	let fingerprint = "none";
 	let busy = false;
+	let latestResponse = null;
 
 	function init() {
 		applyStoredStyle();
@@ -52,6 +55,10 @@ export function createRouteController({
 		controls.saveAs.addEventListener("click", () => save(true));
 		controls.close.addEventListener("click", () => action("close", {}, "Closing route…"));
 		controls.browserFile.addEventListener("change", rememberBrowserFile);
+		controls.onlyCurrentChartArea.addEventListener("change", updateViewportFilter);
+		map.on?.("moveend", () => {
+			if (controls.onlyCurrentChartArea.checked && latestResponse) populateLists(latestResponse);
+		});
 		styleControls.color.addEventListener("change", updateStyle);
 		styleControls.width.addEventListener("input", updateStyle);
 	}
@@ -60,6 +67,7 @@ export function createRouteController({
 		if (busy) return;
 		try {
 			const response = await request("", { method: "GET" });
+			latestResponse = response;
 			populateLists(response);
 			applyActive(response.active, { fit });
 			controls.piDirectory.textContent = response.routeDirectory
@@ -199,27 +207,41 @@ export function createRouteController({
 	}
 
 	function populateLists(response) {
+		const filterEnabled = controls.onlyCurrentChartArea.checked;
+		const bounds = map.getBounds?.();
+		const allPiFiles = response.piFiles || [];
+		const allResources = response.resources || [];
+		const piFiles = filterRoutesForBounds(allPiFiles, bounds, filterEnabled);
+		const resources = filterRoutesForBounds(allResources, bounds, filterEnabled);
 		populateSelect(
 			controls.piFile,
-			response.piFiles || [],
+			piFiles,
 			(file) => file.fileName,
 			(file) => file.fileName,
 			"No GPX files on the Pi",
 		);
 		populateSelect(
 			controls.resource,
-			response.resources || [],
+			resources,
 			(route) => route.id,
 			(route) => `${route.name} (${route.points} points · ${route.id.slice(0, 8)})`,
 			"No Signal K route resources",
 		);
 		for (const option of controls.resource.options) {
-			const route = (response.resources || []).find((entry) => entry.id === option.value);
+			const route = resources.find((entry) => entry.id === option.value);
 			if (route) option.dataset.routeName = route.name;
 		}
 		controls.openPi.disabled = !controls.piFile.value;
 		controls.openResource.disabled = !controls.resource.value;
 		controls.deleteResource.disabled = !controls.resource.value;
+		controls.viewportFilterHelp.textContent = filterEnabled
+			? `Showing ${piFiles.length} of ${allPiFiles.length} Pi files and ${resources.length} of ${allResources.length} Signal K routes that cross this chart area.`
+			: "Includes every route. Enable this filter to show routes with a waypoint or route leg in the current chart area.";
+	}
+
+	function updateViewportFilter() {
+		storage?.setItem?.(VIEWPORT_FILTER_KEY, controls.onlyCurrentChartArea.checked ? "true" : "false");
+		if (latestResponse) populateLists(latestResponse);
 	}
 
 	function populateSelect(select, entries, value, label, emptyLabel) {
@@ -250,6 +272,7 @@ export function createRouteController({
 		styleControls.color.value = style.color;
 		styleControls.width.value = String(style.weight);
 		styleControls.widthValue.textContent = `${style.weight} px`;
+		controls.onlyCurrentChartArea.checked = storage?.getItem?.(VIEWPORT_FILTER_KEY) === "true";
 		rememberBrowserFile();
 	}
 

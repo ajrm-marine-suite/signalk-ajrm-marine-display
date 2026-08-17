@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.9";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.10";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-Cx_I_rZw.js"></script>
+    <script type="module" crossorigin src="./assets/index-DEY8OPzV.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CfZpbxax.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.9</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.10</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -491,6 +491,15 @@
               </ul>
               <div class="tab-content border border-top-0 rounded-bottom p-3 mb-3">
                 <div class="tab-pane fade show active" id="routePiTab" role="tabpanel">
+                  <div class="form-check mb-1">
+                    <input class="form-check-input" type="checkbox" id="checkRoutesInCurrentChartArea" />
+                    <label class="form-check-label" for="checkRoutesInCurrentChartArea">
+                      Only show routes crossing the current chart area
+                    </label>
+                  </div>
+                  <div class="form-text mb-3" id="routeViewportFilterHelp">
+                    Includes every route. Enable this filter to show routes with a waypoint or route leg in the current chart area.
+                  </div>
                   <label class="form-label" for="selectPiRouteFile">GPX file on the Pi</label>
                   <div class="input-group mb-3">
                     <select class="form-select" id="selectPiRouteFile"></select>
@@ -1595,7 +1604,11 @@
               </ul>
               <p>
                 <strong>Routes</strong> opens, imports, reverses, saves, and
-                closes GPX/Signal K routes. <strong>Voyage observation</strong>
+                closes GPX/Signal K routes. In the Pi tab, <strong>Only show
+                routes crossing the current chart area</strong> narrows both
+                route lists to routes with a visible waypoint or a route leg
+                crossing the screen. The list updates locally as the chart is
+                moved. <strong>Voyage observation</strong>
                 records a timestamped skipper note in the active Capture voyage
                 and can attach Snapshot evidence when that service is available.
               </p>

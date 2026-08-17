@@ -136,6 +136,8 @@ export function createAppDom() {
 		modal: getRequiredElement("modalRoutes"),
 		piFile: getRequiredElement("selectPiRouteFile"),
 		piDirectory: getRequiredElement("routePiDirectory"),
+		onlyCurrentChartArea: getRequiredElement("checkRoutesInCurrentChartArea"),
+		viewportFilterHelp: getRequiredElement("routeViewportFilterHelp"),
 		openPi: getRequiredElement("buttonOpenPiRoute"),
 		resource: getRequiredElement("selectSignalKRoute"),
 		openResource: getRequiredElement("buttonOpenSignalKRoute"),
