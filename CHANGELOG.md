@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.8
+
+- Verify that explicit UTC tide events render as BST during British Summer
+  Time and GMT during winter, without a hard-coded seasonal offset.
+- Restore a smaller default tide-popup footprint for compact desktop displays.
+- Allow desktop users to resize the tide popup in both dimensions while
+  bounding it to the viewport and retaining internal scrolling.
+
 ## 0.8.7
 
 - Split tide information into Details and Graph tabs so the popup presents one

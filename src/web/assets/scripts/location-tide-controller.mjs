@@ -139,10 +139,11 @@ function popupHtml(location) {
 	</div>`;
 }
 
-function timeLabel(value) {
+export function tideEventTimeLabel(value, locale = undefined, timeZone = undefined) {
 	if (!value || Number.isNaN(Date.parse(value))) return "—";
-	return new Intl.DateTimeFormat(undefined, {
+	return new Intl.DateTimeFormat(locale, {
 		weekday: "short", hour: "2-digit", minute: "2-digit", timeZoneName: "short",
+		...(timeZone ? { timeZone } : {}),
 	}).format(new Date(value));
 }
 
@@ -319,8 +320,8 @@ export function createLocationTideController({
 		controls.unavailable.textContent = valid ? "" : tide?.error || "Tide Resolver has no valid result.";
 		controls.heightNow.textContent = heightLabel(tide?.heightNowM);
 		controls.trend.textContent = tide?.trend || "—";
-		controls.nextHigh.textContent = tide?.nextHighWater ? `${timeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—";
-		controls.nextLow.textContent = tide?.nextLowWater ? `${timeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—";
+		controls.nextHigh.textContent = tide?.nextHighWater ? `${tideEventTimeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—";
+		controls.nextLow.textContent = tide?.nextLowWater ? `${tideEventTimeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—";
 		controls.datum.textContent = tide?.datum || "—";
 		controls.station.textContent = tide?.station ? `${tide.station.name} (${tide.station.id})` : "—";
 		const reason = TIDE_SELECTION_LABELS[tide?.selection?.reason] || tide?.selection?.reason || "—";

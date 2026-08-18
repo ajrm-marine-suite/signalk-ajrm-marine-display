@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.8` verifies that normalized UTC tide events are rendered as the
+correct UK civil time—BST in summer and GMT in winter. The tabbed tide popup
+now opens at a smaller desktop size and can be resized by dragging its
+bottom-right corner, within the available viewport.
+
 Version `0.8.7` separates the tide popup into **Details** and **Graph** tabs.
 The graph receives the full popup width and greater spacing between tidal
 extremes, preventing adjacent day/date labels from overlapping while retaining
@@ -439,7 +444,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.7 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.8 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

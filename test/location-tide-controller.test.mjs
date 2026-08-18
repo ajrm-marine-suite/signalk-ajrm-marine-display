@@ -14,6 +14,7 @@ import {
 	tideGraphDays,
 	tideStatusUrl,
 	tideCurveSvg,
+	tideEventTimeLabel,
 } from "../src/web/assets/scripts/location-tide-controller.mjs";
 
 test("tidal selection reasons are translated into skipper-facing explanations", () => {
@@ -38,6 +39,11 @@ test("spring-neap estimate reports elapsed and remaining phase days", () => {
 	const building = springNeapEstimate("2000-01-16T18:15:00Z");
 	assert.equal(building.status, "Building toward spring tides");
 	assert.equal(building.previous, "neap");
+});
+
+test("explicit UTC tide instants display as UK civil time across daylight saving", () => {
+	assert.match(tideEventTimeLabel("2026-08-18T08:53:00.000Z", "en-GB", "Europe/London"), /09:53 BST/);
+	assert.match(tideEventTimeLabel("2026-12-18T08:53:00.000Z", "en-GB", "Europe/London"), /08:53 GMT/);
 });
 
 test("tide graph duration defaults to seven days and rejects invalid stored values", () => {
@@ -69,6 +75,7 @@ test("the hidden tide launcher leaves modal ownership to the controller", async 
 	assert.match(html, /id="tideGraphTab"[\s\S]*?data-bs-target="#tideGraphPane"/);
 	assert.match(html, /id="tideDetailsPane"[\s\S]*?id="tideHeightNow"/);
 	assert.match(html, /id="tideGraphPane"[\s\S]*?id="tideCurve"/);
+	assert.match(html, /modal-dialog[^\"]*ajrm-tide-modal-dialog/);
 });
 
 test("tide requests use the visible chart centre as explicit selection context", () => {
