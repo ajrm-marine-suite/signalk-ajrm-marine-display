@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.11
+
+- Fix the tide graph lower edge at 0 m Chart Datum and label the baseline, so
+  MLWS remains visibly separated from the bottom of the plot.
+
 ## 0.8.10
 
 - Remember the user-resized tide-dialog dimensions in browser storage and

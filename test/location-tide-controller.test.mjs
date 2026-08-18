@@ -136,6 +136,11 @@ test("tide curve shows all four supplied reference levels and hover geometry", (
 	assert.equal((svg.match(/class="tide-reference"/g) || []).length, 4);
 	assert.match(svg, /class="tide-hover-target"/);
 	assert.match(svg, /data-min-time=/);
+	assert.match(svg, /data-min-height="0"/);
+	assert.match(svg, /class="axis-label"[^>]*>0 m</);
+	const plotBottom = Number(svg.match(/data-plot-bottom="([0-9.]+)"/)?.[1]);
+	const mlwsY = Number(svg.match(/tide-reference-mlws">\s*<line[^>]* y1="([0-9.]+)"/)?.[1]);
+	assert.ok(mlwsY < plotBottom, "MLWS should be visibly above the zero baseline");
 	assert.equal(interpolatedTideHeight(events, "2026-08-18T03:00:00Z"), 3);
 });
 

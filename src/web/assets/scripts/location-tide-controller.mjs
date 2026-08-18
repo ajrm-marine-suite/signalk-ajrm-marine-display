@@ -224,7 +224,10 @@ export function tideCurveSvg(events, now = Date.now(), referenceLevels = null) {
 	const minTime = samples[0].at;
 	const maxTime = samples.at(-1).at;
 	const graphHeights = [...samples.map((point) => point.heightM), ...references.map((level) => level.heightM)];
-	const minHeight = Math.min(...graphHeights);
+	// Tide heights and station reference levels use Chart Datum. Keeping the
+	// lower edge fixed at zero makes low-water levels comparable and prevents
+	// MLWS from disappearing against an automatically cropped graph edge.
+	const minHeight = 0;
 	const maxHeight = Math.max(...graphHeights);
 	const heightRange = Math.max(0.1, maxHeight - minHeight);
 	const x = (at) => padding.left + ((at - minTime) / (maxTime - minTime)) * (width - padding.left - padding.right);
@@ -266,6 +269,7 @@ export function tideCurveSvg(events, now = Date.now(), referenceLevels = null) {
 		data-min-time="${minTime}" data-max-time="${maxTime}" data-min-height="${minHeight}" data-max-height="${maxHeight}"
 		data-plot-left="${padding.left}" data-plot-right="${width - padding.right}" data-plot-top="${padding.top}" data-plot-bottom="${height - padding.bottom}">
 		<line class="axis" x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"/>
+		<text class="axis-label" x="${padding.left - 8}" y="${height - padding.bottom + 5}" text-anchor="end">0 m</text>
 		${referenceLines}
 		<path class="curve" d="${line}"/>
 		${nowX == null ? "" : `<line class="now" x1="${nowX.toFixed(1)}" y1="${padding.top}" x2="${nowX.toFixed(1)}" y2="${height - padding.bottom}"/><text x="${nowX.toFixed(1)}" y="12" text-anchor="middle">Now</text>`}

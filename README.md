@@ -1,5 +1,9 @@
 # AJRM Marine Display
 
+Version `0.8.11` fixes the tide graph lower edge at 0 m Chart Datum, keeping
+MLWS visibly above the baseline rather than cropping the graph to its lowest
+reference level.
+
 Version `0.8.10` remembers the tide-popup size on the browser device. The tide
 graph shows available MHWS, MHWN, MLWN and MLWS station levels as light dotted
 references and reports predicted local time and height under the pointer. The
@@ -454,7 +458,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.10 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.11 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
