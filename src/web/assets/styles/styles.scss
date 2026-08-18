@@ -212,7 +212,8 @@ body.ajrm-marine-alert-panel-open .cursor-position {
 .ajrm-marine-replay-status,
 .ajrm-marine-connection-status,
 .ajrm-marine-chart-cycle-status,
-.ajrm-marine-tide-status {
+.ajrm-marine-tide-status,
+.ajrm-marine-anchoring-suggestion {
   display: flex;
   max-width: 100%;
   flex-wrap: wrap;
@@ -235,7 +236,8 @@ body.ajrm-marine-alert-panel-open .cursor-position {
 .ajrm-marine-replay-status.d-none,
 .ajrm-marine-connection-status.d-none,
 .ajrm-marine-chart-cycle-status.d-none,
-.ajrm-marine-tide-status.d-none {
+.ajrm-marine-tide-status.d-none,
+.ajrm-marine-anchoring-suggestion.d-none {
   display: none;
 }
 
@@ -279,6 +281,12 @@ body.ajrm-marine-alert-panel-open .cursor-position {
 	border-color: var(--bs-secondary-border-subtle);
 	color: var(--bs-secondary-color);
 	background: var(--bs-secondary-bg);
+}
+
+.ajrm-marine-anchoring-suggestion {
+	border: 1px solid var(--bs-primary-border-subtle);
+	color: var(--bs-primary-text-emphasis);
+	background: var(--bs-primary-bg-subtle);
 }
 
 .leaflet-bar a,

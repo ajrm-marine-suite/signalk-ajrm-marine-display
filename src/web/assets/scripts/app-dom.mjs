@@ -182,6 +182,10 @@ export function createAppDom() {
 		showAnchorages: getRequiredElement("checkShowAnchorages"),
 		showLocations: getRequiredElement("checkShowLocations"),
 		showStatus: getRequiredElement("checkShowTideStatus"),
+		anchoringSuggestion: getRequiredElement("anchoringSuggestion"),
+		anchoringSuggestionText: getRequiredElement("anchoringSuggestionText"),
+		confirmAnchoring: getRequiredElement("buttonConfirmAnchoring"),
+		dismissAnchoring: getRequiredElement("buttonDismissAnchoring"),
 	};
 
 	const observationControls = {

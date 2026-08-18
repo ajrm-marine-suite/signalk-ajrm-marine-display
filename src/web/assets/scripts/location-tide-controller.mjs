@@ -25,6 +25,12 @@ export const TIDE_SELECTION_LABELS = Object.freeze({
 	none: "No suitable tidal port selected",
 });
 
+export function anchoringSuggestionText(value) {
+	return value?.state === "suggested" && value?.suggestionId
+		? `You appear stationary at ${value.location?.name || "an anchorage or mooring"}. Select the Anchored profile?`
+		: "";
+}
+
 function escapeHtml(value) {
 	return String(value ?? "").replace(/[&<>"']/g, (character) => ({
 		"&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;",
@@ -140,12 +146,16 @@ export function createLocationTideController({
 	fetchFn = globalThis.fetch,
 	storage = globalThis.localStorage,
 	windowObject = globalThis.window,
+	onProfileChanged = async () => {},
 }) {
 	const anchorageLayer = L.layerGroup();
 	const locationLayer = L.layerGroup();
 	let locations = [];
 	let tide = null;
 	let refreshTimer = null;
+	let anchoringTimer = null;
+	let anchoring = null;
+	let anchoringBusy = false;
 
 	async function requestJson(url, options = {}) {
 		const response = await fetchFn(url, { cache: "no-store", credentials: "include", ...options });
@@ -258,6 +268,44 @@ export function createLocationTideController({
 		}
 	}
 
+	function renderAnchoring() {
+		const message = anchoringSuggestionText(anchoring);
+		const suggested = Boolean(message);
+		controls.anchoringSuggestion.classList.toggle("d-none", !suggested);
+		controls.anchoringSuggestionText.textContent = message;
+		controls.confirmAnchoring.disabled = anchoringBusy;
+		controls.dismissAnchoring.disabled = anchoringBusy;
+	}
+
+	async function refreshAnchoring() {
+		try {
+			anchoring = await requestJson(`${LOCATION_API}/anchoring/status`);
+		} catch {
+			anchoring = null;
+		}
+		renderAnchoring();
+	}
+
+	async function anchoringAction(action) {
+		if (anchoringBusy || !anchoring?.suggestionId) return;
+		anchoringBusy = true;
+		renderAnchoring();
+		try {
+			anchoring = await requestJson(`${LOCATION_API}/anchoring/${action}`, {
+				method: "POST",
+				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
+				body: JSON.stringify({ suggestionId: anchoring.suggestionId }),
+			});
+			if (action === "confirm") await onProfileChanged();
+		} catch (error) {
+			controls.actionStatus.textContent = error.message;
+			await refreshAnchoring();
+		} finally {
+			anchoringBusy = false;
+			renderAnchoring();
+		}
+	}
+
 	function bindFlag(control, key, fallback, apply) {
 		control.checked = readFlag(storage, key, fallback);
 		control.addEventListener("change", () => { writeFlag(storage, key, control.checked); apply(); });
@@ -271,18 +319,23 @@ export function createLocationTideController({
 		controls.pin.addEventListener("click", () => pin(controls.alternativePort.value));
 		controls.clearPin.addEventListener("click", () => pin(null));
 		controls.refresh.addEventListener("click", () => refresh({ force: true }));
+		controls.confirmAnchoring.addEventListener("click", () => anchoringAction("confirm"));
+		controls.dismissAnchoring.addEventListener("click", () => anchoringAction("dismiss"));
 		refresh();
+		refreshAnchoring();
 		// The resolver owns provider caching, so a short UI poll keeps the
 		// continuously changing height and freshness display useful without
 		// causing a fresh upstream tide request each time.
 		refreshTimer = windowObject.setInterval(() => refresh(), 60 * 1000);
+		anchoringTimer = windowObject.setInterval(() => refreshAnchoring(), 15 * 1000);
 	}
 
 	function stop() {
 		windowObject.clearInterval(refreshTimer);
+		windowObject.clearInterval(anchoringTimer);
 		anchorageLayer.removeFrom(map);
 		locationLayer.removeFrom(map);
 	}
 
-	return { init, refresh, stop, renderLayers, renderTide };
+	return { init, refresh, refreshAnchoring, stop, renderLayers, renderTide, renderAnchoring };
 }

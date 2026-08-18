@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.8.1` adds confirmation-first assisted anchoring. When Location
+Editor detects sufficient stationary evidence at an anchorage or mooring,
+Display offers **Select Anchored** or **Not now**. Confirmation changes the
+profile but deliberately does not invent an anchor position; manual **Drop
+Anchor** remains available to record the physical position and depth.
+
 Version `0.8.0` consumes Location Editor's shared Tide Resolver and versioned
 location catalogue. Display can optionally show anchorage/mooring symbols and
 other saved locations, presents a compact live tide panel and detailed curve,
@@ -398,7 +404,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.0 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.1 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

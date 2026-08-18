@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.1
+
+- Show Location Editor's backend anchoring suggestion prominently on the map
+  and let the skipper confirm Anchored or dismiss the suggestion.
+- Keep manual **Drop Anchor** separate so confirmation never fabricates the
+  physical anchor position or depth.
+
 ## 0.8.0
 
 - Add optional chart symbols for anchorages/moorings and other versioned AJRM

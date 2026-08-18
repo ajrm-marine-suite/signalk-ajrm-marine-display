@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.0";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.1";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-DBU27Cab.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DrGwjZOp.css">
+    <script type="module" crossorigin src="./assets/index-B8bXl9ov.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-Bgq8O1j3.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.0</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.1</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -242,6 +242,11 @@
       >
         <span class="fw-semibold"><i class="bi bi-water"></i> Tide unavailable</span>
       </button>
+      <div id="anchoringSuggestion" class="ajrm-marine-anchoring-suggestion shadow-sm d-none" role="alert" aria-live="assertive">
+        <span id="anchoringSuggestionText" class="fw-semibold"></span>
+        <button id="buttonConfirmAnchoring" type="button" class="btn btn-sm btn-primary">Select Anchored</button>
+        <button id="buttonDismissAnchoring" type="button" class="btn btn-sm btn-outline-secondary">Not now</button>
+      </div>
     </div>
     <button type="button" class="d-none" id="buttonCycleChart"></button>
     <button
@@ -1706,6 +1711,14 @@
                 trend, next high/low waters, datum, station, selection reason,
                 source freshness and the tide curve. A manually pinned port
                 overrides—but does not hide—the automatic choice.
+              </p>
+              <p>
+                <strong>Assisted anchoring</strong> asks before selecting the
+                Anchored profile when the shared location service finds the
+                vessel stationary at an anchorage or mooring. Confirming does
+                not create an anchor mark. Use <strong>Drop Anchor</strong> at
+                the actual drop point to record its position and depth. Vessel
+                movement never automatically un-anchors.
               </p>
               <h6>Alerts shown by Display</h6>
               <p>

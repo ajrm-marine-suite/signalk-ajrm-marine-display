@@ -209,6 +209,7 @@ createLocationTideController({
 	fetchFn: fetch,
 	storage: window.localStorage,
 	windowObject: window,
+	onProfileChanged: profileActions.refreshProfilesFromServer,
 }).init();
 if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 	startDisplayDebugControlPolling({
