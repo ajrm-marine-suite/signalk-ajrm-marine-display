@@ -138,6 +138,24 @@ export function tideCurveSvg(events, now = Date.now()) {
 	</svg>`;
 }
 
+export function tideMapContext(map) {
+	const center = map?.getCenter?.();
+	const latitude = Number(center?.lat);
+	const longitude = Number(center?.lng);
+	return Number.isFinite(latitude) && latitude >= -90 && latitude <= 90 &&
+		Number.isFinite(longitude) && longitude >= -180 && longitude <= 180
+		? { latitude, longitude }
+		: {};
+}
+
+export function tideStatusUrl(context = {}) {
+	const query = new URLSearchParams();
+	if (Number.isFinite(context.latitude)) query.set("latitude", String(context.latitude));
+	if (Number.isFinite(context.longitude)) query.set("longitude", String(context.longitude));
+	const suffix = query.toString();
+	return `${LOCATION_API}/tides/status${suffix ? `?${suffix}` : ""}`;
+}
+
 export function createLocationTideController({
 	L,
 	map,
@@ -233,11 +251,12 @@ export function createLocationTideController({
 
 	async function refresh({ force = false } = {}) {
 		try {
+			const context = tideMapContext(map);
 			const [catalogue, result] = await Promise.all([
 				requestJson(`${LOCATION_API}/locations?workspace=all`),
 				force
-					? requestJson(`${LOCATION_API}/tides/refresh`, { method: "POST", headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }), body: "{}" })
-					: requestJson(`${LOCATION_API}/tides/status`),
+					? requestJson(`${LOCATION_API}/tides/refresh`, { method: "POST", headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(context) })
+					: requestJson(tideStatusUrl(context)),
 			]);
 			locations = catalogue.locations || [];
 			tide = result;
@@ -257,7 +276,7 @@ export function createLocationTideController({
 			tide = await requestJson(`${LOCATION_API}/tides/pin`, {
 				method: "POST",
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
-				body: JSON.stringify({ portId: portId || null }),
+				body: JSON.stringify({ portId: portId || null, ...tideMapContext(map) }),
 			});
 			renderTide();
 			controls.actionStatus.textContent = portId ? "Alternative tidal port pinned." : "Automatic tidal-port selection restored.";
@@ -315,7 +334,10 @@ export function createLocationTideController({
 		bindFlag(controls.showAnchorages, STORAGE.anchorages, true, renderLayers);
 		bindFlag(controls.showLocations, STORAGE.locations, false, renderLayers);
 		bindFlag(controls.showStatus, STORAGE.status, true, renderTide);
-		controls.statusPanel.addEventListener("click", () => modal?.show?.());
+		controls.statusPanel.addEventListener("click", () => {
+			modal?.show?.();
+			refresh();
+		});
 		controls.pin.addEventListener("click", () => pin(controls.alternativePort.value));
 		controls.clearPin.addEventListener("click", () => pin(null));
 		controls.refresh.addEventListener("click", () => refresh({ force: true }));

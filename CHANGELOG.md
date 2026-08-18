@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.3
+
+- Resolve tides for the visible chart centre and preserve that context while
+  refreshing, pinning an alternative port or restoring automatic selection.
+  This avoids a false no-port result when Display is inspecting an area
+  without a current own-vessel position.
+
 ## 0.8.2
 
 - Supplies the persisted manual anchor reference to Traffic's sustained release monitor.

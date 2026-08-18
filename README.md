@@ -1,5 +1,9 @@
 # AJRM Marine Display
 
+Version `0.8.3` resolves tides for the visible chart centre. Tide selection
+therefore works while inspecting a chart away from the vessel and when no
+current own-vessel position is available.
+
 Version `0.8.2` supplies Traffic with the persisted manual anchor position so
 the shared Anchored profile can be released only after sustained movement or a
 sustained excursion beyond the configured anchor radius. Help now explains
@@ -412,7 +416,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.2 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.3 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

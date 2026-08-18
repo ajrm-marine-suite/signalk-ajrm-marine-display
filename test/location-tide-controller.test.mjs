@@ -7,6 +7,8 @@ import test from "node:test";
 import {
 	TIDE_SELECTION_LABELS,
 	anchoringSuggestionText,
+	tideMapContext,
+	tideStatusUrl,
 	tideCurveSvg,
 } from "../src/web/assets/scripts/location-tide-controller.mjs";
 
@@ -15,6 +17,19 @@ test("tidal selection reasons are translated into skipper-facing explanations", 
 	assert.match(TIDE_SELECTION_LABELS.containingRegionAssignment, /containing tidal region/);
 	assert.match(TIDE_SELECTION_LABELS.nearestPortInTidalRegion, /Nearest suitable port/);
 	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /Manually pinned/);
+});
+
+test("tide requests use the visible chart centre as explicit selection context", () => {
+	const context = tideMapContext({ getCenter: () => ({ lat: 56.27224, lng: -5.637656 }) });
+	assert.deepEqual(context, { latitude: 56.27224, longitude: -5.637656 });
+	const url = new URL(tideStatusUrl(context), "https://example.test");
+	assert.equal(url.searchParams.get("latitude"), "56.27224");
+	assert.equal(url.searchParams.get("longitude"), "-5.637656");
+});
+
+test("invalid chart centres do not create misleading tide coordinates", () => {
+	assert.deepEqual(tideMapContext({ getCenter: () => ({ lat: 100, lng: -5 }) }), {});
+	assert.equal(tideStatusUrl({}), "/plugins/signalk-ajrm-marine-location-editor/tides/status");
 });
 
 test("anchoring prompt requires an explicit current backend suggestion", () => {
