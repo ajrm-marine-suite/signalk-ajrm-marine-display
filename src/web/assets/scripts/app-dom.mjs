@@ -162,6 +162,8 @@ export function createAppDom() {
 	};
 
 	const locationTideControls = {
+		dialog: getRequiredElement("tideModalDialog"),
+		resizeHandle: getRequiredElement("tideModalResizeHandle"),
 		open: getRequiredElement("buttonOpenTides"),
 		statusPanel: getRequiredElement("tideStatusPanel"),
 		unavailable: getRequiredElement("tideUnavailable"),

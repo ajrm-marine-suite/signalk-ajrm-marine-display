@@ -18,6 +18,7 @@ import { createAppTargetCollections } from "./app-target-collections.mjs";
 import { startBrowserPerformanceDebug } from "./browser-performance-debug.mjs";
 import { createChartCycleControls } from "./chart-cycle-controls.mjs";
 import { createCursorPositionController } from "./cursor-position-control.mjs";
+import { createDialogResizeController } from "./dialog-resize-controller.mjs";
 import {
 	applyDisplayDebugMapControls,
 	startDisplayDebugControlPolling,
@@ -201,6 +202,10 @@ createAnchorController({
 	windowObject: window,
 	onProfileChanged: profileActions.refreshProfilesFromServer,
 }).init();
+createDialogResizeController({
+	dialog: locationTideControls.dialog,
+	handle: locationTideControls.resizeHandle,
+});
 createLocationTideController({
 	L,
 	map,

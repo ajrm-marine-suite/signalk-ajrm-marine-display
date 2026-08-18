@@ -103,13 +103,35 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 	max-height: calc(100vh - 2rem);
 	min-width: min(24rem, calc(100vw - 2rem));
 	min-height: min(24rem, calc(100vh - 2rem));
-	resize: both;
-	overflow: auto;
+	resize: none;
+	overflow: hidden;
 }
 
 .ajrm-tide-modal-dialog .modal-content {
+	position: relative;
 	height: 100%;
 	max-height: 100%;
+}
+
+.ajrm-dialog-resize-handle {
+	position: absolute;
+	right: 0.2rem;
+	bottom: 0.2rem;
+	z-index: 2;
+	width: 1.75rem;
+	height: 1.75rem;
+	padding: 0;
+	border: 0;
+	background:
+		linear-gradient(135deg, transparent 44%, var(--bs-secondary-color) 46%, var(--bs-secondary-color) 52%, transparent 54%) 0.45rem 0.45rem / 0.8rem 0.8rem no-repeat,
+		linear-gradient(135deg, transparent 44%, var(--bs-secondary-color) 46%, var(--bs-secondary-color) 52%, transparent 54%) 0.9rem 0.9rem / 0.6rem 0.6rem no-repeat;
+	cursor: nwse-resize;
+	touch-action: none;
+}
+
+.ajrm-dialog-resize-handle:focus-visible {
+	outline: 2px solid var(--bs-primary);
+	outline-offset: -2px;
 }
 
 @media (max-width: 575.98px) {
@@ -119,6 +141,10 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 		min-width: 0;
 		min-height: 0;
 		resize: none;
+	}
+
+	.ajrm-dialog-resize-handle {
+		display: none;
 	}
 }
 @import "leaflet/dist/leaflet.css";

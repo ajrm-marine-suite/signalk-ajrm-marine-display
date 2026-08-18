@@ -76,6 +76,7 @@ test("the hidden tide launcher leaves modal ownership to the controller", async 
 	assert.match(html, /id="tideDetailsPane"[\s\S]*?id="tideHeightNow"/);
 	assert.match(html, /id="tideGraphPane"[\s\S]*?id="tideCurve"/);
 	assert.match(html, /modal-dialog[^\"]*ajrm-tide-modal-dialog/);
+	assert.match(html, /id="tideModalResizeHandle"[^>]*aria-label="Resize tide window"/);
 });
 
 test("tide requests use the visible chart centre as explicit selection context", () => {

@@ -1,5 +1,9 @@
 # AJRM Marine Display
 
+Version `0.8.9` replaces the browser-native tide-popup resize affordance with
+a visible bottom-right drag handle that works independently of Bootstrap's
+scroll container. Double-clicking the handle restores the default size.
+
 Version `0.8.8` verifies that normalized UTC tide events are rendered as the
 correct UK civil time—BST in summer and GMT in winter. The tabbed tide popup
 now opens at a smaller desktop size and can be resized by dragging its
@@ -444,7 +448,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.8 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.9 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

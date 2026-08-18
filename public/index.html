@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.8";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.9";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-DLeejb7j.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-DK95LUSl.css">
+    <script type="module" crossorigin src="./assets/index-D8hdSAhI.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DtjXTthY.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.8</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.9</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -338,7 +338,7 @@
       </button>
 
       <div class="modal" tabindex="-1" id="modalTides" aria-labelledby="modalTidesTitle">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg ajrm-tide-modal-dialog">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg ajrm-tide-modal-dialog" id="tideModalDialog">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modalTidesTitle">Tides and locations</h5>
@@ -406,6 +406,7 @@
                 </div>
               </div>
             </div>
+            <button type="button" class="ajrm-dialog-resize-handle" id="tideModalResizeHandle" aria-label="Resize tide window" title="Drag to resize the tide window; double-click to reset"></button>
           </div>
         </div>
       </div>

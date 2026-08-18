@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.9
+
+- Replace unreliable CSS-native tide-dialog resizing with an explicit visible
+  bottom-right drag handle using Pointer Events.
+- Keep the dialog's top-left corner fixed while resizing and bound its minimum
+  and maximum size to usable desktop dimensions and the current viewport.
+- Allow a double-click on the resize handle to restore the default centred
+  dialog size.
+
 ## 0.8.8
 
 - Verify that explicit UTC tide events render as BST during British Summer
