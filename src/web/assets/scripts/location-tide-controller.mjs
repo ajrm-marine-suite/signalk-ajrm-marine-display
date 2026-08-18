@@ -175,9 +175,12 @@ export function tideCurveSvg(events, now = Date.now()) {
 	const { events: extremes, samples } = eventPoints(events);
 	if (samples.length < 2) return "<p class=\"text-body-secondary\">No tidal curve is available.</p>";
 	const spanDays = Math.max(1, (samples.at(-1).at - samples[0].at) / (24 * 60 * 60 * 1000));
-	const width = Math.max(640, Math.ceil(spanDays * 220));
-	const height = 260;
-	const padding = { left: 44, right: 16, top: 18, bottom: 40 };
+	const width = Math.max(700, Math.ceil(spanDays * 260));
+	const height = 310;
+	// Keep a distinct annotation band around the curve. This prevents high-water
+	// labels being clipped and leaves low-water heights and two-line timestamps
+	// clear of both the curve and one another.
+	const padding = { left: 64, right: 64, top: 38, bottom: 70 };
 	const minTime = samples[0].at;
 	const maxTime = samples.at(-1).at;
 	const minHeight = Math.min(...samples.map((point) => point.heightM));
@@ -188,7 +191,27 @@ export function tideCurveSvg(events, now = Date.now()) {
 	const line = samples.map((point, index) => `${index ? "L" : "M"}${x(point.at).toFixed(1)},${y(point.heightM).toFixed(1)}`).join(" ");
 	const nowMs = new Date(now).getTime();
 	const nowX = nowMs >= minTime && nowMs <= maxTime ? x(nowMs) : null;
-	const labels = extremes.map((event) => `<g><circle cx="${x(Date.parse(event.at)).toFixed(1)}" cy="${y(event.heightM).toFixed(1)}" r="4"/><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${height - 18}" text-anchor="middle">${new Intl.DateTimeFormat(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(event.at))}</text><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${(y(event.heightM) - 8).toFixed(1)}" text-anchor="middle">${Number(event.heightM).toFixed(1)} m</text></g>`).join("");
+	const dateFormatter = new Intl.DateTimeFormat(undefined, {
+		weekday: "short", day: "numeric", month: "short",
+	});
+	const timeFormatter = new Intl.DateTimeFormat(undefined, {
+		hour: "2-digit", minute: "2-digit",
+	});
+	const labels = extremes.map((event) => {
+		const eventDate = new Date(event.at);
+		const eventX = x(eventDate.getTime()).toFixed(1);
+		const eventY = y(event.heightM);
+		const isLowWater = String(event.type || "").toLowerCase() === "low";
+		const heightLabelY = eventY + (isLowWater ? 20 : -10);
+		return `<g class="extreme extreme-${isLowWater ? "low" : "high"}">
+			<circle cx="${eventX}" cy="${eventY.toFixed(1)}" r="4"/>
+			<text class="extreme-time" x="${eventX}" y="${height - 38}" text-anchor="middle">
+				<tspan x="${eventX}">${dateFormatter.format(eventDate)}</tspan>
+				<tspan x="${eventX}" dy="16">${timeFormatter.format(eventDate)}</tspan>
+			</text>
+			<text class="extreme-height" x="${eventX}" y="${heightLabelY.toFixed(1)}" text-anchor="middle">${Number(event.heightM).toFixed(1)} m</text>
+		</g>`;
+	}).join("");
 	return `<svg viewBox="0 0 ${width} ${height}" style="width:${width}px;max-width:none" role="img" aria-label="Predicted tide curve">
 		<line class="axis" x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"/>
 		<path class="curve" d="${line}"/>

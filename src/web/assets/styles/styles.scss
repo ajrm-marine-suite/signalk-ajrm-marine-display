@@ -84,6 +84,14 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 	fill: var(--bs-body-color);
 	font: 14px system-ui, sans-serif;
 }
+
+.ajrm-tide-curve .extreme-height {
+	font-weight: 700;
+}
+
+.ajrm-tide-curve .extreme-time {
+	font-size: 13px;
+}
 @import "leaflet/dist/leaflet.css";
 @import "leaflet-easybutton/src/easy-button.css";
 

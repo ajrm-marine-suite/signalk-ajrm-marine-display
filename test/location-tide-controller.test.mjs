@@ -97,6 +97,16 @@ test("tide curve renders labelled extremes and the calculation reference", () =>
 	assert.match(svg, /class="curve"/);
 	assert.match(svg, />Now</);
 	assert.match(svg, />5\.0 m</);
+	assert.match(svg, /class="extreme extreme-low"/);
+	assert.match(svg, /class="extreme extreme-high"/);
+	assert.equal((svg.match(/<tspan /g) || []).length, 6);
+	assert.equal((svg.match(/dy="16"/g) || []).length, 3);
+	const lowPointY = Number(svg.match(/extreme-low">\s*<circle[^>]* cy="([0-9.]+)"/)?.[1]);
+	const lowLabelY = Number(svg.match(/extreme-low">[\s\S]*?extreme-height"[^>]* y="([0-9.]+)"/)?.[1]);
+	const highPointY = Number(svg.match(/extreme-high">\s*<circle[^>]* cy="([0-9.]+)"/)?.[1]);
+	const highLabelY = Number(svg.match(/extreme-high">[\s\S]*?extreme-height"[^>]* y="([0-9.]+)"/)?.[1]);
+	assert.ok(lowLabelY > lowPointY, "low-water height should appear below its trough");
+	assert.ok(highLabelY < highPointY, "high-water height should appear above its peak");
 });
 
 test("tide curve has an explicit empty state", () => {

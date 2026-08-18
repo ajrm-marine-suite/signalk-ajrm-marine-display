@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.6` makes the multi-day tide graph easier to read. High-water
+heights are shown above their peaks, low-water heights below their troughs,
+and each extreme has a two-line day/date and time label with enough margin to
+avoid clipping.
+
 Version `0.8.5` adds an astronomical spring-neap orientation to the tide
 popup. It reports whether tidal ranges are building toward spring or easing
 toward neap, together with days after the preceding phase and before the next.
@@ -429,7 +434,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.5 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.6 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

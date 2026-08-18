@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.6
+
+- Put low-water heights below their troughs while retaining high-water heights
+  above their peaks.
+- Split each tide-extreme timestamp across a day/date line and a time line.
+- Add dedicated graph margins and slightly more horizontal spacing so labels
+  remain visible rather than being clipped by the graph boundary.
+
 ## 0.8.5
 
 - Add an explicitly labelled astronomical spring-neap estimate to the tide
