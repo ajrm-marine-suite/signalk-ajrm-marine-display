@@ -11,6 +11,7 @@ import {
 const LOCATION_API = "/plugins/signalk-ajrm-marine-location-editor";
 const STORAGE = {
 	anchorages: "ajrmMarineDisplay.showAnchorages",
+	graphDays: "ajrmMarineDisplay.tideGraphDays",
 	locations: "ajrmMarineDisplay.showLocations",
 	status: "ajrmMarineDisplay.showTideStatus",
 };
@@ -44,6 +45,22 @@ function readFlag(storage, key, fallback) {
 
 function writeFlag(storage, key, value) {
 	storage?.setItem?.(key, String(Boolean(value)));
+}
+
+export function tideGraphDays(value, fallback = 7) {
+	const days = Math.trunc(Number(value));
+	return days >= 1 && days <= 7 ? days : fallback;
+}
+
+export function tideCurveEventsForDays(events, now = Date.now(), days = 7) {
+	const nowMs = new Date(now).getTime();
+	const endMs = nowMs + tideGraphDays(days) * 24 * 60 * 60 * 1000;
+	const normalized = (events || []).filter((event) =>
+		Number.isFinite(Number(event?.heightM)) && !Number.isNaN(Date.parse(event?.at)),
+	).sort((left, right) => Date.parse(left.at) - Date.parse(right.at));
+	const previous = normalized.filter((event) => Date.parse(event.at) <= nowMs).at(-1);
+	const visible = normalized.filter((event) => Date.parse(event.at) >= nowMs && Date.parse(event.at) <= endMs);
+	return previous && visible[0] !== previous ? [previous, ...visible] : visible;
 }
 
 function locationPosition(location) {
@@ -116,7 +133,8 @@ function eventPoints(events) {
 export function tideCurveSvg(events, now = Date.now()) {
 	const { events: extremes, samples } = eventPoints(events);
 	if (samples.length < 2) return "<p class=\"text-body-secondary\">No tidal curve is available.</p>";
-	const width = 640;
+	const spanDays = Math.max(1, (samples.at(-1).at - samples[0].at) / (24 * 60 * 60 * 1000));
+	const width = Math.max(640, Math.ceil(spanDays * 220));
 	const height = 260;
 	const padding = { left: 44, right: 16, top: 18, bottom: 40 };
 	const minTime = samples[0].at;
@@ -129,8 +147,8 @@ export function tideCurveSvg(events, now = Date.now()) {
 	const line = samples.map((point, index) => `${index ? "L" : "M"}${x(point.at).toFixed(1)},${y(point.heightM).toFixed(1)}`).join(" ");
 	const nowMs = new Date(now).getTime();
 	const nowX = nowMs >= minTime && nowMs <= maxTime ? x(nowMs) : null;
-	const labels = extremes.map((event) => `<g><circle cx="${x(Date.parse(event.at)).toFixed(1)}" cy="${y(event.heightM).toFixed(1)}" r="4"/><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${height - 18}" text-anchor="middle">${new Date(event.at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}</text><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${(y(event.heightM) - 8).toFixed(1)}" text-anchor="middle">${Number(event.heightM).toFixed(1)} m</text></g>`).join("");
-	return `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Predicted tide curve">
+	const labels = extremes.map((event) => `<g><circle cx="${x(Date.parse(event.at)).toFixed(1)}" cy="${y(event.heightM).toFixed(1)}" r="4"/><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${height - 18}" text-anchor="middle">${new Intl.DateTimeFormat(undefined, { weekday: "short", hour: "2-digit", minute: "2-digit" }).format(new Date(event.at))}</text><text x="${x(Date.parse(event.at)).toFixed(1)}" y="${(y(event.heightM) - 8).toFixed(1)}" text-anchor="middle">${Number(event.heightM).toFixed(1)} m</text></g>`).join("");
+	return `<svg viewBox="0 0 ${width} ${height}" style="width:${width}px;max-width:none" role="img" aria-label="Predicted tide curve">
 		<line class="axis" x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}"/>
 		<path class="curve" d="${line}"/>
 		${nowX == null ? "" : `<line class="now" x1="${nowX.toFixed(1)}" y1="${padding.top}" x2="${nowX.toFixed(1)}" y2="${height - padding.bottom}"/><text x="${nowX.toFixed(1)}" y="12" text-anchor="middle">Now</text>`}
@@ -174,6 +192,7 @@ export function createLocationTideController({
 	let anchoringTimer = null;
 	let anchoring = null;
 	let anchoringBusy = false;
+	let graphDays = tideGraphDays(storage?.getItem?.(STORAGE.graphDays));
 
 	async function requestJson(url, options = {}) {
 		const response = await fetchFn(url, { cache: "no-store", credentials: "include", ...options });
@@ -245,7 +264,11 @@ export function createLocationTideController({
 		const ageHours = Number.isFinite(Number(tide?.freshness?.ageSeconds)) ? `${(Number(tide.freshness.ageSeconds) / 3600).toFixed(1)} h old` : "age unknown";
 		controls.sourceFreshness.textContent = tide?.source
 			? `${tide.source.provider} · ${tide.freshness?.state || "unknown"} · ${ageHours}` : "—";
-		controls.curve.innerHTML = tideCurveSvg(tide?.curve, tide?.calculationReferenceAt || Date.now());
+		const referenceAt = tide?.calculationReferenceAt || Date.now();
+		controls.curve.innerHTML = tideCurveSvg(
+			tideCurveEventsForDays(tide?.curve, referenceAt, graphDays),
+			referenceAt,
+		);
 		renderPortChoices();
 	}
 
@@ -334,10 +357,18 @@ export function createLocationTideController({
 		bindFlag(controls.showAnchorages, STORAGE.anchorages, true, renderLayers);
 		bindFlag(controls.showLocations, STORAGE.locations, false, renderLayers);
 		bindFlag(controls.showStatus, STORAGE.status, true, renderTide);
-		controls.statusPanel.addEventListener("click", () => {
+		controls.graphDays.value = String(graphDays);
+		controls.graphDays.addEventListener("change", () => {
+			graphDays = tideGraphDays(controls.graphDays.value);
+			storage?.setItem?.(STORAGE.graphDays, String(graphDays));
+			renderTide();
+		});
+		const openTides = () => {
 			modal?.show?.();
 			refresh();
-		});
+		};
+		controls.open.addEventListener("click", openTides);
+		controls.statusPanel.addEventListener("click", openTides);
 		controls.pin.addEventListener("click", () => pin(controls.alternativePort.value));
 		controls.clearPin.addEventListener("click", () => pin(null));
 		controls.refresh.addEventListener("click", () => refresh({ force: true }));

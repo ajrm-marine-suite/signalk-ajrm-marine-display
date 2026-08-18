@@ -159,6 +159,15 @@ body,
   width: 100vw;
 }
 
+.ajrm-tide-curve {
+  overflow-x: auto;
+  overscroll-behavior-inline: contain;
+}
+
+.ajrm-tide-curve svg {
+  display: block;
+}
+
 #map {
   color: var(--bs-body-color);
   background-color: var(--bs-body-bg);

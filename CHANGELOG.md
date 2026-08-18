@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.4
+
+- Use one programmatic owner for the tide modal instead of mixing Bootstrap's
+  hidden data launcher with an existing modal instance. Closing tide details
+  no longer leaves the chart toolbar obscured by modal state.
+- Add a remembered one-to-seven-day tide-graph range, defaulting to seven
+  days, with a horizontally scrollable multi-day curve and day/time labels.
+
 ## 0.8.3
 
 - Resolve tides for the visible chart centre and preserve that context while

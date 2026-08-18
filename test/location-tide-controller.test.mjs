@@ -3,11 +3,14 @@
  */
 
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import test from "node:test";
 import {
 	TIDE_SELECTION_LABELS,
 	anchoringSuggestionText,
 	tideMapContext,
+	tideCurveEventsForDays,
+	tideGraphDays,
 	tideStatusUrl,
 	tideCurveSvg,
 } from "../src/web/assets/scripts/location-tide-controller.mjs";
@@ -17,6 +20,33 @@ test("tidal selection reasons are translated into skipper-facing explanations", 
 	assert.match(TIDE_SELECTION_LABELS.containingRegionAssignment, /containing tidal region/);
 	assert.match(TIDE_SELECTION_LABELS.nearestPortInTidalRegion, /Nearest suitable port/);
 	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /Manually pinned/);
+});
+
+test("tide graph duration defaults to seven days and rejects invalid stored values", () => {
+	assert.equal(tideGraphDays(null), 7);
+	assert.equal(tideGraphDays("3"), 3);
+	assert.equal(tideGraphDays("9"), 7);
+});
+
+test("tide graph duration keeps the preceding extreme and selected future days", () => {
+	const events = [
+		{ at: "2026-08-17T18:00:00Z", heightM: 1 },
+		{ at: "2026-08-18T06:00:00Z", heightM: 5 },
+		{ at: "2026-08-19T06:00:00Z", heightM: 4.8 },
+		{ at: "2026-08-20T06:00:00Z", heightM: 4.6 },
+	];
+	assert.deepEqual(
+		tideCurveEventsForDays(events, "2026-08-18T00:00:00Z", 1).map((event) => event.at),
+		["2026-08-17T18:00:00Z", "2026-08-18T06:00:00Z"],
+	);
+});
+
+test("the hidden tide launcher leaves modal ownership to the controller", async () => {
+	const html = await fs.readFile(new URL("../src/web/index.html", import.meta.url), "utf8");
+	const launcher = html.match(/<button[\s\S]*?id="buttonOpenTides"[\s\S]*?<\/button>/)?.[0] || "";
+	assert.ok(launcher);
+	assert.doesNotMatch(launcher, /data-bs-(?:toggle|target)/);
+	assert.match(html, /id="selectTideGraphDays"/);
 });
 
 test("tide requests use the visible chart centre as explicit selection context", () => {

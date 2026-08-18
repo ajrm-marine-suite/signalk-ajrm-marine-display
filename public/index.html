@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.3";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.4";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-dx5zYMOW.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Bgq8O1j3.css">
+    <script type="module" crossorigin src="./assets/index-guxRqv8L.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-C38mcUhZ.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.3</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.4</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -253,8 +253,6 @@
       type="button"
       class="d-none"
       id="buttonOpenTides"
-      data-bs-toggle="modal"
-      data-bs-target="#modalTides"
     >Tides and locations</button>
     <button
       type="button"
@@ -362,6 +360,18 @@
                   </dl>
                 </div>
                 <div class="col-12 col-md-7">
+                  <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
+                    <label class="form-label mb-0" for="selectTideGraphDays">Graph range</label>
+                    <select class="form-select form-select-sm w-auto" id="selectTideGraphDays" aria-label="Number of days shown on tide graph">
+                      <option value="1">1 day</option>
+                      <option value="2">2 days</option>
+                      <option value="3">3 days</option>
+                      <option value="4">4 days</option>
+                      <option value="5">5 days</option>
+                      <option value="6">6 days</option>
+                      <option value="7" selected>7 days</option>
+                    </select>
+                  </div>
                   <div id="tideCurve" class="ajrm-tide-curve" aria-label="Tide curve"></div>
                 </div>
               </div>
@@ -1709,7 +1719,8 @@
                 mooring and other saved-location symbols. Its popup consumes
                 Location Editor's shared resolver to show current height,
                 trend, next high/low waters, datum, station, selection reason,
-                source freshness and the tide curve. A manually pinned port
+                source freshness and the tide curve. The graph range defaults
+                to seven days and is remembered by this browser. A manually pinned port
                 overrides—but does not hide—the automatic choice.
               </p>
               <p>

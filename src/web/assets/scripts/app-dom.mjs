@@ -174,6 +174,7 @@ export function createAppDom() {
 		selectionReason: getRequiredElement("tideSelectionReason"),
 		sourceFreshness: getRequiredElement("tideSourceFreshness"),
 		curve: getRequiredElement("tideCurve"),
+		graphDays: getRequiredElement("selectTideGraphDays"),
 		alternativePort: getRequiredElement("selectAlternativeTidePort"),
 		pin: getRequiredElement("buttonPinTidePort"),
 		clearPin: getRequiredElement("buttonClearTidePortPin"),

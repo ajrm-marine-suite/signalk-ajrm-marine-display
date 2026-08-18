@@ -1,5 +1,12 @@
 # AJRM Marine Display
 
+The tide popup offers a remembered one-to-seven-day graph range, defaulting to
+seven days. Its launcher is owned by one programmatic modal controller so
+closing the tide popup cannot leave the map toolbar behind a stale backdrop.
+
+Version `0.8.4` fixes the tide popup close lifecycle and adds the remembered
+one-to-seven-day graph range described below.
+
 Version `0.8.3` resolves tides for the visible chart centre. Tide selection
 therefore works while inspecting a chart away from the vessel and when no
 current own-vessel position is available.
@@ -416,7 +423,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.3 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.4 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
