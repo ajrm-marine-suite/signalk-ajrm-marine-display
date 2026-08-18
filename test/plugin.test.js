@@ -590,6 +590,7 @@ test("Display profiles include AJRM Marine Traffic sensitivity settings", () => 
 test("Display marks a dropped anchor and Un-anchor selects Coastal", () => {
   let profile = "coastal";
   const selectedProfiles = [];
+  const anchorReferences = [];
   const paths = {
     "navigation.position": { latitude: 56.45, longitude: -5.45 },
     "environment.depth.belowKeel": 4.2,
@@ -603,6 +604,10 @@ test("Display marks a dropped anchor and Un-anchor selects Coastal", () => {
         profile = value;
         selectedProfiles.push(value);
         return { current: value };
+      },
+      setAnchorReference(value) {
+        anchorReferences.push(value);
+        return { ok: true };
       },
     },
   });
@@ -620,11 +625,17 @@ test("Display marks a dropped anchor and Un-anchor selects Coastal", () => {
   assert.equal(body.active, true);
   assert.deepEqual(body.mark.position, paths["navigation.position"]);
   assert.equal(body.mark.depthBelowKeelMeters, 4.2);
+  assert.deepEqual(anchorReferences.at(-1), {
+    position: paths["navigation.position"],
+    droppedAt: body.mark.droppedAt,
+    provenance: "manual-anchor-mark",
+  });
 
   routes.get("POST /ajrmMarineDisplay/anchor/clear")({}, response);
   assert.deepEqual(selectedProfiles, ["anchor", "coastal"]);
   assert.equal(body.active, false);
   assert.equal(body.mark, null);
+  assert.equal(anchorReferences.at(-1), null);
   plugin.stop();
 });
 

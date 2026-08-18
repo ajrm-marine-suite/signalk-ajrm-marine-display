@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.2` supplies Traffic with the persisted manual anchor position so
+the shared Anchored profile can be released only after sustained movement or a
+sustained excursion beyond the configured anchor radius. Help now explains
+the default 2-knot/60-second and 100-metre/30-second rules.
+
 Version `0.8.1` adds confirmation-first assisted anchoring. When Location
 Editor detects sufficient stationary evidence at an anchorage or mooring,
 Display offers **Select Anchored** or **Not now**. Confirmation changes the
@@ -51,7 +56,10 @@ Version `0.7.5` moves **Drop Anchor** into the Profiles menu. It selects
 Traffic's Anchored profile, records the current own-vessel position and depth
 below keel, and places a persistent labelled anchor symbol on the chart.
 **Un-anchor** always selects Coastal and removes the marker; changing away from
-Anchored elsewhere removes it automatically.
+Anchored elsewhere removes it automatically. Traffic also releases Anchored
+after sustained movement above its configured speed threshold (2 knots for 60
+seconds by default), or—when this manual mark exists—after the vessel remains
+beyond its configured anchor radius (100 m for 30 seconds by default).
 
 Version `0.7.4` improves own-vessel following by leaving 66% of the visible
 chart ahead along COG and 34% behind by default. The browser-local setting can
@@ -404,7 +412,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.1 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.2 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.1";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.2";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.1</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.2</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1718,7 +1718,9 @@
                 vessel stationary at an anchorage or mooring. Confirming does
                 not create an anchor mark. Use <strong>Drop Anchor</strong> at
                 the actual drop point to record its position and depth. Vessel
-                movement never automatically un-anchors.
+                Traffic releases Anchored only after sustained evidence: by
+                default, more than 2 knots for 60 seconds or, when a manual
+                anchor mark exists, more than 100 m from it for 30 seconds.
               </p>
               <h6>Alerts shown by Display</h6>
               <p>

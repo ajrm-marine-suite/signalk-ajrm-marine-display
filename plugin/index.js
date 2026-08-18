@@ -194,6 +194,14 @@ module.exports = function ajrmMarineDisplay(app) {
       panelEvents: () => panelEvents(brokerProjection()),
       alertEvents: () => ({ events: alertEvents(brokerProjection()) }),
       uiState: () => currentUiState(),
+      anchorReference: () =>
+        anchorMark
+          ? {
+              position: { ...anchorMark.position },
+              droppedAt: anchorMark.droppedAt,
+              provenance: "manual-anchor-mark",
+            }
+          : null,
       async currentRoute() {
         await routeManagerReady;
         return running && generation === lifecycleGeneration
@@ -215,6 +223,7 @@ module.exports = function ajrmMarineDisplay(app) {
     };
     app.ajrmMarineDisplayApi = api;
     globalThis[AJRM_MARINE_DISPLAY_API_REGISTRY] = api;
+    syncAnchorReference();
     app.setPluginStatus(
       status.enabled
         ? `Enabled v${packageInfo.version}; AJRM Marine Traffic display`
@@ -505,6 +514,7 @@ module.exports = function ajrmMarineDisplay(app) {
       removeAnchorMark(app);
       publishCurrentStatus();
     }
+    syncAnchorReference();
     return {
       available: true,
       active: Boolean(anchorMark && profile === "anchor"),
@@ -534,6 +544,7 @@ module.exports = function ajrmMarineDisplay(app) {
       depthBelowKeelMeters,
       droppedAt: new Date().toISOString(),
     });
+    syncAnchorReference();
     publishCurrentStatus();
     return { ok: true, ...currentAnchorStatus() };
   }
@@ -546,12 +557,27 @@ module.exports = function ajrmMarineDisplay(app) {
     traffic.setProfile("coastal");
     anchorMark = null;
     removeAnchorMark(app);
+    syncAnchorReference();
     publishCurrentStatus();
     return { ok: true, ...currentAnchorStatus() };
   }
 
   function trafficApi() {
     return app.ajrmMarineTrafficApi || globalThis[AJRM_MARINE_TRAFFIC_API_REGISTRY] || null;
+  }
+
+  function syncAnchorReference() {
+    const traffic = trafficApi();
+    if (typeof traffic?.setAnchorReference !== "function") return;
+    traffic.setAnchorReference(
+      anchorMark
+        ? {
+            position: anchorMark.position,
+            droppedAt: anchorMark.droppedAt,
+            provenance: "manual-anchor-mark",
+          }
+        : null,
+    );
   }
 
   function explicitTrafficProfile() {

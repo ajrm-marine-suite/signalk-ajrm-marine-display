@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.2
+
+- Supplies the persisted manual anchor reference to Traffic's sustained release monitor.
+- Documents the default speed and anchor-radius release conditions in onboard help.
+
 ## 0.8.1
 
 - Show Location Editor's backend anchoring suggestion prominently on the map
