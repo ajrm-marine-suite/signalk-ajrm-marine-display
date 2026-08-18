@@ -8,6 +8,8 @@ import test from "node:test";
 import {
 	TIDE_SELECTION_LABELS,
 	anchoringSuggestionText,
+	distanceToNextLowWater,
+	interpolatedTideHeight,
 	springNeapEstimate,
 	tideMapContext,
 	tideCurveEventsForDays,
@@ -74,6 +76,7 @@ test("the hidden tide launcher leaves modal ownership to the controller", async 
 	assert.match(html, /id="tideDetailsTab"[\s\S]*?data-bs-target="#tideDetailsPane"/);
 	assert.match(html, /id="tideGraphTab"[\s\S]*?data-bs-target="#tideGraphPane"/);
 	assert.match(html, /id="tideDetailsPane"[\s\S]*?id="tideHeightNow"/);
+	assert.match(html, /id="tideDistanceToFall"/);
 	assert.match(html, /id="tideGraphPane"[\s\S]*?id="tideCurve"/);
 	assert.match(html, /modal-dialog[^\"]*ajrm-tide-modal-dialog/);
 	assert.match(html, /id="tideModalResizeHandle"[^>]*aria-label="Resize tide window"/);
@@ -119,6 +122,28 @@ test("tide curve renders labelled extremes and the calculation reference", () =>
 	const highLabelY = Number(svg.match(/extreme-high">[\s\S]*?extreme-height"[^>]* y="([0-9.]+)"/)?.[1]);
 	assert.ok(lowLabelY > lowPointY, "low-water height should appear below its trough");
 	assert.ok(highLabelY < highPointY, "high-water height should appear above its peak");
+});
+
+test("tide curve shows all four supplied reference levels and hover geometry", () => {
+	const events = [
+		{ at: "2026-08-18T00:00:00Z", type: "low", heightM: 1 },
+		{ at: "2026-08-18T06:00:00Z", type: "high", heightM: 5 },
+	];
+	const svg = tideCurveSvg(events, "2026-08-18T03:00:00Z", {
+		mhws: 4, mhwn: 2.9, mlwn: 1.8, mlws: 0.7,
+	});
+	for (const label of ["MHWS 4.0 m", "MHWN 2.9 m", "MLWN 1.8 m", "MLWS 0.7 m"]) assert.match(svg, new RegExp(label));
+	assert.equal((svg.match(/class="tide-reference"/g) || []).length, 4);
+	assert.match(svg, /class="tide-hover-target"/);
+	assert.match(svg, /data-min-time=/);
+	assert.equal(interpolatedTideHeight(events, "2026-08-18T03:00:00Z"), 3);
+});
+
+test("distance to fall always uses current height and the next low water", () => {
+	assert.equal(distanceToNextLowWater({
+		heightNowM: 3.4, trend: "rising", nextLowWater: { heightM: 1.1 },
+	}), 2.3);
+	assert.equal(distanceToNextLowWater({ heightNowM: 3.4, nextLowWater: null }), null);
 });
 
 test("tide curve has an explicit empty state", () => {

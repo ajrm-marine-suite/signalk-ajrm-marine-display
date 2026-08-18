@@ -171,6 +171,7 @@ export function createAppDom() {
 		trend: getRequiredElement("tideTrend"),
 		nextHigh: getRequiredElement("tideNextHigh"),
 		nextLow: getRequiredElement("tideNextLow"),
+		distanceToFall: getRequiredElement("tideDistanceToFall"),
 		datum: getRequiredElement("tideDatum"),
 		station: getRequiredElement("tideStation"),
 		selectionReason: getRequiredElement("tideSelectionReason"),

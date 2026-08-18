@@ -5,6 +5,7 @@
  */
 
 const EDGE_GAP = 8;
+export const DIALOG_SIZE_STORAGE_KEY = "ajrmMarineDisplay.tideDialogSize.v1";
 
 export function boundedDialogSize({ width, height, maxWidth, maxHeight, minWidth = 384, minHeight = 320 }) {
 	return {
@@ -13,12 +14,44 @@ export function boundedDialogSize({ width, height, maxWidth, maxHeight, minWidth
 	};
 }
 
-export function createDialogResizeController({ dialog, handle, windowObject = globalThis.window }) {
+export function readSavedDialogSize(storage, key = DIALOG_SIZE_STORAGE_KEY) {
+	try {
+		const value = JSON.parse(storage?.getItem?.(key));
+		return Number.isFinite(value?.width) && Number.isFinite(value?.height) && value.width > 0 && value.height > 0
+			? { width: value.width, height: value.height }
+			: null;
+	} catch {
+		return null;
+	}
+}
+
+export function createDialogResizeController({
+	dialog,
+	handle,
+	windowObject = globalThis.window,
+	storage = globalThis.localStorage,
+	storageKey = DIALOG_SIZE_STORAGE_KEY,
+}) {
 	let drag = null;
+	const saved = readSavedDialogSize(storage, storageKey);
+	if (saved) {
+		const size = boundedDialogSize({
+			...saved,
+			maxWidth: Math.max(1, windowObject.innerWidth - EDGE_GAP * 2),
+			maxHeight: Math.max(1, windowObject.innerHeight - EDGE_GAP * 2),
+		});
+		dialog.style.width = `${Math.round(size.width)}px`;
+		dialog.style.height = `${Math.round(size.height)}px`;
+	}
 
 	function stop(event) {
 		if (!drag || (event?.pointerId != null && event.pointerId !== drag.pointerId)) return;
 		handle.releasePointerCapture?.(drag.pointerId);
+		const rect = dialog.getBoundingClientRect();
+		storage?.setItem?.(storageKey, JSON.stringify({
+			width: Math.round(rect.width),
+			height: Math.round(rect.height),
+		}));
 		drag = null;
 	}
 
@@ -60,6 +93,7 @@ export function createDialogResizeController({ dialog, handle, windowObject = gl
 
 	function reset() {
 		stop();
+		storage?.removeItem?.(storageKey);
 		for (const property of ["position", "left", "top", "margin", "width", "height"]) {
 			dialog.style.removeProperty(property);
 		}

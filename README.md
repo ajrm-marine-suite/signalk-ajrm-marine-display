@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.8.10` remembers the tide-popup size on the browser device. The tide
+graph shows available MHWS, MHWN, MLWN and MLWS station levels as light dotted
+references and reports predicted local time and height under the pointer. The
+Details tab also shows the current height above the next low water as
+**Distance to fall**, whether the tide is rising or falling.
+
 Version `0.8.9` replaces the browser-native tide-popup resize affordance with
 a visible bottom-right drag handle that works independently of Bootstrap's
 scroll container. Double-clicking the handle restores the default size.
@@ -448,7 +454,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.9 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.10 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

@@ -205,6 +205,7 @@ createAnchorController({
 createDialogResizeController({
 	dialog: locationTideControls.dialog,
 	handle: locationTideControls.resizeHandle,
+	storage: window.localStorage,
 });
 createLocationTideController({
 	L,

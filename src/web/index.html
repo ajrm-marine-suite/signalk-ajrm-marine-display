@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.9";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.10";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.9</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.10</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -365,6 +365,7 @@
                     <dt class="col-5">Trend</dt><dd class="col-7" id="tideTrend">—</dd>
                     <dt class="col-5">Next high water</dt><dd class="col-7" id="tideNextHigh">—</dd>
                     <dt class="col-5">Next low water</dt><dd class="col-7" id="tideNextLow">—</dd>
+					<dt class="col-5">Distance to fall</dt><dd class="col-7" id="tideDistanceToFall">—</dd>
                     <dt class="col-5">Datum</dt><dd class="col-7" id="tideDatum">—</dd>
                     <dt class="col-5">Station</dt><dd class="col-7" id="tideStation">—</dd>
                     <dt class="col-5">Selected because</dt><dd class="col-7" id="tideSelectionReason">—</dd>

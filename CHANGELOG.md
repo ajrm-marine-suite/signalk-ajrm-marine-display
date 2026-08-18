@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.8.10
+
+- Remember the user-resized tide-dialog dimensions in browser storage and
+  restore them within the current viewport; double-click still resets them.
+- Draw available MHWS, MHWN, MLWN and MLWS station levels as labelled light
+  dotted lines behind the predicted curve.
+- Show interpolated local time and predicted height while hovering over the
+  tide curve.
+- Show **Distance to fall** as current predicted height minus the next
+  low-water height, during both rising and falling tides.
+
 ## 0.8.9
 
 - Replace unreliable CSS-native tide-dialog resizing with an explicit visible
