@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.7` separates the tide popup into **Details** and **Graph** tabs.
+The graph receives the full popup width and greater spacing between tidal
+extremes, preventing adjacent day/date labels from overlapping while retaining
+horizontal scrolling for long ranges.
+
 Version `0.8.6` makes the multi-day tide graph easier to read. High-water
 heights are shown above their peaks, low-water heights below their troughs,
 and each extreme has a two-line day/date and time label with enough margin to
@@ -434,7 +439,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.6 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.7 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

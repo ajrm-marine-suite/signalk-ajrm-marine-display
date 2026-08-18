@@ -65,6 +65,10 @@ test("the hidden tide launcher leaves modal ownership to the controller", async 
 	assert.ok(launcher);
 	assert.doesNotMatch(launcher, /data-bs-(?:toggle|target)/);
 	assert.match(html, /id="selectTideGraphDays"/);
+	assert.match(html, /id="tideDetailsTab"[\s\S]*?data-bs-target="#tideDetailsPane"/);
+	assert.match(html, /id="tideGraphTab"[\s\S]*?data-bs-target="#tideGraphPane"/);
+	assert.match(html, /id="tideDetailsPane"[\s\S]*?id="tideHeightNow"/);
+	assert.match(html, /id="tideGraphPane"[\s\S]*?id="tideCurve"/);
 });
 
 test("tide requests use the visible chart centre as explicit selection context", () => {

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.7
+
+- Split tide information into Details and Graph tabs so the popup presents one
+  task at a time and the curve can use the full modal width.
+- Increase horizontal spacing between tidal extremes to prevent two-line
+  day/date and time labels from overlapping.
+- Use the extra-large responsive modal width where the browser permits it,
+  while retaining horizontal graph scrolling on smaller screens.
+
 ## 0.8.6
 
 - Put low-water heights below their troughs while retaining high-water heights

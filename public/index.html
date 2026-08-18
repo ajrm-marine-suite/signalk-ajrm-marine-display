@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.6";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.7";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-DjZ_uKTe.js"></script>
+    <script type="module" crossorigin src="./assets/index-C1HkIg1W.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-CIH2_bh0.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.6</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.7</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -338,7 +338,7 @@
       </button>
 
       <div class="modal" tabindex="-1" id="modalTides" aria-labelledby="modalTidesTitle">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl">
           <div class="modal-content">
             <div class="modal-header">
               <h5 class="modal-title" id="modalTidesTitle">Tides and locations</h5>
@@ -346,8 +346,20 @@
             </div>
             <div class="modal-body">
               <div id="tideUnavailable" class="alert alert-warning d-none"></div>
-              <div class="row g-3">
-                <div class="col-12 col-md-5">
+              <ul class="nav nav-tabs" id="tideTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link active" id="tideDetailsTab" data-bs-toggle="tab" data-bs-target="#tideDetailsPane" type="button" role="tab" aria-controls="tideDetailsPane" aria-selected="true">
+                    Details
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="tideGraphTab" data-bs-toggle="tab" data-bs-target="#tideGraphPane" type="button" role="tab" aria-controls="tideGraphPane" aria-selected="false">
+                    Graph
+                  </button>
+                </li>
+              </ul>
+              <div class="tab-content border border-top-0 rounded-bottom p-3">
+                <div class="tab-pane fade show active" id="tideDetailsPane" role="tabpanel" aria-labelledby="tideDetailsTab" tabindex="0">
                   <dl class="row small mb-0">
                     <dt class="col-5">Current height</dt><dd class="col-7" id="tideHeightNow">—</dd>
                     <dt class="col-5">Trend</dt><dd class="col-7" id="tideTrend">—</dd>
@@ -360,8 +372,24 @@
                     <dt class="col-5">Spring/neap</dt><dd class="col-7" id="tideSpringNeapStatus">—</dd>
                     <dt class="col-5">Phase timing</dt><dd class="col-7" id="tideSpringNeapTiming">—</dd>
                   </dl>
+                  <p class="small text-body-secondary mt-2 mb-0">
+                    Spring/neap timing is an astronomical estimate. Local tidal range commonly lags the corresponding lunar phase, so verify the plotted station predictions.
+                  </p>
+                  <hr />
+                  <label class="form-label" for="selectAlternativeTidePort">Alternative tidal port</label>
+                  <select class="form-select" id="selectAlternativeTidePort"></select>
+                  <div class="d-flex flex-wrap gap-2 mt-2">
+                    <button type="button" class="btn btn-primary" id="buttonPinTidePort">Pin selected port</button>
+                    <button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
+                    <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
+                  </div>
+                  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
+                  <p class="small text-body-secondary mt-3 mb-0">
+                    Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
+                    Predictions and interpolation are planning aids; verify station, datum and freshness.
+                  </p>
                 </div>
-                <div class="col-12 col-md-7">
+                <div class="tab-pane fade" id="tideGraphPane" role="tabpanel" aria-labelledby="tideGraphTab" tabindex="0">
                   <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
                     <label class="form-label mb-0" for="selectTideGraphDays">Graph range</label>
                     <select class="form-select form-select-sm w-auto" id="selectTideGraphDays" aria-label="Number of days shown on tide graph">
@@ -375,24 +403,8 @@
                     </select>
                   </div>
                   <div id="tideCurve" class="ajrm-tide-curve" aria-label="Tide curve"></div>
-                  <p class="small text-body-secondary mt-2 mb-0">
-                    Spring/neap timing is an astronomical estimate. Local tidal range commonly lags the corresponding lunar phase, so verify the plotted station predictions.
-                  </p>
                 </div>
               </div>
-              <hr />
-              <label class="form-label" for="selectAlternativeTidePort">Alternative tidal port</label>
-              <select class="form-select" id="selectAlternativeTidePort"></select>
-              <div class="d-flex gap-2 mt-2">
-                <button type="button" class="btn btn-primary" id="buttonPinTidePort">Pin selected port</button>
-                <button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
-                <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
-              </div>
-              <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
-              <p class="small text-body-secondary mt-3 mb-0">
-                Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
-                Predictions and interpolation are planning aids; verify station, datum and freshness.
-              </p>
             </div>
           </div>
         </div>

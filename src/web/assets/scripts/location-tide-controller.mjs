@@ -175,7 +175,9 @@ export function tideCurveSvg(events, now = Date.now()) {
 	const { events: extremes, samples } = eventPoints(events);
 	if (samples.length < 2) return "<p class=\"text-body-secondary\">No tidal curve is available.</p>";
 	const spanDays = Math.max(1, (samples.at(-1).at - samples[0].at) / (24 * 60 * 60 * 1000));
-	const width = Math.max(700, Math.ceil(spanDays * 260));
+	// Four extremes per day is common. Reserve roughly 100 px for each label so
+	// a day/date such as "Wed 19 Aug" cannot collide with its neighbour.
+	const width = Math.max(800, Math.ceil(spanDays * 400));
 	const height = 310;
 	// Keep a distinct annotation band around the curve. This prevents high-water
 	// labels being clipped and leaves low-water heights and two-line timestamps
