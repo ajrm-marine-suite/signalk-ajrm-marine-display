@@ -10,6 +10,7 @@ import {
 	anchoringSuggestionText,
 	distanceToNextLowWater,
 	interpolatedTideHeight,
+	isSelectableTidePort,
 	springNeapEstimate,
 	tideMapContext,
 	tideCurveEventsForDays,
@@ -22,10 +23,11 @@ import {
 } from "../src/web/assets/scripts/location-tide-controller.mjs";
 
 test("tidal selection reasons are translated into skipper-facing explanations", () => {
+	assert.match(TIDE_SELECTION_LABELS.explicitRequestedPort, /selected in Display/);
 	assert.match(TIDE_SELECTION_LABELS.explicitTideLocationRef, /Explicit tidal port/);
 	assert.match(TIDE_SELECTION_LABELS.containingRegionAssignment, /containing tidal region/);
 	assert.match(TIDE_SELECTION_LABELS.nearestPortInTidalRegion, /Nearest suitable port/);
-	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /Manually pinned/);
+	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /manual tidal-port override/);
 });
 
 test("spring-neap estimate reports elapsed and remaining phase days", () => {
@@ -97,6 +99,25 @@ test("tide requests use the visible chart centre as explicit selection context",
 	const alternativeUrl = new URL(tideStatusUrl(alternative), "https://example.test");
 	assert.equal(alternative.portId, "alternative-port-id");
 	assert.equal(alternativeUrl.searchParams.get("portId"), "alternative-port-id");
+});
+
+test("automatic tide selection prefers the live vessel position to the chart centre", () => {
+	const context = tideMapContext(
+		{ getCenter: () => ({ lat: 56, lng: -5 }) },
+		{ isValid: true, latitude: 55.5, longitude: -6.25 },
+	);
+	assert.deepEqual(context, { latitude: 55.5, longitude: -6.25 });
+});
+
+test("tidal-port chooser includes secondary ports resolved through a parent", () => {
+	assert.equal(isSelectableTidePort({
+		types: ["tidalSecondaryPort"],
+		properties: { tide: {
+			parentLocationRef: "/resources/locations/parent",
+			secondaryPortCorrections: { contract: "ajrm-secondary-port-corrections-v3" },
+		} },
+	}), true);
+	assert.equal(isSelectableTidePort({ types: ["tidalSecondaryPort"], properties: { tide: {} } }), false);
 });
 
 test("invalid chart centres do not create misleading tide coordinates", () => {

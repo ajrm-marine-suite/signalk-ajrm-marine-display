@@ -1,11 +1,14 @@
 # AJRM Marine Display
 
-Version `0.8.12` makes an alternative tidal-port choice effective immediately
+Version `0.8.13` simplifies tidal-port selection. Automatic mode follows the
+live vessel position and falls back to the displayed chart centre; the chooser
+contains both standard and secondary ports. A manual choice is described as
+the selected tidal port and no longer creates a persistent pin.
+
+Version `0.8.12` made an alternative tidal-port choice effective immediately
 and carries it through Refresh. While the selected port is loading or has no
 prediction data, Display clears the previous station's measurements and graph
-instead of presenting stale numbers under the new choice. **Pin selected port**
-continues to make that choice persistent; **Use automatic selection** restores
-location-based selection.
+instead of presenting stale numbers under the new choice.
 
 Version `0.8.11` fixes the tide graph lower edge at 0 m Chart Datum, keeping
 MLWS visibly above the baseline rather than cropping the graph to its lowest
@@ -465,7 +468,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.12 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.13 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

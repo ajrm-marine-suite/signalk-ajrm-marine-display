@@ -100,6 +100,7 @@ createGpsStatusIndicator({
 	element: elements.gpsStatusIndicator,
 	textElement: elements.gpsStatusText,
 	windowObject: window,
+	getOwnPosition: state.getSelfTarget,
 }).start();
 
 const {

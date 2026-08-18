@@ -32,11 +32,11 @@ const TIDE_REFERENCE_LEVELS = Object.freeze([
 ]);
 
 export const TIDE_SELECTION_LABELS = Object.freeze({
-	explicitRequestedPort: "Alternative tidal port selected in Display",
+	explicitRequestedPort: "Tidal port selected in Display",
 	explicitTideLocationRef: "Explicit tidal port assigned to this location",
 	containingRegionAssignment: "Tidal port assigned to the containing tidal region",
 	nearestPortInTidalRegion: "Nearest suitable port in the same tidal region",
-	manualPinnedOverride: "Manually pinned alternative port",
+	manualPinnedOverride: "Saved manual tidal-port override",
 	none: "No suitable tidal port selected",
 });
 
@@ -353,7 +353,14 @@ export function attachTideCurveHover(container, events, { windowObject = globalT
 	return { destroy() { target.removeEventListener("pointermove", move); target.removeEventListener("pointerleave", hide); readout.remove(); } };
 }
 
-export function tideMapContext(map) {
+
+export function tideMapContext(map, ownPosition = null) {
+	const ownLatitude = Number(ownPosition?.latitude);
+	const ownLongitude = Number(ownPosition?.longitude);
+	if (ownPosition?.isValid !== false && Number.isFinite(ownLatitude) && ownLatitude >= -90 && ownLatitude <= 90 &&
+		Number.isFinite(ownLongitude) && ownLongitude >= -180 && ownLongitude <= 180) {
+		return { latitude: ownLatitude, longitude: ownLongitude };
+	}
 	const center = map?.getCenter?.();
 	const latitude = Number(center?.lat);
 	const longitude = Number(center?.lng);
@@ -372,11 +379,18 @@ export function tideStatusUrl(context = {}) {
 	return `${LOCATION_API}/tides/status${suffix ? `?${suffix}` : ""}`;
 }
 
-export function tideRequestContext(map, portId = null) {
+export function tideRequestContext(map, portId = null, ownPosition = null) {
 	return {
-		...tideMapContext(map),
+		...tideMapContext(map, ownPosition),
 		...(portId ? { portId: String(portId) } : {}),
 	};
+}
+
+export function isSelectableTidePort(location) {
+	const tide = location?.properties?.tide;
+	if (!location?.types?.some((type) => PORT_TYPES.has(type))) return false;
+	if (tide?.providerId && tide?.stationId) return true;
+	return Boolean(location.types.includes("tidalSecondaryPort") && tide?.parentLocationRef && tide?.secondaryPortCorrections);
 }
 
 export function createLocationTideController({
@@ -387,6 +401,7 @@ export function createLocationTideController({
 	fetchFn = globalThis.fetch,
 	storage = globalThis.localStorage,
 	windowObject = globalThis.window,
+	getOwnPosition = () => null,
 	onProfileChanged = async () => {},
 }) {
 	const anchorageLayer = L.layerGroup();
@@ -436,16 +451,16 @@ export function createLocationTideController({
 	}
 
 	function renderPortChoices() {
-		const previous = controls.alternativePort.value;
 		controls.alternativePort.replaceChildren();
-		for (const location of locations.filter((entry) =>
-			entry.types.some((type) => PORT_TYPES.has(type)) && entry.properties?.tide?.providerId && entry.properties?.tide?.stationId,
-		).sort((left, right) => left.name.localeCompare(right.name))) {
-			controls.alternativePort.append(new Option(location.name, location.id));
+		const automaticName = !selectedPortId && tide?.selectedPort?.name ? ` — ${tide.selectedPort.name}` : "";
+		controls.alternativePort.append(new Option(`Automatic by position${automaticName}`, ""));
+		for (const location of locations.filter(isSelectableTidePort).sort((left, right) => left.name.localeCompare(right.name))) {
+			const kind = location.types.includes("tidalSecondaryPort") ? "secondary" : "standard";
+			controls.alternativePort.append(new Option(`${location.name} (${kind})`, location.id));
 		}
-		controls.alternativePort.value = selectedPortId || tide?.selectedPort?.id || previous;
+		controls.alternativePort.value = selectedPortId || "";
 		controls.pin.disabled = !controls.alternativePort.value;
-		controls.clearPin.disabled = tide?.selection?.pinned !== true;
+		controls.clearPin.disabled = !selectedPortId && tide?.selection?.pinned !== true;
 	}
 
 	function renderTide() {
@@ -517,7 +532,7 @@ export function createLocationTideController({
 		const sequence = ++requestSequence;
 		const requestedPortId = selectedPortId;
 		try {
-			const context = tideRequestContext(map, requestedPortId);
+			const context = tideRequestContext(map, requestedPortId, getOwnPosition());
 			const [catalogue, result] = await Promise.all([
 				requestJson(`${LOCATION_API}/locations?workspace=all`),
 				force
@@ -540,21 +555,21 @@ export function createLocationTideController({
 		}
 	}
 
-	async function pin(portId) {
+	async function useAutomaticSelection() {
 		const sequence = ++requestSequence;
-		selectedPortId = portId || null;
-		showPendingPort(selectedPortId, portId ? "Loading the selected tidal port…" : "Restoring automatic tidal-port selection…");
+		selectedPortId = null;
+		showPendingPort(null, "Restoring automatic tidal-port selection…");
 		try {
 			controls.pin.disabled = true;
 			const result = await requestJson(`${LOCATION_API}/tides/pin`, {
 				method: "POST",
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
-				body: JSON.stringify({ portId: portId || null, ...tideMapContext(map) }),
+				body: JSON.stringify({ portId: null, ...tideMapContext(map, getOwnPosition()) }),
 			});
 			if (sequence !== requestSequence) return;
 			tide = result;
 			renderTide();
-			controls.actionStatus.textContent = portId ? "Alternative tidal port pinned." : "Automatic tidal-port selection restored.";
+			controls.actionStatus.textContent = "Automatic tidal-port selection restored.";
 		} catch (error) {
 			if (sequence !== requestSequence) return;
 			tide = pendingTide(selectedPortId, error.message);
@@ -626,12 +641,19 @@ export function createLocationTideController({
 		controls.statusPanel.addEventListener("click", openTides);
 		controls.alternativePort.addEventListener("change", () => {
 			selectedPortId = controls.alternativePort.value || null;
-			showPendingPort(selectedPortId, "Loading the selected tidal port…");
-			controls.actionStatus.textContent = "Loading the selected tidal port…";
+			if (!selectedPortId) {
+				useAutomaticSelection();
+				return;
+			}
+			showPendingPort(selectedPortId, selectedPortId ? "Loading the selected tidal port…" : "Selecting a tidal port automatically…");
+			controls.actionStatus.textContent = selectedPortId ? "Loading the selected tidal port…" : "Selecting a tidal port automatically…";
 			refresh();
 		});
-		controls.pin.addEventListener("click", () => pin(controls.alternativePort.value));
-		controls.clearPin.addEventListener("click", () => pin(null));
+		controls.pin.addEventListener("click", () => {
+			selectedPortId = controls.alternativePort.value || null;
+			refresh();
+		});
+		controls.clearPin.addEventListener("click", useAutomaticSelection);
 		controls.refresh.addEventListener("click", () => refresh({ force: true }));
 		controls.confirmAnchoring.addEventListener("click", () => anchoringAction("confirm"));
 		controls.dismissAnchoring.addEventListener("click", () => anchoringAction("dismiss"));

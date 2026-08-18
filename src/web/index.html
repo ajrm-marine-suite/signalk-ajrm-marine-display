@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.12";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.13";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.12</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.13</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -377,14 +377,15 @@
                     Spring/neap timing is an astronomical estimate. Local tidal range commonly lags the corresponding lunar phase, so verify the plotted station predictions.
                   </p>
                   <hr />
-                  <label class="form-label" for="selectAlternativeTidePort">Alternative tidal port</label>
-                  <select class="form-select" id="selectAlternativeTidePort"></select>
-                  <div class="d-flex flex-wrap gap-2 mt-2">
-                    <button type="button" class="btn btn-primary" id="buttonPinTidePort">Pin selected port</button>
-                    <button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
+				  <label class="form-label" for="selectAlternativeTidePort">Tidal port</label>
+				  <select class="form-select" id="selectAlternativeTidePort"></select>
+				  <div class="d-flex flex-wrap gap-2 mt-2">
+					<button type="button" class="btn btn-primary" id="buttonPinTidePort">Use selected port</button>
+					<button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
                     <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
                   </div>
-                  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
+				  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
+				  <p class="small text-body-secondary mt-2 mb-0">Automatic selection follows the vessel position when available, otherwise the centre of the displayed chart. A manual selection lasts until automatic selection is restored.</p>
                   <p class="small text-body-secondary mt-3 mb-0">
                     Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
                     Predictions and interpolation are planning aids; verify station, datum and freshness.
@@ -1742,8 +1743,10 @@
                 astronomical spring-neap estimate, including days after the
                 preceding phase and before the next; local tidal response may
                 lag that lunar phase. The graph range defaults to seven days
-                and is remembered by this browser. A manually pinned port
-                overrides—but does not hide—the automatic choice.
+				and is remembered by this browser. Automatic tidal-port selection
+				uses the live vessel position when available and otherwise the chart
+				centre; a selected standard or secondary port overrides it until
+				automatic selection is restored.
               </p>
               <p>
                 <strong>Assisted anchoring</strong> asks before selecting the

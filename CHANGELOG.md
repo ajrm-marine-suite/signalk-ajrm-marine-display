@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.13
+
+- Rename the alternative-port control to the selected tidal port and remove
+  persistent pinning from normal manual selection.
+- Make automatic selection follow a valid live vessel position, falling back
+  to the visible chart centre when own position is unavailable.
+- List usable secondary ports as well as direct-provider standard ports.
+
 ## 0.8.12
 
 - Apply an alternative tidal-port selection immediately and retain its
