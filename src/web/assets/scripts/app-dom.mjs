@@ -55,6 +55,7 @@ export function createAppDom() {
 		selectedVesselProperties: new bootstrap.Modal(
 			"#modalSelectedVesselProperties",
 		),
+		tides: new bootstrap.Modal("#modalTides"),
 	};
 
 	const offcanvas = {
@@ -160,6 +161,29 @@ export function createAppDom() {
 		status: getRequiredElement("routeStatus"),
 	};
 
+	const locationTideControls = {
+		open: getRequiredElement("buttonOpenTides"),
+		statusPanel: getRequiredElement("tideStatusPanel"),
+		unavailable: getRequiredElement("tideUnavailable"),
+		heightNow: getRequiredElement("tideHeightNow"),
+		trend: getRequiredElement("tideTrend"),
+		nextHigh: getRequiredElement("tideNextHigh"),
+		nextLow: getRequiredElement("tideNextLow"),
+		datum: getRequiredElement("tideDatum"),
+		station: getRequiredElement("tideStation"),
+		selectionReason: getRequiredElement("tideSelectionReason"),
+		sourceFreshness: getRequiredElement("tideSourceFreshness"),
+		curve: getRequiredElement("tideCurve"),
+		alternativePort: getRequiredElement("selectAlternativeTidePort"),
+		pin: getRequiredElement("buttonPinTidePort"),
+		clearPin: getRequiredElement("buttonClearTidePortPin"),
+		refresh: getRequiredElement("buttonRefreshTides"),
+		actionStatus: getRequiredElement("tideActionStatus"),
+		showAnchorages: getRequiredElement("checkShowAnchorages"),
+		showLocations: getRequiredElement("checkShowLocations"),
+		showStatus: getRequiredElement("checkShowTideStatus"),
+	};
+
 	const observationControls = {
 		modal: getRequiredElement("modalVoyageObservation"),
 		form: getRequiredElement("formVoyageObservation"),
@@ -191,6 +215,7 @@ export function createAppDom() {
 		mapControls,
 		routeControls,
 		observationControls,
+		locationTideControls,
 		autoProfileControls,
 		sizeControls,
 	};

@@ -27,6 +27,63 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 	white-space: nowrap;
 	font-size: 0.75rem;
 }
+
+.ajrm-location-marker {
+	display: grid;
+	place-items: center;
+	border: 2px solid #fff;
+	border-radius: 50%;
+	background: #075985;
+	box-shadow: 0 1px 5px rgb(0 0 0 / 55%);
+	color: #fff;
+	font: 800 15px/1 system-ui, sans-serif;
+}
+
+.ajrm-location-marker-anchorage {
+	background: #166534;
+}
+
+.ajrm-location-popup p {
+	margin: 0.4rem 0;
+	max-width: 22rem;
+}
+
+.ajrm-tide-curve {
+	min-height: 12rem;
+}
+
+.ajrm-tide-curve svg {
+	display: block;
+	width: 100%;
+	height: auto;
+	overflow: visible;
+}
+
+.ajrm-tide-curve .axis {
+	stroke: var(--bs-secondary-color);
+	stroke-width: 1;
+}
+
+.ajrm-tide-curve .curve {
+	fill: none;
+	stroke: var(--bs-primary);
+	stroke-width: 4;
+}
+
+.ajrm-tide-curve .now {
+	stroke: var(--bs-danger);
+	stroke-dasharray: 5 4;
+	stroke-width: 2;
+}
+
+.ajrm-tide-curve circle {
+	fill: var(--bs-primary);
+}
+
+.ajrm-tide-curve text {
+	fill: var(--bs-body-color);
+	font: 14px system-ui, sans-serif;
+}
 @import "leaflet/dist/leaflet.css";
 @import "leaflet-easybutton/src/easy-button.css";
 
@@ -154,7 +211,8 @@ body.ajrm-marine-alert-panel-open .cursor-position {
 
 .ajrm-marine-replay-status,
 .ajrm-marine-connection-status,
-.ajrm-marine-chart-cycle-status {
+.ajrm-marine-chart-cycle-status,
+.ajrm-marine-tide-status {
   display: flex;
   max-width: 100%;
   flex-wrap: wrap;
@@ -176,7 +234,8 @@ body.ajrm-marine-alert-panel-open .cursor-position {
 
 .ajrm-marine-replay-status.d-none,
 .ajrm-marine-connection-status.d-none,
-.ajrm-marine-chart-cycle-status.d-none {
+.ajrm-marine-chart-cycle-status.d-none,
+.ajrm-marine-tide-status.d-none {
   display: none;
 }
 
@@ -202,6 +261,24 @@ body.ajrm-marine-alert-panel-open .cursor-position {
   border: 1px solid var(--bs-primary-border-subtle);
   color: var(--bs-primary-text-emphasis);
   background: var(--bs-primary-bg-subtle);
+}
+
+.ajrm-marine-tide-status {
+	border: 1px solid var(--bs-info-border-subtle);
+	color: var(--bs-info-text-emphasis);
+	background: var(--bs-info-bg-subtle);
+}
+
+.ajrm-marine-tide-status-stale {
+	border-color: var(--bs-warning-border-subtle);
+	color: var(--bs-warning-text-emphasis);
+	background: var(--bs-warning-bg-subtle);
+}
+
+.ajrm-marine-tide-status-invalid {
+	border-color: var(--bs-secondary-border-subtle);
+	color: var(--bs-secondary-color);
+	background: var(--bs-secondary-bg);
 }
 
 .leaflet-bar a,

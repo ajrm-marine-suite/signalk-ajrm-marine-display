@@ -1,5 +1,19 @@
 # AJRM Marine Display
 
+Version `0.8.0` consumes Location Editor's shared Tide Resolver and versioned
+location catalogue. Display can optionally show anchorage/mooring symbols and
+other saved locations, presents a compact live tide panel and detailed curve,
+and explains the selected tidal port and source freshness. A skipper can pin
+an alternative configured prediction port or restore automatic selection;
+Display never duplicates station-selection or tide-calculation logic.
+
+The tide and saved-location controls require AJRM Marine Location Editor
+`0.4.0` or later. Configure at least one tidal prediction port and its provider
+in that plugin; for UKHO predictions, add the ADMIRALTY API subscription key in
+Location Editor's Signal K plugin settings. Display remains operational when
+the service is absent, but reports **Tide unavailable** rather than inventing a
+station or prediction.
+
 Version `0.7.11` extends current-chart-area route filtering to GPX files on the
 browser device. The device tab can index several selected GPX files or an
 entire selected folder, list every route within them, and update the filtered
@@ -384,7 +398,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.7.3 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.0 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

@@ -51,6 +51,7 @@ test("map toolbar keeps chart cycling directly below the chart selector", () => 
 			"Profiles",
 			"Settings",
 			"Routes",
+			"Tides and locations",
 			"Voyage observation",
 			"Help",
 		],
@@ -63,6 +64,7 @@ test("map toolbar keeps chart cycling directly below the chart selector", () => 
 		"profiles",
 		"settings",
 		"buttonOpenRoutes",
+		"buttonOpenTides",
 		"buttonOpenObservation",
 		"buttonOpenHelp",
 	]);
@@ -95,8 +97,8 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 		document: { getElementById: () => null },
 	});
 
-	assert.equal(result.buttons.length, 7);
-	assert.equal(calls.length, 7);
+	assert.equal(result.buttons.length, 8);
+	assert.equal(calls.length, 8);
 	assert.ok(calls.every((call) => call.target === map));
 	assert.ok(result.buttons.every((button) => button.button.attributes["data-ajrm-map-help"]));
 	assert.deepEqual(
@@ -107,6 +109,7 @@ test("map toolbar creates all buttons through the supplied EasyButton factory", 
 			"Profiles",
 			"Settings",
 			"Routes",
+			"Tides and locations",
 			"Voyage observation",
 			"Help",
 		],

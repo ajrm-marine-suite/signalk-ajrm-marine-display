@@ -24,6 +24,7 @@ import {
 } from "./display-debug-controls.mjs";
 import { createRefreshDiagnosticPoster } from "./display-refresh-debug.mjs";
 import { createGpsStatusIndicator } from "./gps-status-indicator.mjs";
+import { createLocationTideController } from "./location-tide-controller.mjs";
 import {
 	createMainDom,
 	createMainServices,
@@ -82,6 +83,7 @@ const {
 	mapControls,
 	routeControls,
 	observationControls,
+	locationTideControls,
 	autoProfileControls,
 	sizeControls,
 } = createMainDom({ createDom: createAppDom });
@@ -198,6 +200,15 @@ createAnchorController({
 	fetchFn: fetch,
 	windowObject: window,
 	onProfileChanged: profileActions.refreshProfilesFromServer,
+}).init();
+createLocationTideController({
+	L,
+	map,
+	controls: locationTideControls,
+	modal: modals.tides,
+	fetchFn: fetch,
+	storage: window.localStorage,
+	windowObject: window,
 }).init();
 if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 	startDisplayDebugControlPolling({

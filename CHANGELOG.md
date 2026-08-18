@@ -1,5 +1,19 @@
 # Changelog
 
+## 0.8.0
+
+- Add optional chart symbols for anchorages/moorings and other versioned AJRM
+  locations, with stored details available from each popup.
+- Add a compact tide-status panel and a detailed tide popup containing current
+  height, trend, next high/low waters, datum, station, source freshness and an
+  interpolated curve.
+- Explain why the shared resolver selected its current tidal port and preserve
+  visibility of the automatic candidate beneath a manual pin.
+- Add authenticated controls to pin an alternative configured prediction port,
+  restore automatic selection and refresh the shared provider data.
+- Keep all tidal selection, provider access, interpolation and caching in
+  Location Editor's shared resolver rather than copying it into Display.
+
 ## 0.7.11
 
 - Extend current-chart-area filtering to GPX routes on the browser device.

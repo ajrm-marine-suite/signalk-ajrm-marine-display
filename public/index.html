@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.7.11";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.0";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-LPUfEfhw.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-CfZpbxax.css">
+    <script type="module" crossorigin src="./assets/index-DBU27Cab.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DrGwjZOp.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.7.11</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.0</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -234,8 +234,23 @@
         role="status"
         aria-live="polite"
       ></div>
+      <button
+        id="tideStatusPanel"
+        type="button"
+        class="ajrm-marine-tide-status shadow-sm d-none"
+        aria-label="Open tide details"
+      >
+        <span class="fw-semibold"><i class="bi bi-water"></i> Tide unavailable</span>
+      </button>
     </div>
     <button type="button" class="d-none" id="buttonCycleChart"></button>
+    <button
+      type="button"
+      class="d-none"
+      id="buttonOpenTides"
+      data-bs-toggle="modal"
+      data-bs-target="#modalTides"
+    >Tides and locations</button>
     <button
       type="button"
       class="d-none"
@@ -318,6 +333,50 @@
       >
         Show alerts
       </button>
+
+      <div class="modal" tabindex="-1" id="modalTides" aria-labelledby="modalTidesTitle">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalTidesTitle">Tides and locations</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <div id="tideUnavailable" class="alert alert-warning d-none"></div>
+              <div class="row g-3">
+                <div class="col-12 col-md-5">
+                  <dl class="row small mb-0">
+                    <dt class="col-5">Current height</dt><dd class="col-7" id="tideHeightNow">—</dd>
+                    <dt class="col-5">Trend</dt><dd class="col-7" id="tideTrend">—</dd>
+                    <dt class="col-5">Next high water</dt><dd class="col-7" id="tideNextHigh">—</dd>
+                    <dt class="col-5">Next low water</dt><dd class="col-7" id="tideNextLow">—</dd>
+                    <dt class="col-5">Datum</dt><dd class="col-7" id="tideDatum">—</dd>
+                    <dt class="col-5">Station</dt><dd class="col-7" id="tideStation">—</dd>
+                    <dt class="col-5">Selected because</dt><dd class="col-7" id="tideSelectionReason">—</dd>
+                    <dt class="col-5">Source/freshness</dt><dd class="col-7" id="tideSourceFreshness">—</dd>
+                  </dl>
+                </div>
+                <div class="col-12 col-md-7">
+                  <div id="tideCurve" class="ajrm-tide-curve" aria-label="Tide curve"></div>
+                </div>
+              </div>
+              <hr />
+              <label class="form-label" for="selectAlternativeTidePort">Alternative tidal port</label>
+              <select class="form-select" id="selectAlternativeTidePort"></select>
+              <div class="d-flex gap-2 mt-2">
+                <button type="button" class="btn btn-primary" id="buttonPinTidePort">Pin selected port</button>
+                <button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
+                <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
+              </div>
+              <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
+              <p class="small text-body-secondary mt-3 mb-0">
+                Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
+                Predictions and interpolation are planning aids; verify station, datum and freshness.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <!-- ERROR MODAL -->
       <div class="modal" tabindex="-1" id="modalAlert">
@@ -1151,6 +1210,24 @@
                   </div>
                 </div>
                 <div class="card mb-3">
+                  <div class="card-body">
+                    <h6 class="card-title">Locations and tides</h6>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="checkShowAnchorages" checked />
+                      <label class="form-check-label" for="checkShowAnchorages">Show anchorages and moorings</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="checkShowLocations" />
+                      <label class="form-check-label" for="checkShowLocations">Show other saved locations</label>
+                    </div>
+                    <div class="form-check form-switch">
+                      <input class="form-check-input" type="checkbox" id="checkShowTideStatus" checked />
+                      <label class="form-check-label" for="checkShowTideStatus">Show tide status above chart</label>
+                    </div>
+                    <div class="form-text">Click a location symbol for its stored details. Tide selection is performed by Location Editor's shared resolver.</div>
+                  </div>
+                </div>
+                <div class="card mb-3">
                   <button
                     class="btn btn-light d-flex align-items-center justify-content-between"
                     type="button"
@@ -1598,7 +1675,7 @@
                       <path d="M9.405 1.05c-.413-1.4-2.397-1.4-2.81 0l-.1.34a1.46 1.46 0 0 1-2.105.872l-.31-.18c-1.266-.73-2.668.672-1.937 1.937l.178.31c.446.775.072 1.767-.871 2.105l-.34.1c-1.4.413-1.4 2.397 0 2.81l.34.1a1.46 1.46 0 0 1 .872 2.105l-.18.31c-.73 1.266.672 2.668 1.937 1.937l.31-.178a1.46 1.46 0 0 1 2.105.871l.1.34c.413 1.4 2.397 1.4 2.81 0l.1-.34a1.46 1.46 0 0 1 2.105-.872l.31.18c1.266.73 2.668-.672 1.937-1.937l-.178-.31a1.46 1.46 0 0 1 .871-2.105l.34-.1c1.4-.413 1.4-2.397 0-2.81l-.34-.1a1.46 1.46 0 0 1-.872-2.105l.18-.31c.73-1.266-.672-2.668-1.937-1.937l-.31.178a1.46 1.46 0 0 1-2.105-.871zM8 10.93a2.93 2.93 0 1 1 0-5.86 2.93 2.93 0 0 1 0 5.86" />
                     </svg>
                   </span>
-                  <span><strong>Settings:</strong> controls Display-only options such as alerts, dark mode, no-sleep, own-vessel icon, harbour limits, and TCPA guide lines.</span>
+                  <span><strong>Settings:</strong> controls Display-only options such as alerts, dark mode, no-sleep, own-vessel icon, saved location symbols, the tide-status panel, harbour limits, and TCPA guide lines.</span>
                 </li>
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">
@@ -1621,6 +1698,14 @@
                 <strong>Voyage observation</strong>
                 records a timestamped skipper note in the active Capture voyage
                 and can attach Snapshot evidence when that service is available.
+              </p>
+              <p>
+                <strong>Tides and locations</strong> shows optional anchorage,
+                mooring and other saved-location symbols. Its popup consumes
+                Location Editor's shared resolver to show current height,
+                trend, next high/low waters, datum, station, selection reason,
+                source freshness and the tide curve. A manually pinned port
+                overrides—but does not hide—the automatic choice.
               </p>
               <h6>Alerts shown by Display</h6>
               <p>

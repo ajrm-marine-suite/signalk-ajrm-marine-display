@@ -42,6 +42,11 @@ export function mapToolbarButtonSpecs({
 			action: () => document.getElementById("buttonOpenRoutes")?.click(),
 		},
 		{
+			icon: DISPLAY_CONTROL_ICONS.tides,
+			title: "Tides and locations",
+			action: () => document.getElementById("buttonOpenTides")?.click(),
+		},
+		{
 			icon: DISPLAY_CONTROL_ICONS.observation,
 			title: "Voyage observation",
 			action: () => document.getElementById("buttonOpenObservation")?.click(),
