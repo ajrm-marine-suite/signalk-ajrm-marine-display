@@ -1,5 +1,11 @@
 # AJRM Marine Display
 
+Version `0.8.5` adds an astronomical spring-neap orientation to the tide
+popup. It reports whether tidal ranges are building toward spring or easing
+toward neap, together with days after the preceding phase and before the next.
+It is deliberately labelled as an estimate because local spring/neap range
+commonly lags the corresponding lunar phase.
+
 The tide popup offers a remembered one-to-seven-day graph range, defaulting to
 seven days. Its launcher is owned by one programmatic modal controller so
 closing the tide popup cannot leave the map toolbar behind a stale backdrop.
@@ -423,7 +429,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.4 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.5 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

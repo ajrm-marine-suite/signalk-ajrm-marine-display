@@ -173,6 +173,8 @@ export function createAppDom() {
 		station: getRequiredElement("tideStation"),
 		selectionReason: getRequiredElement("tideSelectionReason"),
 		sourceFreshness: getRequiredElement("tideSourceFreshness"),
+		springNeapStatus: getRequiredElement("tideSpringNeapStatus"),
+		springNeapTiming: getRequiredElement("tideSpringNeapTiming"),
 		curve: getRequiredElement("tideCurve"),
 		graphDays: getRequiredElement("selectTideGraphDays"),
 		alternativePort: getRequiredElement("selectAlternativeTidePort"),

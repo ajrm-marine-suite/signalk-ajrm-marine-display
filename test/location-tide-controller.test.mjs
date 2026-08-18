@@ -8,6 +8,7 @@ import test from "node:test";
 import {
 	TIDE_SELECTION_LABELS,
 	anchoringSuggestionText,
+	springNeapEstimate,
 	tideMapContext,
 	tideCurveEventsForDays,
 	tideGraphDays,
@@ -20,6 +21,23 @@ test("tidal selection reasons are translated into skipper-facing explanations", 
 	assert.match(TIDE_SELECTION_LABELS.containingRegionAssignment, /containing tidal region/);
 	assert.match(TIDE_SELECTION_LABELS.nearestPortInTidalRegion, /Nearest suitable port/);
 	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /Manually pinned/);
+});
+
+test("spring-neap estimate reports elapsed and remaining phase days", () => {
+	const spring = springNeapEstimate("2000-01-06T18:15:00Z");
+	assert.equal(spring.status, "Near spring tides");
+	assert.equal(spring.previous, "spring");
+	assert.equal(spring.daysAfter, 0);
+	assert.match(spring.timing, /0\.0 days after spring/);
+	assert.match(spring.timing, /7\.4 days before neap/);
+
+	const easing = springNeapEstimate("2000-01-09T18:15:00Z");
+	assert.equal(easing.status, "Easing toward neap tides");
+	assert.match(easing.timing, /3\.0 days after spring/);
+
+	const building = springNeapEstimate("2000-01-16T18:15:00Z");
+	assert.equal(building.status, "Building toward spring tides");
+	assert.equal(building.previous, "neap");
 });
 
 test("tide graph duration defaults to seven days and rejects invalid stored values", () => {

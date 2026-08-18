@@ -17,6 +17,13 @@ const STORAGE = {
 };
 const ANCHORAGE_TYPES = new Set(["anchorage", "mooring"]);
 const PORT_TYPES = new Set(["tidalStandardPort", "tidalSecondaryPort"]);
+const DAY_MS = 24 * 60 * 60 * 1000;
+const SYNODIC_MONTH_DAYS = 29.530588853;
+const SPRING_NEAP_INTERVAL_MS = (SYNODIC_MONTH_DAYS / 4) * DAY_MS;
+// NASA's primary-phase table records this new moon at 18:15 UTC. A mean
+// synodic interval is sufficient for the deliberately approximate orientation
+// shown here; it is not used for tidal-height or navigation calculations.
+const SPRING_EPOCH_MS = Date.UTC(2000, 0, 6, 18, 15);
 
 export const TIDE_SELECTION_LABELS = Object.freeze({
 	explicitTideLocationRef: "Explicit tidal port assigned to this location",
@@ -54,13 +61,47 @@ export function tideGraphDays(value, fallback = 7) {
 
 export function tideCurveEventsForDays(events, now = Date.now(), days = 7) {
 	const nowMs = new Date(now).getTime();
-	const endMs = nowMs + tideGraphDays(days) * 24 * 60 * 60 * 1000;
+	const endMs = nowMs + tideGraphDays(days) * DAY_MS;
 	const normalized = (events || []).filter((event) =>
 		Number.isFinite(Number(event?.heightM)) && !Number.isNaN(Date.parse(event?.at)),
 	).sort((left, right) => Date.parse(left.at) - Date.parse(right.at));
 	const previous = normalized.filter((event) => Date.parse(event.at) <= nowMs).at(-1);
 	const visible = normalized.filter((event) => Date.parse(event.at) >= nowMs && Date.parse(event.at) <= endMs);
 	return previous && visible[0] !== previous ? [previous, ...visible] : visible;
+}
+
+function phaseName(index) {
+	return ((index % 2) + 2) % 2 === 0 ? "spring" : "neap";
+}
+
+function phaseDays(value) {
+	return `${Math.max(0, value).toFixed(1)} days`;
+}
+
+export function springNeapEstimate(now = Date.now()) {
+	const nowMs = new Date(now).getTime();
+	if (!Number.isFinite(nowMs)) return null;
+	const phaseIndex = Math.floor((nowMs - SPRING_EPOCH_MS) / SPRING_NEAP_INTERVAL_MS);
+	const previousAt = SPRING_EPOCH_MS + phaseIndex * SPRING_NEAP_INTERVAL_MS;
+	const nextAt = previousAt + SPRING_NEAP_INTERVAL_MS;
+	const previous = phaseName(phaseIndex);
+	const next = phaseName(phaseIndex + 1);
+	const daysAfter = (nowMs - previousAt) / DAY_MS;
+	const daysBefore = (nextAt - nowMs) / DAY_MS;
+	const nearPrevious = daysAfter <= 0.5;
+	const nearNext = daysBefore <= 0.5;
+	const nearest = nearPrevious ? previous : nearNext ? next : null;
+	return {
+		contract: "astronomical-spring-neap-estimate-v1",
+		status: nearest
+			? `Near ${nearest} tides`
+			: next === "spring" ? "Building toward spring tides" : "Easing toward neap tides",
+		timing: `${phaseDays(daysAfter)} after ${previous}; ${phaseDays(daysBefore)} before ${next}`,
+		previous,
+		next,
+		daysAfter,
+		daysBefore,
+	};
 }
 
 function locationPosition(location) {
@@ -265,6 +306,9 @@ export function createLocationTideController({
 		controls.sourceFreshness.textContent = tide?.source
 			? `${tide.source.provider} · ${tide.freshness?.state || "unknown"} · ${ageHours}` : "—";
 		const referenceAt = tide?.calculationReferenceAt || Date.now();
+		const springNeap = springNeapEstimate(referenceAt);
+		controls.springNeapStatus.textContent = springNeap?.status || "—";
+		controls.springNeapTiming.textContent = springNeap?.timing || "—";
 		controls.curve.innerHTML = tideCurveSvg(
 			tideCurveEventsForDays(tide?.curve, referenceAt, graphDays),
 			referenceAt,

@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.4";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.5";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.4</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.5</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -357,6 +357,8 @@
                     <dt class="col-5">Station</dt><dd class="col-7" id="tideStation">—</dd>
                     <dt class="col-5">Selected because</dt><dd class="col-7" id="tideSelectionReason">—</dd>
                     <dt class="col-5">Source/freshness</dt><dd class="col-7" id="tideSourceFreshness">—</dd>
+                    <dt class="col-5">Spring/neap</dt><dd class="col-7" id="tideSpringNeapStatus">—</dd>
+                    <dt class="col-5">Phase timing</dt><dd class="col-7" id="tideSpringNeapTiming">—</dd>
                   </dl>
                 </div>
                 <div class="col-12 col-md-7">
@@ -373,6 +375,9 @@
                     </select>
                   </div>
                   <div id="tideCurve" class="ajrm-tide-curve" aria-label="Tide curve"></div>
+                  <p class="small text-body-secondary mt-2 mb-0">
+                    Spring/neap timing is an astronomical estimate. Local tidal range commonly lags the corresponding lunar phase, so verify the plotted station predictions.
+                  </p>
                 </div>
               </div>
               <hr />
@@ -1719,8 +1724,11 @@
                 mooring and other saved-location symbols. Its popup consumes
                 Location Editor's shared resolver to show current height,
                 trend, next high/low waters, datum, station, selection reason,
-                source freshness and the tide curve. The graph range defaults
-                to seven days and is remembered by this browser. A manually pinned port
+                source freshness and the tide curve. It also gives an
+                astronomical spring-neap estimate, including days after the
+                preceding phase and before the next; local tidal response may
+                lag that lunar phase. The graph range defaults to seven days
+                and is remembered by this browser. A manually pinned port
                 overrides—but does not hide—the automatic choice.
               </p>
               <p>

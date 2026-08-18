@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.8.5
+
+- Add an explicitly labelled astronomical spring-neap estimate to the tide
+  popup, showing whether ranges are building toward spring or easing toward
+  neap and the days since the preceding phase and until the next one.
+- Explain that actual local spring/neap range may lag the corresponding lunar
+  phase and remains subordinate to the selected station's plotted prediction.
+
 ## 0.8.4
 
 - Use one programmatic owner for the tide modal instead of mixing Bootstrap's
