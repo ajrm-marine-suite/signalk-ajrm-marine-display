@@ -14,6 +14,8 @@ import {
 	tideMapContext,
 	tideCurveEventsForDays,
 	tideGraphDays,
+	tideMeasurementLabels,
+	tideRequestContext,
 	tideStatusUrl,
 	tideCurveSvg,
 	tideEventTimeLabel,
@@ -88,6 +90,13 @@ test("tide requests use the visible chart centre as explicit selection context",
 	const url = new URL(tideStatusUrl(context), "https://example.test");
 	assert.equal(url.searchParams.get("latitude"), "56.27224");
 	assert.equal(url.searchParams.get("longitude"), "-5.637656");
+	const alternative = tideRequestContext(
+		{ getCenter: () => ({ lat: 56.27224, lng: -5.637656 }) },
+		"alternative-port-id",
+	);
+	const alternativeUrl = new URL(tideStatusUrl(alternative), "https://example.test");
+	assert.equal(alternative.portId, "alternative-port-id");
+	assert.equal(alternativeUrl.searchParams.get("portId"), "alternative-port-id");
 });
 
 test("invalid chart centres do not create misleading tide coordinates", () => {
@@ -149,6 +158,21 @@ test("distance to fall always uses current height and the next low water", () =>
 		heightNowM: 3.4, trend: "rising", nextLowWater: { heightM: 1.1 },
 	}), 2.3);
 	assert.equal(distanceToNextLowWater({ heightNowM: 3.4, nextLowWater: null }), null);
+});
+
+test("an unavailable selected port cannot display stale measurements from the previous port", () => {
+	const labels = tideMeasurementLabels({
+		valid: false,
+		heightNowM: 3.4,
+		trend: "falling",
+		nextHighWater: { at: "2026-08-18T12:00:00Z", heightM: 4.8 },
+		nextLowWater: { at: "2026-08-18T18:00:00Z", heightM: 1.1 },
+		datum: "Chart Datum",
+		station: { name: "Previous port", id: "previous" },
+		source: { provider: "Previous provider" },
+		freshness: { state: "fresh", ageSeconds: 10 },
+	});
+	assert.deepEqual(new Set(Object.values(labels)), new Set(["—"]));
 });
 
 test("tide curve has an explicit empty state", () => {

@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.12
+
+- Apply an alternative tidal-port selection immediately and retain its
+  explicit port ID during normal polling and forced provider refreshes.
+- Clear all station-derived measurements, source details and curve data while
+  the selected port is loading, unavailable or has no fetched predictions.
+- Ignore late tide responses after a newer port choice, preventing an earlier
+  automatic Oban result from replacing the current selection.
+
 ## 0.8.11
 
 - Fix the tide graph lower edge at 0 m Chart Datum and label the baseline, so

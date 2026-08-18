@@ -32,6 +32,7 @@ const TIDE_REFERENCE_LEVELS = Object.freeze([
 ]);
 
 export const TIDE_SELECTION_LABELS = Object.freeze({
+	explicitRequestedPort: "Alternative tidal port selected in Display",
 	explicitTideLocationRef: "Explicit tidal port assigned to this location",
 	containingRegionAssignment: "Tidal port assigned to the containing tidal region",
 	nearestPortInTidalRegion: "Nearest suitable port in the same tidal region",
@@ -155,6 +156,25 @@ export function tideEventTimeLabel(value, locale = undefined, timeZone = undefin
 
 function heightLabel(value) {
 	return value != null && Number.isFinite(Number(value)) ? `${Number(value).toFixed(2)} m` : "—";
+}
+
+export function tideMeasurementLabels(tide) {
+	const valid = tide?.valid === true;
+	const ageHours = Number.isFinite(Number(tide?.freshness?.ageSeconds))
+		? `${(Number(tide.freshness.ageSeconds) / 3600).toFixed(1)} h old`
+		: "age unknown";
+	return {
+		heightNow: valid ? heightLabel(tide?.heightNowM) : "—",
+		trend: valid ? tide?.trend || "—" : "—",
+		nextHigh: valid && tide?.nextHighWater ? `${tideEventTimeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—",
+		nextLow: valid && tide?.nextLowWater ? `${tideEventTimeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—",
+		distanceToFall: valid ? heightLabel(distanceToNextLowWater(tide)) : "—",
+		datum: valid ? tide?.datum || "—" : "—",
+		station: valid && tide?.station ? `${tide.station.name} (${tide.station.id})` : "—",
+		sourceFreshness: valid && tide?.source
+			? `${tide.source.provider} · ${tide.freshness?.state || "unknown"} · ${ageHours}`
+			: "—",
+	};
 }
 
 function eventPoints(events) {
@@ -347,8 +367,16 @@ export function tideStatusUrl(context = {}) {
 	const query = new URLSearchParams();
 	if (Number.isFinite(context.latitude)) query.set("latitude", String(context.latitude));
 	if (Number.isFinite(context.longitude)) query.set("longitude", String(context.longitude));
+	if (context.portId) query.set("portId", String(context.portId));
 	const suffix = query.toString();
 	return `${LOCATION_API}/tides/status${suffix ? `?${suffix}` : ""}`;
+}
+
+export function tideRequestContext(map, portId = null) {
+	return {
+		...tideMapContext(map),
+		...(portId ? { portId: String(portId) } : {}),
+	};
 }
 
 export function createLocationTideController({
@@ -371,6 +399,8 @@ export function createLocationTideController({
 	let anchoringBusy = false;
 	let curveHoverController = null;
 	let graphDays = tideGraphDays(storage?.getItem?.(STORAGE.graphDays));
+	let selectedPortId = null;
+	let requestSequence = 0;
 
 	async function requestJson(url, options = {}) {
 		const response = await fetchFn(url, { cache: "no-store", credentials: "include", ...options });
@@ -413,13 +443,14 @@ export function createLocationTideController({
 		).sort((left, right) => left.name.localeCompare(right.name))) {
 			controls.alternativePort.append(new Option(location.name, location.id));
 		}
-		controls.alternativePort.value = tide?.selectedPort?.id || previous;
+		controls.alternativePort.value = selectedPortId || tide?.selectedPort?.id || previous;
 		controls.pin.disabled = !controls.alternativePort.value;
 		controls.clearPin.disabled = tide?.selection?.pinned !== true;
 	}
 
 	function renderTide() {
 		const valid = tide?.valid === true;
+		const measurements = tideMeasurementLabels(tide);
 		const stationName = tide?.station?.name || tide?.selectedPort?.name || "No station";
 		controls.statusPanel.innerHTML = valid
 			? `<span class="fw-semibold"><i class="bi bi-water"></i> ${escapeHtml(heightLabel(tide.heightNowM))} · ${escapeHtml(tide.trend)} · ${escapeHtml(stationName)}</span>`
@@ -429,67 +460,105 @@ export function createLocationTideController({
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-invalid", !valid);
 		controls.unavailable.classList.toggle("d-none", valid);
 		controls.unavailable.textContent = valid ? "" : tide?.error || "Tide Resolver has no valid result.";
-		controls.heightNow.textContent = heightLabel(tide?.heightNowM);
-		controls.trend.textContent = tide?.trend || "—";
-		controls.nextHigh.textContent = tide?.nextHighWater ? `${tideEventTimeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—";
-		controls.nextLow.textContent = tide?.nextLowWater ? `${tideEventTimeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—";
-		controls.distanceToFall.textContent = heightLabel(distanceToNextLowWater(tide));
-		controls.datum.textContent = tide?.datum || "—";
-		controls.station.textContent = tide?.station ? `${tide.station.name} (${tide.station.id})` : "—";
+		// Never leave measurements from one station visible while another station
+		// is selected, loading or unavailable. Port identity remains visible in the
+		// status banner, but all station-derived values require a valid projection.
+		controls.heightNow.textContent = measurements.heightNow;
+		controls.trend.textContent = measurements.trend;
+		controls.nextHigh.textContent = measurements.nextHigh;
+		controls.nextLow.textContent = measurements.nextLow;
+		controls.distanceToFall.textContent = measurements.distanceToFall;
+		controls.datum.textContent = measurements.datum;
+		controls.station.textContent = measurements.station;
 		const reason = TIDE_SELECTION_LABELS[tide?.selection?.reason] || tide?.selection?.reason || "—";
 		const automatic = tide?.selection?.pinned && tide.selection.automaticPort
 			? `; automatic choice was ${tide.selection.automaticPort.name}` : "";
 		controls.selectionReason.textContent = `${reason}${automatic}`;
-		const ageHours = Number.isFinite(Number(tide?.freshness?.ageSeconds)) ? `${(Number(tide.freshness.ageSeconds) / 3600).toFixed(1)} h old` : "age unknown";
-		controls.sourceFreshness.textContent = tide?.source
-			? `${tide.source.provider} · ${tide.freshness?.state || "unknown"} · ${ageHours}` : "—";
+		controls.sourceFreshness.textContent = measurements.sourceFreshness;
 		const referenceAt = tide?.calculationReferenceAt || Date.now();
 		const springNeap = springNeapEstimate(referenceAt);
 		controls.springNeapStatus.textContent = springNeap?.status || "—";
 		controls.springNeapTiming.textContent = springNeap?.timing || "—";
-		const curveEvents = tideCurveEventsForDays(tide?.curve, referenceAt, graphDays);
+		const curveEvents = tideCurveEventsForDays(valid ? tide?.curve : [], referenceAt, graphDays);
 		curveHoverController?.destroy();
 		controls.curve.innerHTML = tideCurveSvg(
 			curveEvents,
 			referenceAt,
-			tide?.referenceLevels,
+			valid ? tide?.referenceLevels : null,
 		);
 		curveHoverController = attachTideCurveHover(controls.curve, curveEvents, { windowObject });
 		renderPortChoices();
 	}
 
+	function pendingTide(portId, error = "Tidal data have not been loaded for the selected port.") {
+		const port = locations.find((location) => location.id === portId);
+		return {
+			valid: false,
+			selectedPort: port ? { id: port.id, name: port.name } : null,
+			selection: { reason: portId ? "explicitRequestedPort" : "none", pinned: false },
+			heightNowM: null,
+			nextHighWater: null,
+			nextLowWater: null,
+			trend: null,
+			station: null,
+			source: null,
+			freshness: null,
+			curve: [],
+			error,
+		};
+	}
+
+	function showPendingPort(portId, message) {
+		tide = pendingTide(portId, message);
+		renderTide();
+	}
+
 	async function refresh({ force = false } = {}) {
+		const sequence = ++requestSequence;
+		const requestedPortId = selectedPortId;
 		try {
-			const context = tideMapContext(map);
+			const context = tideRequestContext(map, requestedPortId);
 			const [catalogue, result] = await Promise.all([
 				requestJson(`${LOCATION_API}/locations?workspace=all`),
 				force
 					? requestJson(`${LOCATION_API}/tides/refresh`, { method: "POST", headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(context) })
 					: requestJson(tideStatusUrl(context)),
 			]);
+			if (sequence !== requestSequence) return;
 			locations = catalogue.locations || [];
 			tide = result;
 			renderLayers();
 			renderTide();
-			controls.actionStatus.textContent = force ? "Tidal data refreshed." : "";
+			controls.actionStatus.textContent = force
+				? result?.valid ? "Tidal data refreshed." : result?.error || "Tidal data are unavailable for the selected port."
+				: "";
 		} catch (error) {
-			tide = { valid: false, error: error.message };
+			if (sequence !== requestSequence) return;
+			tide = pendingTide(requestedPortId, error.message);
 			renderTide();
 			controls.actionStatus.textContent = error.message;
 		}
 	}
 
 	async function pin(portId) {
+		const sequence = ++requestSequence;
+		selectedPortId = portId || null;
+		showPendingPort(selectedPortId, portId ? "Loading the selected tidal port…" : "Restoring automatic tidal-port selection…");
 		try {
 			controls.pin.disabled = true;
-			tide = await requestJson(`${LOCATION_API}/tides/pin`, {
+			const result = await requestJson(`${LOCATION_API}/tides/pin`, {
 				method: "POST",
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
 				body: JSON.stringify({ portId: portId || null, ...tideMapContext(map) }),
 			});
+			if (sequence !== requestSequence) return;
+			tide = result;
 			renderTide();
 			controls.actionStatus.textContent = portId ? "Alternative tidal port pinned." : "Automatic tidal-port selection restored.";
 		} catch (error) {
+			if (sequence !== requestSequence) return;
+			tide = pendingTide(selectedPortId, error.message);
+			renderTide();
 			controls.actionStatus.textContent = error.message;
 		} finally {
 			controls.pin.disabled = !controls.alternativePort.value;
@@ -555,6 +624,12 @@ export function createLocationTideController({
 		};
 		controls.open.addEventListener("click", openTides);
 		controls.statusPanel.addEventListener("click", openTides);
+		controls.alternativePort.addEventListener("change", () => {
+			selectedPortId = controls.alternativePort.value || null;
+			showPendingPort(selectedPortId, "Loading the selected tidal port…");
+			controls.actionStatus.textContent = "Loading the selected tidal port…";
+			refresh();
+		});
 		controls.pin.addEventListener("click", () => pin(controls.alternativePort.value));
 		controls.clearPin.addEventListener("click", () => pin(null));
 		controls.refresh.addEventListener("click", () => refresh({ force: true }));
