@@ -1,6 +1,7 @@
 # AJRM Marine Display
 
-Version `0.8.13` simplifies tidal-port selection. Automatic mode follows the
+Version `0.8.14` shares its tide-curve renderer with Marine Planning and keeps
+the simplified tidal-port selection introduced in `0.8.13`. Automatic mode follows the
 live vessel position and falls back to the displayed chart centre; the chooser
 contains both standard and secondary ports. A manual choice is described as
 the selected tidal port and no longer creates a persistent pin.
@@ -468,7 +469,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.13 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.14 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

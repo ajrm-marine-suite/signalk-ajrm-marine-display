@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.14
+
+- Use Map Core's shared tide-curve renderer, keeping Display and Marine
+  Planning on one chart-datum, reference-level and hover implementation.
+
 ## 0.8.13
 
 - Rename the alternative-port control to the selected tidal port and remove
