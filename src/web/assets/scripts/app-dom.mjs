@@ -181,7 +181,6 @@ export function createAppDom() {
 		curve: getRequiredElement("tideCurve"),
 		graphDays: getRequiredElement("selectTideGraphDays"),
 		alternativePort: getRequiredElement("selectAlternativeTidePort"),
-		pin: getRequiredElement("buttonPinTidePort"),
 		clearPin: getRequiredElement("buttonClearTidePortPin"),
 		refresh: getRequiredElement("buttonRefreshTides"),
 		actionStatus: getRequiredElement("tideActionStatus"),

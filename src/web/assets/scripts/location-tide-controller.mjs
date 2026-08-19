@@ -284,7 +284,6 @@ export function createLocationTideController({
 			controls.alternativePort.append(new Option(`${location.name} (${kind})`, location.id));
 		}
 		controls.alternativePort.value = selectedPortId || "";
-		controls.pin.disabled = !controls.alternativePort.value;
 		controls.clearPin.disabled = !selectedPortId && tide?.selection?.pinned !== true;
 	}
 
@@ -385,7 +384,6 @@ export function createLocationTideController({
 		selectedPortId = null;
 		showPendingPort(null, "Restoring automatic tidal-port selection…");
 		try {
-			controls.pin.disabled = true;
 			const result = await requestJson(`${LOCATION_API}/tides/pin`, {
 				method: "POST",
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
@@ -400,8 +398,6 @@ export function createLocationTideController({
 			tide = pendingTide(selectedPortId, error.message);
 			renderTide();
 			controls.actionStatus.textContent = error.message;
-		} finally {
-			controls.pin.disabled = !controls.alternativePort.value;
 		}
 	}
 
@@ -472,10 +468,6 @@ export function createLocationTideController({
 			}
 			showPendingPort(selectedPortId, selectedPortId ? "Loading the selected tidal port…" : "Selecting a tidal port automatically…");
 			controls.actionStatus.textContent = selectedPortId ? "Loading the selected tidal port…" : "Selecting a tidal port automatically…";
-			refresh();
-		});
-		controls.pin.addEventListener("click", () => {
-			selectedPortId = controls.alternativePort.value || null;
 			refresh();
 		});
 		controls.clearPin.addEventListener("click", useAutomaticSelection);

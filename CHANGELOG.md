@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.20
+
+- Remove the redundant **Use selected port** tide action: selecting a tidal
+  port now remains the single immediate manual-selection action, while **Use
+  automatic selection** explicitly restores position-based selection.
+- Update the shared map shell to 0.7.9.
+
 ## 0.8.19
 
 - Package the Display icon at both the npm root required by Signal K App Store

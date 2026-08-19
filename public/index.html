@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.19";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.20";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-DOP6jCEZ.js"></script>
+    <script type="module" crossorigin src="./assets/index-NpZgwI2M.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Bnxe4c-5.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.19</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.20</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -380,12 +380,11 @@
 				  <label class="form-label" for="selectAlternativeTidePort">Tidal port</label>
 				  <select class="form-select" id="selectAlternativeTidePort"></select>
 				  <div class="d-flex flex-wrap gap-2 mt-2">
-					<button type="button" class="btn btn-primary" id="buttonPinTidePort">Use selected port</button>
 					<button type="button" class="btn btn-outline-primary" id="buttonClearTidePortPin">Use automatic selection</button>
                     <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
                   </div>
 				  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
-				  <p class="small text-body-secondary mt-2 mb-0">Automatic selection follows the vessel position when available, otherwise the centre of the displayed chart. A manual selection lasts until automatic selection is restored.</p>
+				  <p class="small text-body-secondary mt-2 mb-0">Choosing a tidal port applies it immediately and pauses automatic selection. Automatic selection follows the vessel position when available, otherwise the centre of the displayed chart.</p>
                   <p class="small text-body-secondary mt-3 mb-0">
                     Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
                     Predictions and interpolation are planning aids; verify station, datum and freshness.
@@ -1684,7 +1683,7 @@
                       <path d="M4.5 7.25 8 5.5l3.5 1.75L8 9zM4.5 9 8 10.75 11.5 9v1L8 11.75 4.5 10z" />
                     </svg>
                   </span>
-                  <span><strong>Cycle chart:</strong> cycles enabled charts overlapping the map centre, then returns to Automatic selection.</span>
+                  <span><strong>Cycle chart:</strong> cycles enabled charts overlapping the map centre, shows the basemap alone, then returns to Automatic selection.</span>
                 </li>
                 <li>
                   <span class="ajrm-marine-help-control-icon" aria-hidden="true">
