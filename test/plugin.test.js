@@ -69,7 +69,7 @@ test("runtime API exposes the active-only alert panel projection for BITE", () =
   assert.equal(globalThis[Symbol.for("mcdonaldajr.ajrmMarineDisplayApi")], undefined);
 });
 
-test("Signal K compatibility API returns Harbour region geometry", async () => {
+test("Display returns profile areas from Location Editor", async () => {
   const geometry = {
     type: "Polygon",
     coordinates: [
@@ -81,21 +81,22 @@ test("Signal K compatibility API returns Harbour region geometry", async () => {
       ],
     ],
   };
-  const { plugin } = harness(
-    {
-      "plugins.ajrmMarineTraffic.autoProfile": {
-        settings: { harbourRegionNamePrefix: "Harbour:" },
-      },
+  const location = {
+    id: "oban",
+    name: "Oban",
+    types: ["harbour"],
+    feature: { type: "Feature", properties: {}, geometry },
+  };
+  const { plugin } = harness({}, {}, {}, {
+    ajrmMarineLocations: {
+      contract: "ajrm-marine-locations-service-v1",
+      async profileAreas() { return [location]; },
     },
-    {
-      oban: { name: "Harbour: Oban", geometry },
-      other: { name: "Cruising area", geometry },
-    },
-  );
+  });
   const { router, routes } = routeHarness();
   plugin.signalKApiRoutes(router);
   let body;
-  await routes.get("GET /ajrmMarineDisplay/harbourRegions")(
+  await routes.get("GET /ajrmMarineDisplay/profileAreas")(
     {},
     {
       set() {},
@@ -107,9 +108,7 @@ test("Signal K compatibility API returns Harbour region geometry", async () => {
       },
     },
   );
-  assert.deepEqual(body, {
-    regions: [{ id: "oban", name: "Harbour: Oban", geometry }],
-  });
+  assert.deepEqual(body, { profileAreas: [location] });
 });
 
 test("Signal K compatibility API writes refresh diagnostics through app.debug", async () => {

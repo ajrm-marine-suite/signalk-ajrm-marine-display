@@ -3,7 +3,7 @@
  */
 
 export function harbourDisplayName(name) {
-	return String(name || "").replace(/^Harbour:\s*/i, "");
+	return String(name || "");
 }
 
 export function harbourGeometry(region) {

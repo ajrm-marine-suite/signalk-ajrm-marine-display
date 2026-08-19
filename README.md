@@ -1,6 +1,6 @@
 # AJRM Marine Display
 
-Version `0.8.14` shares its tide-curve renderer with Marine Planning and keeps
+Version `0.8.15` consumes automatic profile areas directly from Locations and keeps
 the simplified tidal-port selection introduced in `0.8.13`. Automatic mode follows the
 live vessel position and falls back to the displayed chart centre; the chooser
 contains both standard and secondary ports. A manual choice is described as
@@ -147,7 +147,7 @@ Version `0.6.31` adds visible hover/focus help to every map control icon,
 including zoom, chart selection, chart cycling, follow and Display actions.
 
 Version `0.6.30` places Cycle chart immediately below the chart selector,
-matching DR Plotter, Voyage Viewer and Harbour Editor.
+matching the other current suite map views and Locations.
 
 Version `0.6.28` keeps the complete chart selector, including chart folders,
 inside short browser windows and enables reliable mouse/touch scrolling.
@@ -162,7 +162,7 @@ Operational chart, target and alert Display for the AJRM Marine suite.
 
 Version `0.6.25` establishes AJRM Marine Display as the reference map interface
 for the suite and consumes the versioned AJRM map core for shared Auto Charts
-ranking. DR Plotter, Voyage Viewer and Harbour Editor use the matching core
+ranking. Other suite map views and Locations use the matching core
 control, chart-folder hierarchy and overlap-cycling behaviour.
 
 Version `0.6.24` caches normalized bounds and zoom metadata for the Auto Charts
@@ -469,7 +469,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.14 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.15 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

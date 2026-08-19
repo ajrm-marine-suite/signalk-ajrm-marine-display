@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.15
+
+- Load automatic profile areas directly from the shared Locations service;
+  remove Signal K `Harbour:` region discovery and prefix handling.
+- Expose the direct profile-area projection to Snapshot and BITE.
+- Ship a package-root 120-pixel PNG icon for reliable Signal K Webapps display.
+
 ## 0.8.14
 
 - Use Map Core's shared tide-curve renderer, keeping Display and Marine

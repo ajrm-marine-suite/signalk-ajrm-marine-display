@@ -5,17 +5,17 @@
 import { resolveMapDisplaySupportFactories } from "./map-display-support-factories.mjs";
 import { SETTINGS_STORAGE_KEYS } from "./settings-storage-keys.mjs";
 
-export function harbourRegionsUrl(_pluginId) {
-	return `/signalk/v1/api/ajrmMarineDisplay/harbourRegions`;
+export function profileAreasUrl(_pluginId) {
+	return `/signalk/v1/api/ajrmMarineDisplay/profileAreas`;
 }
 
-export async function fetchHarbourRegions({ pluginId, getHttpResponse }) {
+export async function fetchProfileAreas({ pluginId, getHttpResponse }) {
 	return (
 		(
-			await getHttpResponse(harbourRegionsUrl(pluginId), {
+			await getHttpResponse(profileAreasUrl(pluginId), {
 				ignoreEmptyResponse: true,
 			})
-		)?.regions || []
+		)?.profileAreas || []
 	);
 }
 
@@ -41,8 +41,8 @@ export function createDisplaySettingsControls(elements = {}, mapControls = {}) {
 	return controls;
 }
 
-export function createHarbourRegionProvider({ pluginId, getHttpResponse }) {
-	return async () => fetchHarbourRegions({ pluginId, getHttpResponse });
+export function createProfileAreaProvider({ pluginId, getHttpResponse }) {
+	return async () => fetchProfileAreas({ pluginId, getHttpResponse });
 }
 
 export function createConfiguredMapDisplaySupport({
@@ -65,7 +65,7 @@ export function createConfiguredMapDisplaySupport({
 
 	const harbourDisplay = createHarbourDisplay({
 		map,
-		getRegions: createHarbourRegionProvider({ pluginId, getHttpResponse }),
+		getRegions: createProfileAreaProvider({ pluginId, getHttpResponse }),
 		initialEnabled:
 			storage?.getItem?.(SETTINGS_STORAGE_KEYS.displayHarbours) !== "false",
 	});

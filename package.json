@@ -1,6 +1,6 @@
 {
   "name": "signalk-ajrm-marine-display",
-  "version": "0.8.14",
+  "version": "0.8.15",
   "description": "Chart, traffic, and vessel-status display for the AJRM Marine Suite.",
   "main": "plugin/index.js",
   "scripts": {
@@ -38,6 +38,7 @@
   "files": [
     "plugin",
     "public",
+    "icon-120.png",
     "README.md",
     "LICENSE",
     "docs"
@@ -62,6 +63,6 @@
   "signalk-plugin-enabled-by-default": true,
   "signalk": {
     "displayName": "AJRM Marine Display",
-    "appIcon": "./public/assets/icon-120.png"
+    "appIcon": "./icon-120.png"
   }
 }

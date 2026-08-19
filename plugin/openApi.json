@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.8.14",
+    "version": "0.8.15",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
@@ -33,7 +33,7 @@
     "/routes/save": { "post": { "summary": "Save or save-as the displayed route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
     "/routes/close": { "post": { "summary": "Close the displayed route", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "409": { "$ref": "#/components/responses/Error" } } } },
     "/routes/export": { "get": { "summary": "Download the active route as GPX 1.1", "responses": { "200": { "description": "GPX route document", "content": { "application/gpx+xml": {} } }, "409": { "$ref": "#/components/responses/Error" } } } },
-    "/harbourRegions": { "get": { "summary": "List harbour region resources projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
+    "/profileAreas": { "get": { "summary": "List automatic-profile areas from Location Editor", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "503": { "$ref": "#/components/responses/Error" } } } },
     "/refreshDiagnostics": { "post": { "summary": "Submit an authenticated browser performance diagnostic", "security": [{ "signalk": ["readwrite"] }], "responses": { "200": { "$ref": "#/components/responses/Ok" }, "403": { "$ref": "#/components/responses/Forbidden" }, "500": { "$ref": "#/components/responses/Error" } } } },
     "/observations/status": { "get": { "summary": "Get current Capture voyage-observation capability", "responses": { "200": { "$ref": "#/components/responses/Ok" }, "500": { "$ref": "#/components/responses/Error" } } } },
     "/observations": {

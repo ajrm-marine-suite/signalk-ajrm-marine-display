@@ -19,7 +19,7 @@ const {
   uiState,
   valueOf,
 } = require("./lib/compatibility");
-const { loadHarbourRegions } = require("./lib/harbour-regions");
+const { loadLocationProfileAreas } = require("./lib/location-profile-areas");
 const { createRouteManager } = require("./lib/route-manager");
 const {
   loadAnchorMark,
@@ -194,6 +194,7 @@ module.exports = function ajrmMarineDisplay(app) {
       panelEvents: () => panelEvents(brokerProjection()),
       alertEvents: () => ({ events: alertEvents(brokerProjection()) }),
       uiState: () => currentUiState(),
+      profileAreas: () => loadLocationProfileAreas(app),
       anchorReference: () =>
         anchorMark
           ? {
@@ -369,18 +370,12 @@ module.exports = function ajrmMarineDisplay(app) {
         res.status(409).json({ ok: false, error: error.message });
       }
     });
-    router.get(route("/harbourRegions"), async (_req, res) => {
+    router.get(route("/profileAreas"), async (_req, res) => {
       try {
         res.set?.("Cache-Control", "no-store");
-        const prefix =
-          trafficAutoProfile().settings?.harbourRegionNamePrefix || "Harbour:";
-        const regions = await loadHarbourRegions({
-          resourcesApi: app.resourcesApi,
-          prefix,
-        });
-        res.json({ regions });
+        res.json({ profileAreas: await loadLocationProfileAreas(app) });
       } catch (error) {
-        res.status(500).json({ error: error.message });
+        res.status(503).json({ error: error.message });
       }
     });
     router.post?.(route("/refreshDiagnostics"), write(async (req, res) => {
