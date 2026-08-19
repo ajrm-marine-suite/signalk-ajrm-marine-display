@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.17
+
+- Serve the Display Webapps icon from the built public webapp and verify the
+  Signal K `appIcon` URL during tests.
+
 ## 0.8.16
 
 - Include a **No Auto chart** step in Display's chart cycle so the selected

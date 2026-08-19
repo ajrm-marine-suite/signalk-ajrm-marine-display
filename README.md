@@ -1,6 +1,8 @@
 # AJRM Marine Display
 
-Version `0.8.16` adds a **No Auto chart** step to the chart-cycle button and
+Version `0.8.17` fixes the Signal K Webapps icon by serving it from Display's
+built public webapp and adds a regression test for that URL. Version `0.8.16`
+adds a **No Auto chart** step to the chart-cycle button and
 keyboard shortcut, exposing the basemap before the cycle returns to automatic
 selection. It also makes the enabled tide **Use automatic selection** action
 visually distinct from a disabled button.
@@ -474,7 +476,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.16 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.17 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
