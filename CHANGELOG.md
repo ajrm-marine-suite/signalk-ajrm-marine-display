@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.21
+
+- Widen the responsive top-centre chart-cycle banner to reduce wrapping of long
+  chart names and update to shared map shell 0.7.11.
+
 ## 0.8.20
 
 - Remove the redundant **Use selected port** tide action: selecting a tidal

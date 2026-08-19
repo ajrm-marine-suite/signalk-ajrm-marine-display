@@ -1,6 +1,7 @@
 # AJRM Marine Display
 
-Version `0.8.20` removes the redundant **Use selected port** tide button because
+Version `0.8.21` widens the responsive chart-cycle banner so long chart names
+remain readable on normal screens while still fitting small displays. Version `0.8.20` removes the redundant **Use selected port** tide button because
 choosing a port already applies it immediately; **Use automatic selection** is
 the explicit way back to vessel/chart-centre selection. It also updates the
 shared map shell to 0.7.9. Version `0.8.19` packages the icon at both Signal K consumer locations: the
@@ -482,7 +483,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.20 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.21 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
