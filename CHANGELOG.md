@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.19
+
+- Package the Display icon at both the npm root required by Signal K App Store
+  metadata and the public webapp root used by the installed Webapps catalogue.
+- Verify both copies in clean-checkout tests.
+
 ## 0.8.18
 
 - Correct the scaffold validator to verify the source and built public Webapps

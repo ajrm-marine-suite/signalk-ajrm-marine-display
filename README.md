@@ -1,6 +1,7 @@
 # AJRM Marine Display
 
-Version `0.8.18` corrects the clean-checkout package validator to check the
+Version `0.8.19` packages the icon at both Signal K consumer locations: the
+App Store package root and installed webapp public URL. Version `0.8.18` corrects the clean-checkout package validator to check the
 served Webapps icon rather than the obsolete package-root location. Version
 `0.8.17` fixes the Signal K Webapps icon by serving it from Display's
 built public webapp and adds a regression test for that URL. Version `0.8.16`
@@ -478,7 +479,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.18 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.19 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

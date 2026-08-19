@@ -22,6 +22,7 @@ assert.ok(packageInfo.keywords.includes("signalk-webapp"));
 assert.equal(packageInfo["signalk-plugin-enabled-by-default"], true);
 assert.equal(packageInfo.signalk.displayName, "AJRM Marine Display");
 assert.equal(packageInfo.signalk.appIcon, "./icon-120.png");
+assert.ok(fs.existsSync(path.join(root, packageInfo.signalk.appIcon)));
 assert.ok(fs.existsSync(path.join(root, "src", "web", "public", "icon-120.png")));
 assert.ok(fs.existsSync(path.join(root, "public", packageInfo.signalk.appIcon.slice(2))));
 assert.ok(fs.existsSync(path.join(root, "plugin", "lib", "compatibility.js")));
