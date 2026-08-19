@@ -1,6 +1,8 @@
 # AJRM Marine Display
 
-Version `0.8.17` fixes the Signal K Webapps icon by serving it from Display's
+Version `0.8.18` corrects the clean-checkout package validator to check the
+served Webapps icon rather than the obsolete package-root location. Version
+`0.8.17` fixes the Signal K Webapps icon by serving it from Display's
 built public webapp and adds a regression test for that URL. Version `0.8.16`
 adds a **No Auto chart** step to the chart-cycle button and
 keyboard shortcut, exposing the basemap before the cycle returns to automatic
@@ -476,7 +478,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.17 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.18 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

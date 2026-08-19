@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.18
+
+- Correct the scaffold validator to verify the source and built public Webapps
+  icon rather than requiring the removed package-root copy.
+- Keep clean-checkout Signal K Plugin CI aligned with the runtime `appIcon`
+  contract.
+
 ## 0.8.17
 
 - Serve the Display Webapps icon from the built public webapp and verify the
