@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.15";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.16";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-CybT5404.js"></script>
+    <script type="module" crossorigin src="./assets/index-DOP6jCEZ.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Bnxe4c-5.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.15</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.16</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -381,7 +381,7 @@
 				  <select class="form-select" id="selectAlternativeTidePort"></select>
 				  <div class="d-flex flex-wrap gap-2 mt-2">
 					<button type="button" class="btn btn-primary" id="buttonPinTidePort">Use selected port</button>
-					<button type="button" class="btn btn-outline-secondary" id="buttonClearTidePortPin">Use automatic selection</button>
+					<button type="button" class="btn btn-outline-primary" id="buttonClearTidePortPin">Use automatic selection</button>
                     <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
                   </div>
 				  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>

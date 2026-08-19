@@ -146,7 +146,7 @@ test("createAutoChartController ignores failed chart resource refreshes", async 
 	assert.equal(await controller.refreshCharts(), false);
 });
 
-test("chart cycling locks each overlapping chart, returns to Auto, and releases outside coverage", () => {
+test("chart cycling locks each overlapping chart, exposes the basemap, then returns to Auto", () => {
 	const calls = [];
 	let position = { lat: 56.2585, lng: -5.6236 };
 	let zoom = 16;
@@ -196,7 +196,7 @@ test("chart cycling locks each overlapping chart, returns to Auto, and releases 
 	const manual = controller.cycleChart();
 	assert.deepEqual(
 		{ mode: manual.mode, index: manual.index, total: manual.total },
-		{ mode: "manual", index: 2, total: 2 },
+		{ mode: "manual", index: 2, total: 3 },
 	);
 	assert.equal(controller.manualChartId, "alternate");
 
@@ -204,17 +204,23 @@ test("chart cycling locks each overlapping chart, returns to Auto, and releases 
 	controller.update();
 	assert.equal(controller.manualChartId, "alternate");
 
-	const automatic = controller.cycleChart();
-	assert.equal(automatic.mode, "auto");
+	const noChart = controller.cycleChart();
+	assert.equal(noChart.mode, "none");
+	assert.equal(controller.noChartSelected, true);
 	assert.equal(controller.manualChartId, null);
 
+	const automatic = controller.cycleChart();
+	assert.equal(automatic.mode, "auto");
+	assert.equal(controller.noChartSelected, false);
+
+	controller.cycleChart();
 	controller.cycleChart();
 	position = { lat: 57, lng: -5.6236 };
 	controller.update();
 	assert.equal(controller.manualChartId, null);
 });
 
-test("single overlapping chart remains automatic under the shared Map Core cycle contract", () => {
+test("a single Auto Chart cycles to the exposed basemap and back", () => {
 	const controller = createAutoChartController({
 		L: {
 			layerGroup: () => fakeLayerGroup([]),
@@ -244,7 +250,11 @@ test("single overlapping chart remains automatic under the shared Map Core cycle
 	});
 
 	const result = controller.cycleChart();
-	assert.equal(result.mode, "auto");
-	assert.equal(result.chart.name, "Only chart");
+	assert.equal(result.mode, "none");
+	assert.equal(result.chart, null);
+	assert.equal(controller.noChartSelected, true);
+	const automatic = controller.cycleChart();
+	assert.equal(automatic.mode, "auto");
+	assert.equal(automatic.chart.name, "Only chart");
 	assert.equal(controller.manualChartId, null);
 });

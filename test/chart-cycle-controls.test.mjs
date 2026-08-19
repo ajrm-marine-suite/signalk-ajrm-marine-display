@@ -20,6 +20,7 @@ test("chart cycle messages identify manual position and automatic return", () =>
 		chartCycleMessage({ mode: "auto", chart: { name: "Admiralty 2326" } }),
 		"Automatic chart: Admiralty 2326",
 	);
+	assert.equal(chartCycleMessage({ mode: "none", chart: null }), "No Auto chart — basemap shown");
 });
 
 test("chart cycle shortcut is browser-local and ignored while typing", () => {

@@ -9,7 +9,12 @@ import {
 	normalizeChartCycleShortcut,
 } from "@ajrm-marine/map-core";
 
-export { chartCycleResultMessage as chartCycleMessage, normalizeChartCycleShortcut };
+export { normalizeChartCycleShortcut };
+
+export function chartCycleMessage(result) {
+	if (result?.mode === "none") return "No Auto chart — basemap shown";
+	return chartCycleResultMessage(result);
+}
 
 export function createChartCycleControls({
 	autoCharts,
@@ -46,7 +51,7 @@ export function createChartCycleControls({
 	function cycle() {
 		if (autoCharts?.enabled === false) return null;
 		const result = autoCharts?.cycleChart?.() ?? null;
-		showStatus(chartCycleResultMessage(result));
+		showStatus(chartCycleMessage(result));
 		return result;
 	}
 

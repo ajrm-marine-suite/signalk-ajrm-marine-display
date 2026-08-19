@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.16` adds a **No Auto chart** step to the chart-cycle button and
+keyboard shortcut, exposing the basemap before the cycle returns to automatic
+selection. It also makes the enabled tide **Use automatic selection** action
+visually distinct from a disabled button.
+
 Version `0.8.15` consumes automatic profile areas directly from Locations and keeps
 the simplified tidal-port selection introduced in `0.8.13`. Automatic mode follows the
 live vessel position and falls back to the displayed chart centre; the chooser
@@ -469,7 +474,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.15 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.16 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

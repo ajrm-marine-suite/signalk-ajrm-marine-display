@@ -28,6 +28,7 @@ export function createAutoChartController({
 	storage = globalThis.localStorage,
 }) {
 	let enabled = true;
+	let noChartSelected = false;
 	const enabledListeners = new Set();
 	const chartList = createAutoChartList(charts);
 	const chartCycle = createChartCycleState();
@@ -61,6 +62,7 @@ export function createAutoChartController({
 	}
 
 	function selectedChart() {
+		if (noChartSelected) return null;
 		return chartCycle.choose(chartList, map, getPosition());
 	}
 
@@ -68,10 +70,27 @@ export function createAutoChartController({
 		if (!enabled) return { mode: "disabled", chart: null, index: 0, total: 0 };
 		const position = getPosition();
 		const candidates = chartCycle.getCandidates(chartList, map, position);
+		if (noChartSelected) {
+			noChartSelected = false;
+			chartCycle.reset();
+			update();
+			return candidates.length
+				? { mode: "auto", chart: candidates[0], index: 1, total: candidates.length + 1 }
+				: { mode: "empty", chart: null, index: 0, total: 0 };
+		}
 		if (candidates.length === 0) {
 			chartCycle.reset();
 			update();
 			return { mode: "empty", chart: null, index: 0, total: 0 };
+		}
+		const currentManualIndex = chartCycle.manualChartId
+			? candidates.findIndex((candidate) => chartId(candidate) === chartCycle.manualChartId)
+			: -1;
+		if (candidates.length === 1 || currentManualIndex === candidates.length - 1) {
+			chartCycle.reset();
+			noChartSelected = true;
+			update();
+			return { mode: "none", chart: null, index: candidates.length + 1, total: candidates.length + 1 };
 		}
 		const chart = chartCycle.cycle(chartList, map, position);
 		update();
@@ -83,7 +102,7 @@ export function createAutoChartController({
 			mode: manualChartId ? "manual" : "auto",
 			chart,
 			index,
-			total: candidates.length,
+			total: candidates.length + 1,
 		};
 	}
 
@@ -110,7 +129,10 @@ export function createAutoChartController({
 	}
 
 	async function toggle(nextEnabled) {
-		if (!nextEnabled) chartCycle.reset();
+		if (!nextEnabled) {
+			chartCycle.reset();
+			noChartSelected = false;
+		}
 		enabled = applyAutoChartToggle({
 			ensureVisible,
 			group,
@@ -143,6 +165,9 @@ export function createAutoChartController({
 		},
 		get manualChartId() {
 			return chartCycle.manualChartId;
+		},
+		get noChartSelected() {
+			return noChartSelected;
 		},
 	};
 }

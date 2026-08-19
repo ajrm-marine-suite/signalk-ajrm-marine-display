@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.16
+
+- Include a **No Auto chart** step in Display's chart cycle so the selected
+  basemap can be exposed without switching Auto Charts off.
+- Give **Use automatic selection** a blue action outline so an enabled control
+  no longer resembles a disabled grey button.
+
 ## 0.8.15
 
 - Load automatic profile areas directly from the shared Locations service;
