@@ -1,5 +1,10 @@
 # Changelog
 
+## 0.8.22
+
+- Consume tidal predictions, port selection and refresh actions from the standalone AJRM Marine Tidal Database.
+- Keep Location Editor responsible only for spatial location symbols and anchoring assistance.
+
 ## 0.8.21
 
 - Widen the responsive top-centre chart-cycle banner to reduce wrapping of long

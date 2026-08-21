@@ -24,6 +24,7 @@ export {
 };
 
 const LOCATION_API = "/plugins/signalk-ajrm-marine-location-editor";
+const TIDE_API = "/plugins/signalk-ajrm-marine-tidal-database";
 const STORAGE = {
 	anchorages: "ajrmMarineDisplay.showAnchorages",
 	graphDays: "ajrmMarineDisplay.tideGraphDays",
@@ -201,7 +202,7 @@ export function tideStatusUrl(context = {}) {
 	if (Number.isFinite(context.longitude)) query.set("longitude", String(context.longitude));
 	if (context.portId) query.set("portId", String(context.portId));
 	const suffix = query.toString();
-	return `${LOCATION_API}/tides/status${suffix ? `?${suffix}` : ""}`;
+	return `${TIDE_API}/tides/status${suffix ? `?${suffix}` : ""}`;
 }
 
 export function tideRequestContext(map, portId = null, ownPosition = null) {
@@ -212,10 +213,7 @@ export function tideRequestContext(map, portId = null, ownPosition = null) {
 }
 
 export function isSelectableTidePort(location) {
-	const tide = location?.properties?.tide;
-	if (!location?.types?.some((type) => PORT_TYPES.has(type))) return false;
-	if (tide?.providerId && tide?.stationId) return true;
-	return Boolean(location.types.includes("tidalSecondaryPort") && tide?.parentLocationRef && tide?.secondaryPortCorrections);
+	return Boolean(location?.types?.some((type) => PORT_TYPES.has(type)));
 }
 
 export function createLocationTideController({
@@ -360,7 +358,7 @@ export function createLocationTideController({
 			const [catalogue, result] = await Promise.all([
 				requestJson(`${LOCATION_API}/locations?workspace=all`),
 				force
-					? requestJson(`${LOCATION_API}/tides/refresh`, { method: "POST", headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(context) })
+					? requestJson(`${TIDE_API}/tides/refresh`, { method: "POST", headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }), body: JSON.stringify(context) })
 					: requestJson(tideStatusUrl(context)),
 			]);
 			if (sequence !== requestSequence) return;
@@ -384,7 +382,7 @@ export function createLocationTideController({
 		selectedPortId = null;
 		showPendingPort(null, "Restoring automatic tidal-port selection…");
 		try {
-			const result = await requestJson(`${LOCATION_API}/tides/pin`, {
+			const result = await requestJson(`${TIDE_API}/tides/pin`, {
 				method: "POST",
 				headers: ajrmMarineAuthHeaders({ "Content-Type": "application/json" }),
 				body: JSON.stringify({ portId: null, ...tideMapContext(map, getOwnPosition()) }),

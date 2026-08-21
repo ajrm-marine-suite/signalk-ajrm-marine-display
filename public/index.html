@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.21";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.22";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -193,13 +193,13 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-h3ksGEfa.js"></script>
+    <script type="module" crossorigin src="./assets/index-C8AapDDs.js"></script>
     <link rel="stylesheet" crossorigin href="./assets/index-Ece98DUa.css">
   </head>
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.21</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.22</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -1258,7 +1258,7 @@
                       <input class="form-check-input" type="checkbox" id="checkShowTideStatus" checked />
                       <label class="form-check-label" for="checkShowTideStatus">Show tide status above chart</label>
                     </div>
-                    <div class="form-text">Click a location symbol for its stored details. Tide selection is performed by Location Editor's shared resolver.</div>
+                    <div class="form-text">Click a location symbol for its stored details. Tide selection and predictions are provided by AJRM Marine Tidal Database.</div>
                   </div>
                 </div>
                 <div class="card mb-3">
@@ -1736,7 +1736,7 @@
               <p>
                 <strong>Tides and locations</strong> shows optional anchorage,
                 mooring and other saved-location symbols. Its popup consumes
-                Location Editor's shared resolver to show current height,
+                Tidal Database's shared resolver to show current height,
                 trend, next high/low waters, datum, station, selection reason,
                 source freshness and the tide curve. It also gives an
                 astronomical spring-neap estimate, including days after the

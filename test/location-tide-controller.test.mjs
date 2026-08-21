@@ -119,12 +119,12 @@ test("tidal-port chooser includes secondary ports resolved through a parent", ()
 			secondaryPortCorrections: { contract: "ajrm-secondary-port-corrections-v3" },
 		} },
 	}), true);
-	assert.equal(isSelectableTidePort({ types: ["tidalSecondaryPort"], properties: { tide: {} } }), false);
+	assert.equal(isSelectableTidePort({ types: ["tidalSecondaryPort"], properties: { tide: {} } }), true);
 });
 
 test("invalid chart centres do not create misleading tide coordinates", () => {
 	assert.deepEqual(tideMapContext({ getCenter: () => ({ lat: 100, lng: -5 }) }), {});
-	assert.equal(tideStatusUrl({}), "/plugins/signalk-ajrm-marine-location-editor/tides/status");
+	assert.equal(tideStatusUrl({}), "/plugins/signalk-ajrm-marine-tidal-database/tides/status");
 });
 
 test("anchoring prompt requires an explicit current backend suggestion", () => {

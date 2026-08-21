@@ -1,5 +1,7 @@
 # AJRM Marine Display
 
+Version `0.8.22` moves provider access, tidal-station mappings, prediction calculations and caching to the standalone AJRM Marine Tidal Database. Display continues to obtain spatial symbols from Location Editor, but consumes tide projections exclusively through the Tidal Database contract.
+
 Version `0.8.21` widens the responsive chart-cycle banner so long chart names
 remain readable on normal screens while still fitting small displays. Version `0.8.20` removes the redundant **Use selected port** tide button because
 choosing a port already applies it immediately; **Use automatic selection** is
@@ -82,19 +84,18 @@ Display offers **Select Anchored** or **Not now**. Confirmation changes the
 profile but deliberately does not invent an anchor position; manual **Drop
 Anchor** remains available to record the physical position and depth.
 
-Version `0.8.0` consumes Location Editor's shared Tide Resolver and versioned
-location catalogue. Display can optionally show anchorage/mooring symbols and
+Version `0.8.0` introduced the shared Tide Resolver and versioned location
+catalogue. Display can optionally show anchorage/mooring symbols and
 other saved locations, presents a compact live tide panel and detailed curve,
 and explains the selected tidal port and source freshness. A skipper can pin
 an alternative configured prediction port or restore automatic selection;
 Display never duplicates station-selection or tide-calculation logic.
 
-The tide and saved-location controls require AJRM Marine Location Editor
-`0.4.0` or later. Configure at least one tidal prediction port and its provider
-in that plugin; for UKHO predictions, add the ADMIRALTY API subscription key in
-Location Editor's Signal K plugin settings. Display remains operational when
-the service is absent, but reports **Tide unavailable** rather than inventing a
-station or prediction.
+Saved-location controls require AJRM Marine Location Editor. Tide controls
+require AJRM Marine Tidal Database; provider credentials and station data are
+configured there, not in Display or Location Editor. Display remains
+operational when either service is absent, and reports **Tide unavailable**
+rather than inventing a station or prediction.
 
 Version `0.7.11` extends current-chart-area route filtering to GPX files on the
 browser device. The device tab can index several selected GPX files or an
@@ -483,7 +484,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.21 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.22 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
