@@ -16,11 +16,20 @@ import {
 	tideCurveEventsForDays,
 	tideGraphDays,
 	tideMeasurementLabels,
+	tidePortTitles,
 	tideRequestContext,
 	tideStatusUrl,
 	tideCurveSvg,
 	tideEventTimeLabel,
 } from "../src/web/assets/scripts/location-tide-controller.mjs";
+
+test("both tide tabs identify the selected tidal port", () => {
+	assert.deepEqual(tidePortTitles({ selectedPort: { name: "Port Ellen" } }), {
+		details: "Port Ellen",
+		graph: "Port Ellen — tidal curve",
+	});
+	assert.deepEqual(tidePortTitles(null), { details: "No tidal port", graph: "No tidal port — tidal curve" });
+});
 
 test("tidal selection reasons are translated into skipper-facing explanations", () => {
 	assert.match(TIDE_SELECTION_LABELS.explicitRequestedPort, /selected in Display/);
@@ -80,8 +89,10 @@ test("the hidden tide launcher leaves modal ownership to the controller", async 
 	assert.match(html, /id="tideDetailsTab"[\s\S]*?data-bs-target="#tideDetailsPane"/);
 	assert.match(html, /id="tideGraphTab"[\s\S]*?data-bs-target="#tideGraphPane"/);
 	assert.match(html, /id="tideDetailsPane"[\s\S]*?id="tideHeightNow"/);
+	assert.match(html, /id="tideDetailsPortName"/);
 	assert.match(html, /id="tideDistanceToFall"/);
 	assert.match(html, /id="tideGraphPane"[\s\S]*?id="tideCurve"/);
+	assert.match(html, /id="tideGraphPortName"/);
 	assert.match(html, /modal-dialog[^\"]*ajrm-tide-modal-dialog/);
 	assert.match(html, /id="tideModalResizeHandle"[^>]*aria-label="Resize tide window"/);
 	assert.doesNotMatch(html, /buttonPinTidePort|Use selected port/);

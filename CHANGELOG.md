@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.8.23
+
+- Show the selected tidal-port name at the top of both the tide details and graph tabs.
+
 ## 0.8.22
 
 - Consume tidal predictions, port selection and refresh actions from the standalone AJRM Marine Tidal Database.

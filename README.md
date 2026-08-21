@@ -1,6 +1,6 @@
 # AJRM Marine Display
 
-Version `0.8.22` moves provider access, tidal-station mappings, prediction calculations and caching to the standalone AJRM Marine Tidal Database. Display continues to obtain spatial symbols from Location Editor, but consumes tide projections exclusively through the Tidal Database contract.
+Version `0.8.23` identifies the selected tidal port in both the details and graph tabs. Display obtains spatial symbols from Location Editor and consumes tide projections exclusively through the standalone Tidal Database contract.
 
 Version `0.8.21` widens the responsive chart-cycle banner so long chart names
 remain readable on normal screens while still fitting small displays. Version `0.8.20` removes the redundant **Use selected port** tide button because
@@ -484,7 +484,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.22 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.23 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

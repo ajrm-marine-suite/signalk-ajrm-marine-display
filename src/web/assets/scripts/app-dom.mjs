@@ -167,6 +167,8 @@ export function createAppDom() {
 		open: getRequiredElement("buttonOpenTides"),
 		statusPanel: getRequiredElement("tideStatusPanel"),
 		unavailable: getRequiredElement("tideUnavailable"),
+		detailsPortName: getRequiredElement("tideDetailsPortName"),
+		graphPortName: getRequiredElement("tideGraphPortName"),
 		heightNow: getRequiredElement("tideHeightNow"),
 		trend: getRequiredElement("tideTrend"),
 		nextHigh: getRequiredElement("tideNextHigh"),

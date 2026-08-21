@@ -50,6 +50,11 @@ export const TIDE_SELECTION_LABELS = Object.freeze({
 	none: "No suitable tidal port selected",
 });
 
+export function tidePortTitles(tide) {
+	const portName = String(tide?.selectedPort?.name || "").trim() || "No tidal port";
+	return { details: portName, graph: `${portName} — tidal curve` };
+}
+
 export function anchoringSuggestionText(value) {
 	return value?.state === "suggested" && value?.suggestionId
 		? `You appear stationary at ${value.location?.name || "an anchorage or mooring"}. Select the Anchored profile?`
@@ -287,6 +292,9 @@ export function createLocationTideController({
 
 	function renderTide() {
 		const valid = tide?.valid === true;
+		const titles = tidePortTitles(tide);
+		controls.detailsPortName.textContent = titles.details;
+		controls.graphPortName.textContent = titles.graph;
 		const measurements = tideMeasurementLabels(tide);
 		const stationName = tide?.station?.name || tide?.selectedPort?.name || "No station";
 		controls.statusPanel.innerHTML = valid

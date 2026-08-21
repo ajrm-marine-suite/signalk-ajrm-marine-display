@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.22";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.23";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -199,7 +199,7 @@
 
   <body>
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.22</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.23</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -360,6 +360,7 @@
               </ul>
               <div class="tab-content border border-top-0 rounded-bottom p-3">
                 <div class="tab-pane fade show active" id="tideDetailsPane" role="tabpanel" aria-labelledby="tideDetailsTab" tabindex="0">
+                  <h6 class="mb-3" id="tideDetailsPortName">No tidal port</h6>
                   <dl class="row small mb-0">
                     <dt class="col-5">Current height</dt><dd class="col-7" id="tideHeightNow">—</dd>
                     <dt class="col-5">Trend</dt><dd class="col-7" id="tideTrend">—</dd>
@@ -391,6 +392,7 @@
                   </p>
                 </div>
                 <div class="tab-pane fade" id="tideGraphPane" role="tabpanel" aria-labelledby="tideGraphTab" tabindex="0">
+                  <h6 class="mb-3" id="tideGraphPortName">No tidal port — tidal curve</h6>
                   <div class="d-flex align-items-center justify-content-between gap-2 mb-2">
                     <label class="form-label mb-0" for="selectTideGraphDays">Graph range</label>
                     <select class="form-select form-select-sm w-auto" id="selectTideGraphDays" aria-label="Number of days shown on tide graph">
