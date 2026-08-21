@@ -253,6 +253,8 @@ test("plugin publishes enabled Display status", () => {
   const value = messages[0].updates[0].values[0];
   assert.equal(value.path, "plugins.ajrmMarineDisplay");
   assert.equal(value.value.contract, "ajrm-marine-display-status");
+  assert.equal(value.value.locationsService, "ajrm-marine-locations-service-v1");
+  assert.equal(value.value.tideService, "ajrm-marine-tidal-database-service-v1");
   assert.equal(value.value.contractVersion, 1);
   assert.equal(value.value.enabled, true);
   assert.equal(value.value.sequence, 1);

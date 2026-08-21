@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.24
+
+- Publishes the current Locations and Tidal Database consumer contracts in
+  Display status for runtime cross-app BITE validation.
+- Corrects documentation to identify Location Editor rather than Signal K
+  region resources as the profile-area source.
+
 ## 0.8.23
 
 - Show the selected tidal-port name at the top of both the tide details and graph tabs.

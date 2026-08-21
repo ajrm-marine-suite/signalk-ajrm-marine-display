@@ -1,5 +1,7 @@
 # AJRM Marine Display
 
+Version `0.8.24` publishes the exact Locations and Tidal Database contracts
+consumed by its browser so Console BITE can verify that cross-app boundary.
 Version `0.8.23` identifies the selected tidal port in both the details and graph tabs. Display obtains spatial symbols from Location Editor and consumes tide projections exclusively through the standalone Tidal Database contract.
 
 Version `0.8.21` widens the responsive chart-cycle banner so long chart names
@@ -404,7 +406,8 @@ Version `2.2.13` is the sailing display for the AJRM Marine architecture:
   backed by AJRM Marine Traffic.
 - Auto Profile status and enable/disable control backed by AJRM Marine Traffic.
 - Global mute and stationary automute controls backed by AJRM Marine Traffic Audio Policy.
-- Harbour Limits loaded directly from Signal K region resources.
+- Location and automatic-profile areas loaded directly from AJRM Marine
+  Location Editor's versioned service.
 - Display-only Signal K v2 routes with configurable colour and width,
   direction arrows, a reversible route order, and optional filtering to routes
   that cross the current chart area.
@@ -484,7 +487,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.23 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.24 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

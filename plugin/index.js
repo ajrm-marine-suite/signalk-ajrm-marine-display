@@ -28,6 +28,8 @@ const {
 } = require("./lib/anchor-mark");
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
+const LOCATIONS_SERVICE_CONTRACT = "ajrm-marine-locations-service-v1";
+const TIDAL_DATABASE_SERVICE_CONTRACT = "ajrm-marine-tidal-database-service-v1";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
 const OBSERVATION_SOURCE = "ajrm-marine-display";
 const AJRM_MARINE_CAPTURE_API_REGISTRY = Symbol.for(
@@ -175,6 +177,8 @@ module.exports = function ajrmMarineDisplay(app) {
       sequence: 1,
       enabled: options.enabled,
       version: packageInfo.version,
+      locationsService: LOCATIONS_SERVICE_CONTRACT,
+      tideService: TIDAL_DATABASE_SERVICE_CONTRACT,
       defaults: options.defaults,
       diagnostics: options.diagnostics,
       routes: {
