@@ -1,7 +1,9 @@
 # AJRM Marine Display
 
-Version `0.8.24` publishes the exact Locations and Tidal Database contracts
+Version `0.8.25` publishes the exact Locations and Tidal Database contracts
 consumed by its browser so Console BITE can verify that cross-app boundary.
+Version `0.8.25` displays Tidal Database caution messages and incomplete station capabilities explicitly. A high-water-only or low-water-only station may show its available next event and provenance, but Display leaves current height and the missing extreme blank and refuses to draw a misleading tidal curve. Automatic selection also explains when a direct provider station has replaced matching entered corrections.
+
 Version `0.8.23` identifies the selected tidal port in both the details and graph tabs. Display obtains spatial symbols from Location Editor and consumes tide projections exclusively through the standalone Tidal Database contract.
 
 Version `0.8.21` widens the responsive chart-cycle banner so long chart names
@@ -487,7 +489,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.24 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.25 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

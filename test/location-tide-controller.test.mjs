@@ -37,6 +37,7 @@ test("tidal selection reasons are translated into skipper-facing explanations", 
 	assert.match(TIDE_SELECTION_LABELS.containingRegionAssignment, /containing tidal region/);
 	assert.match(TIDE_SELECTION_LABELS.nearestPortInTidalRegion, /Nearest suitable port/);
 	assert.match(TIDE_SELECTION_LABELS.manualPinnedOverride, /manual tidal-port override/);
+	assert.match(TIDE_SELECTION_LABELS["preferred-direct-provider"], /Direct provider station preferred/);
 });
 
 test("spring-neap estimate reports elapsed and remaining phase days", () => {
@@ -207,6 +208,18 @@ test("an unavailable selected port cannot display stale measurements from the pr
 		freshness: { state: "fresh", ageSeconds: 10 },
 	});
 	assert.deepEqual(new Set(Object.values(labels)), new Set(["—"]));
+});
+
+test("a high-water-only station exposes its genuine event without inventing a curve or current height", () => {
+	const labels=tideMeasurementLabels({
+		valid:false,availability:{ highWater:true,lowWater:false,nextHighWater:true,nextLowWater:false },
+		heightNowM:null,nextHighWater:{ at:"2026-08-18T12:00:00Z",heightM:4.8 },
+		station:{ name:"High-only station",id:"one" },source:{ provider:"Provider" },freshness:{ state:"fresh",ageSeconds:10 },
+	});
+	assert.match(labels.nextHigh,/4\.80 m/);
+	assert.equal(labels.nextLow,"—");
+	assert.equal(labels.heightNow,"—");
+	assert.match(labels.station,/High-only station/);
 });
 
 test("tide curve has an explicit empty state", () => {

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.8.25
+
+- Explain automatic direct-station preference and display tidal-definition
+  cautions.
+- Preserve genuine events from incomplete stations while leaving unavailable
+  values blank and refusing to draw a false complete tidal curve.
+
 ## 0.8.24
 
 - Publishes the current Locations and Tidal Database consumer contracts in

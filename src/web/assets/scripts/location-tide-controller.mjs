@@ -47,6 +47,7 @@ export const TIDE_SELECTION_LABELS = Object.freeze({
 	containingRegionAssignment: "Tidal port assigned to the containing tidal region",
 	nearestPortInTidalRegion: "Nearest suitable port in the same tidal region",
 	manualPinnedOverride: "Saved manual tidal-port override",
+	"preferred-direct-provider": "Direct provider station preferred over matching entered corrections",
 	none: "No suitable tidal port selected",
 });
 
@@ -159,18 +160,20 @@ function heightLabel(value) {
 
 export function tideMeasurementLabels(tide) {
 	const valid = tide?.valid === true;
+	const availability = tide?.availability || {};
+	const hasEvents = availability.highWater || availability.lowWater;
 	const ageHours = Number.isFinite(Number(tide?.freshness?.ageSeconds))
 		? `${(Number(tide.freshness.ageSeconds) / 3600).toFixed(1)} h old`
 		: "age unknown";
 	return {
 		heightNow: valid ? heightLabel(tide?.heightNowM) : "—",
 		trend: valid ? tide?.trend || "—" : "—",
-		nextHigh: valid && tide?.nextHighWater ? `${tideEventTimeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—",
-		nextLow: valid && tide?.nextLowWater ? `${tideEventTimeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—",
+		nextHigh: availability.nextHighWater && tide?.nextHighWater ? `${tideEventTimeLabel(tide.nextHighWater.at)} · ${heightLabel(tide.nextHighWater.heightM)}` : "—",
+		nextLow: availability.nextLowWater && tide?.nextLowWater ? `${tideEventTimeLabel(tide.nextLowWater.at)} · ${heightLabel(tide.nextLowWater.heightM)}` : "—",
 		distanceToFall: valid ? heightLabel(distanceToNextLowWater(tide)) : "—",
-		datum: valid ? tide?.datum || "—" : "—",
-		station: valid && tide?.station ? `${tide.station.name} (${tide.station.id})` : "—",
-		sourceFreshness: valid && tide?.source
+		datum: valid || hasEvents ? tide?.datum || "—" : "—",
+		station: (valid || hasEvents) && tide?.station ? `${tide.station.name} (${tide.station.id})` : "—",
+		sourceFreshness: (valid || hasEvents) && tide?.source
 			? `${tide.source.provider} · ${tide.freshness?.state || "unknown"} · ${ageHours}`
 			: "—",
 	};
@@ -292,6 +295,7 @@ export function createLocationTideController({
 
 	function renderTide() {
 		const valid = tide?.valid === true;
+		const hasEvents = tide?.availability?.highWater || tide?.availability?.lowWater;
 		const titles = tidePortTitles(tide);
 		controls.detailsPortName.textContent = titles.details;
 		controls.graphPortName.textContent = titles.graph;
@@ -299,12 +303,12 @@ export function createLocationTideController({
 		const stationName = tide?.station?.name || tide?.selectedPort?.name || "No station";
 		controls.statusPanel.innerHTML = valid
 			? `<span class="fw-semibold"><i class="bi bi-water"></i> ${escapeHtml(heightLabel(tide.heightNowM))} · ${escapeHtml(tide.trend)} · ${escapeHtml(stationName)}</span>`
-			: `<span class="fw-semibold"><i class="bi bi-water"></i> Tide unavailable${stationName === "No station" ? "" : ` · ${escapeHtml(stationName)}`}</span>`;
+			: `<span class="fw-semibold"><i class="bi bi-water"></i> ${hasEvents ? "Partial tide data" : "Tide unavailable"}${stationName === "No station" ? "" : ` · ${escapeHtml(stationName)}`}</span>`;
 		controls.statusPanel.classList.toggle("d-none", !controls.showStatus.checked);
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-stale", tide?.freshness?.state === "stale");
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-invalid", !valid);
-		controls.unavailable.classList.toggle("d-none", valid);
-		controls.unavailable.textContent = valid ? "" : tide?.error || "Tide Resolver has no valid result.";
+		controls.unavailable.classList.toggle("d-none", valid && !tide?.advisory);
+		controls.unavailable.textContent = [valid ? null : tide?.error || "Tide Resolver has no valid result.", tide?.advisory?.message].filter(Boolean).join(" ");
 		// Never leave measurements from one station visible while another station
 		// is selected, loading or unavailable. Port identity remains visible in the
 		// status banner, but all station-derived values require a valid projection.
@@ -324,7 +328,7 @@ export function createLocationTideController({
 		const springNeap = springNeapEstimate(referenceAt);
 		controls.springNeapStatus.textContent = springNeap?.status || "—";
 		controls.springNeapTiming.textContent = springNeap?.timing || "—";
-		const curveEvents = tideCurveEventsForDays(valid ? tide?.curve : [], referenceAt, graphDays);
+		const curveEvents = tideCurveEventsForDays(tide?.curve || [], referenceAt, graphDays);
 		curveHoverController?.destroy();
 		controls.curve.innerHTML = tideCurveSvg(
 			curveEvents,
