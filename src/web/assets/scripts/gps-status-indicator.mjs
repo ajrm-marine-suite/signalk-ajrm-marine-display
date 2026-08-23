@@ -2,9 +2,13 @@
  * Implements the GPS status indicator responsibilities of the AJRM Marine Display browser application.
  */
 
+import {
+	DEFAULT_OWN_POSITION_MAX_AGE_MS,
+	isOwnPositionEvidenceAged,
+} from "./own-position-freshness.mjs";
+
 const DEFAULT_STATUS_URL = "/plugins/signalk-ajrm-marine-gps-integrity/status";
 const DEFAULT_FALLBACK_STATUS_URL = "/signalk/v1/api/vessels/self";
-const DEFAULT_FALLBACK_MAX_AGE_MS = 30_000;
 
 export function createGpsStatusIndicator({
 	element,
@@ -15,7 +19,7 @@ export function createGpsStatusIndicator({
 	fallbackStatusUrl = DEFAULT_FALLBACK_STATUS_URL,
 	intervalMs = 3000,
 	timeoutMs = 2500,
-	fallbackMaxAgeMs = DEFAULT_FALLBACK_MAX_AGE_MS,
+	fallbackMaxAgeMs = DEFAULT_OWN_POSITION_MAX_AGE_MS,
 }) {
 	let stopped = false;
 	let timer = null;
@@ -110,7 +114,7 @@ export function createGpsStatusIndicator({
 
 export function classifySignalKGpsStatus(data, {
 	now = Date.now(),
-	maxAgeMs = DEFAULT_FALLBACK_MAX_AGE_MS,
+	maxAgeMs = DEFAULT_OWN_POSITION_MAX_AGE_MS,
 } = {}) {
 	const position = signalKValue(data?.navigation?.position);
 	if (!isFinitePosition(position)) {
@@ -121,8 +125,10 @@ export function classifySignalKGpsStatus(data, {
 		};
 	}
 
-	const timestamp = Date.parse(data?.navigation?.position?.timestamp || "");
-	if (Number.isFinite(timestamp) && now - timestamp > maxAgeMs) {
+	if (isOwnPositionEvidenceAged(
+		{ lastSeenDate: data?.navigation?.position?.timestamp },
+		{ now, maxAgeMs },
+	)) {
 		return {
 			kind: "alert",
 			label: "GPS STALE",

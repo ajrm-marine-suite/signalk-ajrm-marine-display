@@ -254,8 +254,9 @@ export function weatherPresentation(
 	const selectedLocation = resolution.selectedLocation || projection?.contextLocation;
 	const locationName = String(selectedLocation?.name || "").trim() || "No weather location";
 	const distance = weatherDistanceLabel(resolution.distanceMetres);
+	const differentCachedLocation = resolution.mode === "nearest-cached-location";
 	const cachedFallback =
-		resolution.cacheFallback === true || resolution.mode === "nearest-cached-location";
+		resolution.cacheFallback === true || differentCachedLocation;
 	const source = projection?.source || {};
 	const sourceName = source.provider || source.providerId || "Unknown provider";
 	const freshnessState = projection?.freshness?.state || source.freshness?.state || "unknown freshness";
@@ -263,13 +264,21 @@ export function weatherPresentation(
 	const sourceFreshness = projection?.valid
 		? `${sourceName} · fetched ${weatherFetchedAtLabel(source.fetchedAt)} · ${freshnessState} · ${cacheState}`
 		: "—";
-	const selection = cachedFallback
+	const selection = differentCachedLocation
 		? "Nearest cached weather location"
 		: resolution.mode === "nearest-location"
-			? "Nearest weather location"
+			? cachedFallback
+				? "Nearest weather location (cached forecast)"
+				: "Nearest weather location"
 			: "Weather location unavailable";
+	const positionBasis = isLastKnownPosition
+		? "the last known vessel position"
+		: "the vessel";
+	const fallbackLead = differentCachedLocation
+		? "Showing the nearest usable cached forecast from"
+		: "Showing the cached forecast for";
 	const fallbackMessage = cachedFallback
-		? `Live weather was unavailable. Showing the nearest cached forecast from ${locationName}, ${distance} from ${isLastKnownPosition ? "the last known vessel position" : "the vessel"}.${resolution.fallbackReason ? ` ${resolution.fallbackReason}` : ""}`
+		? `Live weather was unavailable. ${fallbackLead} ${locationName}, ${distance} from ${positionBasis}.${resolution.fallbackReason ? ` ${resolution.fallbackReason}` : ""}`
 		: "";
 	return {
 		cachedFallback,

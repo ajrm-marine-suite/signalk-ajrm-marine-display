@@ -86,6 +86,18 @@ test("registered map move events keep follow after zoom-only move", () => {
 	]);
 });
 
+test("invalidateSize moveend without movestart does not pause follow", () => {
+	const { calls, handlers, setCenter } = setup();
+
+	setCenter({ lat: 53.76, lng: -4.7 });
+	handlers.moveend();
+
+	assert.deepEqual(calls, [
+		["setDisableMapPanTo", false],
+		["autoCharts.update"],
+	]);
+});
+
 test("registered zoom event refreshes range rings, labels, and auto charts", () => {
 	const { calls, handlers } = setup();
 

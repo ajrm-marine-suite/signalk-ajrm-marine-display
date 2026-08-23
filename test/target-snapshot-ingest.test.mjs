@@ -89,6 +89,63 @@ test("uses the vessel collection key for non-AIS snapshots without uuid", () => 
 	assert.equal(targets.get("self")?.latitude, 56.2);
 });
 
+test("an own-vessel coordinate without a timestamp fails closed as last-known", () => {
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.2, longitude: -5.5 },
+					},
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30 * 60,
+		selfMmsi: "self",
+	});
+
+	const self = targets.get("self");
+	assert.equal(self.isStale, true);
+	assert.equal(self.isLost, true);
+	assert.equal(self.lastSeenDate, undefined);
+});
+
+test("an untimestamped non-self snapshot receives finite arrival-age evidence", () => {
+	const vessels = {
+		"232035943": {
+			mmsi: { value: "232035943" },
+			navigation: {
+				position: {
+					value: { latitude: 56.2, longitude: -5.5 },
+				},
+			},
+		},
+	};
+	const retainedTargets = new Map();
+	const before = Date.now();
+	ingestRawVesselData({
+		vessels,
+		targets: retainedTargets,
+		targetMaxAge: 30 * 60,
+		selfMmsi: "self",
+	});
+	const target = retainedTargets.get("232035943");
+	assert.ok(target.lastSeenDate instanceof Date);
+	assert.ok(target.lastSeenDate.getTime() >= before);
+	assert.ok(target.lastSeenDate.getTime() <= Date.now());
+
+	const immediatelyExpiredTargets = new Map();
+	ingestRawVesselData({
+		vessels,
+		targets: immediatelyExpiredTargets,
+		targetMaxAge: 0,
+		selfMmsi: "self",
+	});
+	assert.equal(immediatelyExpiredTargets.has("232035943"), false);
+});
+
 test("replay cleanup retains own vessel at its last position and removes other targets", () => {
 	const timestamp = new Date().toISOString();
 	const targets = new Map();
@@ -253,6 +310,31 @@ test("a fresh Display page can render a stale Signal K own-vessel position", () 
 	assert.equal(self.latitude, 56.21616);
 	assert.equal(self.isStale, true);
 	assert.equal(self.lastKnownCog, Math.PI / 2);
+});
+
+test("own-vessel evidence older than the GPS freshness limit is last-known before general target ageing", () => {
+	const targets = new Map();
+	ingestRawVesselData({
+		vessels: {
+			self: {
+				navigation: {
+					position: {
+						value: { latitude: 56.21616, longitude: -5.56725 },
+						timestamp: new Date(Date.now() - 120_000).toISOString(),
+					},
+				},
+			},
+		},
+		targets,
+		targetMaxAge: 30 * 60,
+		selfMmsi: "self",
+	});
+
+	const self = targets.get("self");
+	assert.equal(self.isStale, true);
+	assert.equal(self.isLost, true);
+	assert.equal(self.latitude, 56.21616);
+	assert.equal(self.longitude, -5.56725);
 });
 
 test("a hard refresh restores the browser-cached live last fix after GPS loss", () => {

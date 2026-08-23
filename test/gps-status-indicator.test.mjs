@@ -110,3 +110,23 @@ test("GPS status indicator treats stale fallback position as stale", () => {
 		},
 	);
 });
+
+test("GPS status indicator treats an untimestamped fallback position as stale", () => {
+	assert.deepEqual(
+		classifySignalKGpsStatus({
+			navigation: {
+				position: {
+					value: {
+						latitude: 56.2,
+						longitude: -5.5,
+					},
+				},
+			},
+		}),
+		{
+			kind: "alert",
+			label: "GPS STALE",
+			title: "GPS position is stale",
+		},
+	);
+});

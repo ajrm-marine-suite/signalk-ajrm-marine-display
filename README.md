@@ -2,7 +2,9 @@
 
 At startup, Display keeps the chart covered until it has resolved an
 own-vessel coordinate. A fresh GPS fix is preferred, but a retained
-last-known position is also usable after GPS loss or a browser restart. Display
+last-known position is also usable after GPS loss or a browser restart. Fresh
+means explicit position evidence no more than 30 seconds old; older or
+untimestamped coordinates fail closed as last-known. Display
 centres the chart before tide or weather selection starts, and automatic
 environmental selection never substitutes the initial or browsed chart centre
 for the vessel position. A retained position remains explicitly qualified:
@@ -11,6 +13,13 @@ last-known vessel position, and Weather labels its distance from the last-known
 position. If neither a fresh nor retained coordinate arrives within the
 bounded startup wait, Display makes the chart browsable but leaves automatic
 tide and weather selection unavailable until a coordinate arrives.
+
+Version `0.8.27` keeps the startup recenter from being mistaken for a manual
+pan, aligns fresh/last-known position handling with the 30-second GPS boundary,
+and keeps anchoring fresh-position-only. It also co-ordinates precise live,
+exact-cache and different-location cache provenance with Weather Database
+`0.1.10`, consumes Tidal Database service contract v2, and refreshes the public
+contracts and guidance.
 
 Version `0.8.26` adds the independent Weather tab and position-first startup
 behaviour described above. Weather Database—not Display—selects the nearest
@@ -26,7 +35,8 @@ Version `0.8.23` identifies the selected tidal port in both the details and grap
 Version `0.8.21` widens the responsive chart-cycle banner so long chart names
 remain readable on normal screens while still fitting small displays. Version `0.8.20` removes the redundant **Use selected port** tide button because
 choosing a port already applies it immediately; **Use automatic selection** is
-the explicit way back to vessel/chart-centre selection. It also updates the
+the explicit way back to automatic selection. At that release, automatic mode
+could still use chart centre; version `0.8.26` removed that fallback. It also updates the
 shared map shell to 0.7.9. Version `0.8.19` packages the icon at both Signal K consumer locations: the
 App Store package root and installed webapp public URL. Version `0.8.18` corrects the clean-checkout package validator to check the
 served Webapps icon rather than the obsolete package-root location. Version
@@ -39,7 +49,8 @@ visually distinct from a disabled button.
 
 Version `0.8.15` consumes automatic profile areas directly from Locations and keeps
 the simplified tidal-port selection introduced in `0.8.13`. Automatic mode follows the
-live vessel position and falls back to the displayed chart centre; the chooser
+live vessel position and, at that release, fell back to the displayed chart centre.
+Version `0.8.26` superseded that fallback with fresh/last-known vessel positions only; the chooser
 contains both standard and secondary ports. A manual choice is described as
 the selected tidal port and no longer creates a persistent pin.
 
@@ -90,9 +101,10 @@ closing the tide popup cannot leave the map toolbar behind a stale backdrop.
 Version `0.8.4` fixes the tide popup close lifecycle and adds the remembered
 one-to-seven-day graph range described below.
 
-Version `0.8.3` resolves tides for the visible chart centre. Tide selection
-therefore works while inspecting a chart away from the vessel and when no
-current own-vessel position is available.
+Version `0.8.3` previously resolved tides for the visible chart centre.
+Version `0.8.26` deliberately removed that behaviour: current automatic tide
+and weather selection waits for fresh or retained own-position evidence and
+never treats a browsed chart centre as the vessel.
 
 Version `0.8.2` supplies Traffic with the persisted manual anchor position so
 the shared Anchored profile can be released only after sustained movement or a
@@ -116,7 +128,10 @@ Saved-location controls require AJRM Marine Location Editor. Tide controls
 require AJRM Marine Tidal Database; provider credentials and station data are
 configured there, not in Display or Location Editor. Display remains
 operational when either service is absent, and reports **Tide unavailable**
-rather than inventing a station or prediction.
+rather than inventing a station or prediction. The independent Weather tab
+requires AJRM Marine Weather Database; if it is absent, Display keeps chart,
+traffic, saved-location and tide functions available and reports weather as
+unavailable rather than fetching a provider itself.
 
 Version `0.7.11` extends current-chart-area route filtering to GPX files on the
 browser device. The device tab can index several selected GPX files or an
@@ -506,7 +521,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.26 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.27 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
@@ -517,6 +532,7 @@ Open **Webapps → AJRM Marine Display** and hard-refresh after upgrading.
 ```bash
 npm install
 npm test
+npm pack --dry-run
 ```
 
 ## Attribution
@@ -531,16 +547,13 @@ This software is licensed under the GNU Affero General Public License v3.0 or la
 
 Commercial licensing is available by arrangement for organisations that want different terms.
 
-## Safety
+## Alpha safety disclaimer
 
-> This software is a public beta and must not be relied upon for navigation or
-> safety. The skipper remains responsible for navigation, collision avoidance
-> and every operational decision. The authors do not accept responsibility for
-> loss or damage resulting from its use.
+> This software is Alpha Release and has not been tested in live environments and must not be relied upon for navigation or safety. The Authors do not accept any responsibility for loss or damage as a result of using this software.
 
 
-## Public Beta
+## Alpha Release
 
 Chart, traffic, and vessel-status display for the AJRM Marine Suite.
 
-Development assistance: OpenAI Codex helped with code generation, refactoring, and automated testing during the beta development cycle.
+Development assistance: OpenAI Codex helped with code generation, refactoring, and automated testing during the alpha development cycle.

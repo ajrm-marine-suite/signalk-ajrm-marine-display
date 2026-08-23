@@ -20,6 +20,8 @@ export function shouldPauseFollowAfterMove({
 }) {
 	if (disableMoveend) return false;
 	if (!selfTarget?.isValid) return false;
+	if (moveStartCenter == null || moveStartZoom == null) return false;
+	if (moveEndCenter == null || moveEndZoom == null) return false;
 	if (moveStartZoom !== moveEndZoom) return false;
 	return !mapCentersEqual(moveStartCenter, moveEndCenter);
 }

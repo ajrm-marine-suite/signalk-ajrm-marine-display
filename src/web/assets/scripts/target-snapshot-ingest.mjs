@@ -7,6 +7,7 @@ import {
 	createTarget,
 	vesselTargetId,
 } from "../../../shared/target-model.mjs";
+import { isOwnPositionEvidenceAged } from "./own-position-freshness.mjs";
 
 const LAST_SELF_FIX_STORAGE_KEY = "ajrmMarineDisplay.lastSelfFix.v1";
 
@@ -21,6 +22,7 @@ export function ingestRawVesselData({
 }) {
 	const freshMmsis = new Set();
 	const removedMmsis = [];
+	const snapshotReceivedAt = new Date();
 
 	for (const vesselId in vessels) {
 		const vessel = vessels[vesselId];
@@ -31,6 +33,12 @@ export function ingestRawVesselData({
 			vessel,
 			vesselId,
 		);
+		if (
+			targetId !== selfMmsi &&
+			!Number.isFinite(target.lastSeenDate?.getTime?.())
+		) {
+			target.lastSeenDate = snapshotReceivedAt;
+		}
 		const retainedSelf = hasPosition(previous)
 			? previous
 			: storedSelfFixEnabled
@@ -51,8 +59,14 @@ export function ingestRawVesselData({
 		}
 
 		const lastSeen = Math.round((Date.now() - target.lastSeenDate) / 1000);
-		if (lastSeen >= targetMaxAge) {
-			const lastKnownSelf = hasPosition(previous) ? previous : target;
+		const agedOwnPosition =
+			targetId === selfMmsi && isOwnPositionEvidenceAged(target);
+		if (lastSeen >= targetMaxAge || agedOwnPosition) {
+			const lastKnownSelf = agedOwnPosition && hasPosition(target)
+				? target
+				: hasPosition(previous)
+					? previous
+					: target;
 			if (targetId === selfMmsi && hasPosition(lastKnownSelf)) {
 				if (storedSelfFixEnabled) {
 					writeStoredSelfFix(lastFixStorage, selfMmsi, lastKnownSelf);

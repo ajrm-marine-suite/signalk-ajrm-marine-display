@@ -2,12 +2,12 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.8.26",
+    "version": "0.8.27",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
   "paths": {
-    "/status": { "get": { "summary": "Get Display runtime status and browser defaults", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
+    "/status": { "get": { "summary": "Get Display runtime status, current service contracts and browser defaults", "responses": { "200": { "$ref": "#/components/responses/DisplayStatus" } } } },
     "/getTargets": { "get": { "summary": "Get Traffic targets projected for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/getCollisionProfiles": { "get": { "summary": "Get Traffic profile thresholds formatted for Display", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
     "/anchor": { "get": { "summary": "Get the persistent Display anchor mark and active Traffic profile", "responses": { "200": { "$ref": "#/components/responses/Ok" } } } },
@@ -48,9 +48,58 @@
   "components": {
     "securitySchemes": { "signalk": { "type": "http", "scheme": "bearer" } },
     "responses": {
+      "DisplayStatus": {
+        "description": "Current Display status contract",
+        "content": {
+          "application/json": {
+            "schema": { "$ref": "#/components/schemas/DisplayStatusResponse" }
+          }
+        }
+      },
       "Ok": { "description": "Successful response" },
       "Forbidden": { "description": "Signal K read/write or administrator access required" },
       "Error": { "description": "Operation failed" }
+    },
+    "schemas": {
+      "DisplayStatusResponse": {
+        "type": "object",
+        "required": ["ok", "plugin", "status"],
+        "properties": {
+          "ok": { "type": "boolean", "enum": [true] },
+          "plugin": { "type": "string", "enum": ["signalk-ajrm-marine-display"] },
+          "status": { "$ref": "#/components/schemas/DisplayStatus" }
+        }
+      },
+      "DisplayStatus": {
+        "type": "object",
+        "required": ["contract", "contractVersion", "sessionId", "sequence", "enabled", "version", "locationsService", "tideService", "weatherService", "defaults", "diagnostics", "routes", "anchor", "updatedAt"],
+        "properties": {
+          "contract": { "type": "string", "enum": ["ajrm-marine-display-status"] },
+          "contractVersion": { "type": "integer", "enum": [1] },
+          "sessionId": { "type": "string", "format": "uuid" },
+          "sequence": { "type": "integer", "minimum": 1 },
+          "enabled": { "type": "boolean" },
+          "version": { "type": "string", "example": "0.8.27" },
+          "locationsService": { "type": "string", "enum": ["ajrm-marine-locations-service-v1"] },
+          "tideService": { "type": "string", "enum": ["ajrm-marine-tidal-database-service-v2"] },
+          "weatherService": { "type": "string", "enum": ["ajrm-marine-weather-database-service-v1"] },
+          "defaults": {
+            "type": "object",
+            "required": ["refreshIntervalMs", "latitude", "longitude", "zoom", "coordinateFormat"],
+            "properties": {
+              "refreshIntervalMs": { "type": "integer", "minimum": 500, "maximum": 10000 },
+              "latitude": { "type": "number", "minimum": -90, "maximum": 90 },
+              "longitude": { "type": "number", "minimum": -180, "maximum": 180 },
+              "zoom": { "type": "integer", "minimum": 2, "maximum": 18 },
+              "coordinateFormat": { "type": "string", "enum": ["dms", "degrees-minutes", "decimal"] }
+            }
+          },
+          "diagnostics": { "type": "object" },
+          "routes": { "type": "object" },
+          "anchor": { "type": "object" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
     }
   }
 }

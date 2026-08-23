@@ -3,6 +3,8 @@
  * revealing the startup map.
  */
 
+import { isOwnPositionLastKnown } from "./own-position-freshness.mjs";
+
 export const DEFAULT_STARTUP_POSITION_TIMEOUT_MS = 15000;
 
 export function createStartupPositionGate({
@@ -12,6 +14,7 @@ export function createStartupPositionGate({
 	onWaiting = () => {},
 	onResolved = () => {},
 	onUnavailable = () => {},
+	setDisableMoveend = () => {},
 	timeoutMs = DEFAULT_STARTUP_POSITION_TIMEOUT_MS,
 	setTimeoutFn = globalThis.setTimeout,
 	clearTimeoutFn = globalThis.clearTimeout,
@@ -59,7 +62,12 @@ export function createStartupPositionGate({
 		clearTimer();
 		unsubscribe?.();
 		unsubscribe = null;
-		centerMapOnPosition(map, position);
+		try {
+			setDisableMoveend(true);
+			centerMapOnPosition(map, position);
+		} finally {
+			setDisableMoveend(false);
+		}
 		const previousState = state;
 		state = "resolved";
 		onResolved({
@@ -97,7 +105,7 @@ export function createStartupPositionGate({
 	};
 }
 
-export function currentVesselPosition(target) {
+export function currentVesselPosition(target, freshnessOptions = {}) {
 	if (!target || target.isValid === false) {
 		return null;
 	}
@@ -115,11 +123,7 @@ export function currentVesselPosition(target) {
 		return null;
 	}
 
-	const isLastKnown =
-		target.isLastKnown === true ||
-		target.positionSource === "last-known" ||
-		target.isStale === true ||
-		target.isLost === true;
+	const isLastKnown = isOwnPositionLastKnown(target, freshnessOptions);
 	return {
 		latitude,
 		longitude,
@@ -134,6 +138,26 @@ export function centerMapOnPosition(map, position) {
 		[position.latitude, position.longitude],
 		Number.isFinite(zoom) ? zoom : undefined,
 		{ animate: false },
+	);
+}
+
+export function applyStartupChartDecision({
+	positionState,
+	updateAutoCharts = false,
+	autoCharts,
+	map,
+	documentRef = globalThis.document,
+	windowRef = globalThis.window,
+	cover = documentRef?.getElementById?.("displayPositionGate"),
+}) {
+	if (updateAutoCharts) autoCharts.update();
+	documentRef?.body?.classList?.remove("ajrm-marine-position-pending");
+	if (documentRef?.body?.dataset) {
+		documentRef.body.dataset.ajrmMarinePositionState = positionState;
+	}
+	if (cover) cover.hidden = true;
+	windowRef?.requestAnimationFrame?.(() =>
+		map?.invalidateSize?.({ animate: false }),
 	);
 }
 

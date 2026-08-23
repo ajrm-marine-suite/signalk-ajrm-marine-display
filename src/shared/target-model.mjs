@@ -156,7 +156,7 @@ export function applySnapshotToTarget(target, vessel, fallbackId) {
 	target.longitude = position?.longitude;
 	target.lastSeenDate = vessel.navigation?.position?.timestamp
 		? new Date(vessel.navigation.position.timestamp)
-		: new Date();
+		: undefined;
 	const shipType = signalKType(vessel.design?.aisShipType);
 	const atonType = signalKType(vessel.atonType);
 	target.typeId = shipType.id ?? atonType.id;

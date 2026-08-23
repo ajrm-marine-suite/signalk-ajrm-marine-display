@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.26";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.27";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -229,7 +229,7 @@
         Determining vessel position…
       </div>
     </div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.26</div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.27</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -420,7 +420,7 @@
                     <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
                   </div>
 				  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
-				  <p class="small text-body-secondary mt-2 mb-0">Choosing a tidal port applies it immediately and pauses automatic selection. Automatic selection starts only after a fresh or retained last-known vessel position is available and never uses the displayed chart centre.</p>
+					  <p class="small text-body-secondary mt-2 mb-0">Choosing a tidal port applies it immediately and pauses automatic selection. Automatic selection starts only after a fresh or retained last-known vessel position is available and never uses the displayed chart centre. Position evidence older than 30 seconds, or without explicit age evidence, is treated as last-known.</p>
                   <p class="small text-body-secondary mt-3 mb-0">
                     Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
                     Predictions and interpolation are planning aids; verify station, datum and freshness.
@@ -463,7 +463,7 @@
                     </table>
                   </div>
                   <p class="small text-body-secondary mt-3 mb-0">
-                    Weather is selected independently from the tidal port. Display asks Weather Database for the nearest weather location to the resolved fresh or last-known vessel position. If live data cannot be fetched, Weather Database may return the nearest usable cached location. Distances are explicitly labelled when the vessel position is last-known.
+                    Weather is selected independently from the tidal port. Display asks Weather Database for the nearest weather location to the resolved fresh or last-known vessel position. If live data cannot be fetched, Weather Database may return cached data for that exact location or the nearest usable different cached location; Display labels those cases separately. Distances are explicitly labelled when the vessel position is last-known.
                   </p>
                 </div>
               </div>
@@ -1690,8 +1690,11 @@
             </div>
             <div class="modal-body">
               <div class="alert alert-warning" role="alert">
-                <strong>Simulator/test release:</strong>
-                AJRM Marine Display is an aid to awareness, not a navigation or
+                <strong>Alpha Release:</strong>
+                This software is Alpha Release and has not been tested in live
+                environments and must not be relied upon for navigation or safety.
+                The Authors do not accept any responsibility for loss or damage as
+                a result of using this software. AJRM Marine Display is an aid to awareness, not a navigation or
                 collision-avoidance authority. Use the chart, AIS targets, and
                 alerts as supporting information only. Head-on, Give Way, Stand
                 On, overtaking, and other avoidance prompts are limited
@@ -1804,12 +1807,15 @@
                 preceding phase and before the next; local tidal response may
                 lag that lunar phase. The graph range defaults to seven days
 				and is remembered by this browser. Automatic tidal-port selection
-				waits for a fresh or retained last-known vessel position and never uses the chart centre;
-				a selected standard or secondary port overrides it until automatic
-				selection is restored. The Weather tab separately asks Weather
-				Database for the nearest weather location. When live forecasts are
-				unavailable, it can show the nearest usable cached forecast and the
-				distance of that weather location from the resolved vessel position.
+					waits for a fresh or retained last-known vessel position and never uses the chart centre.
+					Position evidence more than 30 seconds old, or without explicit age evidence,
+					is last-known; only fresh evidence can request assisted anchoring. A selected
+					standard or secondary port overrides automatic selection until it is restored.
+					The Weather tab separately asks Weather
+					Database for the nearest weather location. When live forecasts are
+					unavailable, it distinguishes cached data for that location from the
+					nearest usable different cached location and gives its distance from
+					the resolved vessel position.
               </p>
               <p>
                 <strong>Assisted anchoring</strong> asks before selecting the

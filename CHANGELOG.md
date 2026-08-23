@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.8.27
+
+- Preserve vessel-follow state while the position-first startup gate performs
+  its non-animated Leaflet recenter or the reveal-time `invalidateSize`, with
+  integration tests covering paired and moveend-only Leaflet events. Explicitly
+  update Auto Charts after a successful initial or late position recenter.
+- Treat own-position evidence older than 30 seconds, or lacking explicit age
+  evidence, as last-known so weather/tide labels and fresh-only anchoring remain
+  aligned with the GPS indicator. Untimestamped non-self targets retain bounded
+  local arrival-age evidence instead of bypassing normal target aging.
+- Distinguish an older exact-location cached forecast from a different nearest
+  cached weather location, and avoid labelling a live primary forecast cached
+  merely because a secondary provider supplied cached fields.
+- Consume Tidal Database service contract v2 and refresh the Display status,
+  OpenAPI, help, README, Alpha disclaimer and installation documentation.
+
 ## 0.8.26
 
 - Rename the chart control and popup to **Tides and Weather**, with an

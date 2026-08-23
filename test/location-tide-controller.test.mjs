@@ -132,7 +132,12 @@ test("automatic tide requests never use the visible chart centre as selection co
 test("automatic tide selection prefers the live vessel position to the chart centre", () => {
 	const context = tideMapContext(
 		{ getCenter: () => ({ lat: 56, lng: -5 }) },
-		{ isValid: true, latitude: 55.5, longitude: -6.25 },
+		{
+			isValid: true,
+			latitude: 55.5,
+			longitude: -6.25,
+			lastSeenDate: new Date(),
+		},
 	);
 	assert.deepEqual(context, { latitude: 55.5, longitude: -6.25 });
 });
@@ -225,6 +230,48 @@ test("nearest cached weather presentation makes vessel distance explicit", () =>
 	);
 	assert.equal(weatherDistanceLabel(250), "250 m");
 	assert.equal(weatherDistanceLabel(null), "Distance unavailable");
+});
+
+test("weather presentation distinguishes exact cached data from a different cached location", () => {
+	const exactCached = weatherPresentation({
+		valid: true,
+		locationResolution: {
+			mode: "nearest-location",
+			cacheFallback: true,
+			selectedLocation: { name: "Oban" },
+			distanceMetres: 250,
+			fallbackReason: "provider offline",
+		},
+		source: {
+			provider: "Open-Meteo",
+			cache: "fallback",
+			fallbackReason: "provider offline",
+		},
+	});
+	assert.equal(
+		exactCached.selection,
+		"Nearest weather location (cached forecast)",
+	);
+	assert.match(exactCached.fallbackMessage, /cached forecast for Oban/);
+	assert.doesNotMatch(exactCached.fallbackMessage, /nearest usable cached/);
+
+	const mixedProviders = weatherPresentation({
+		valid: true,
+		locationResolution: {
+			mode: "nearest-location",
+			cacheFallback: false,
+			selectedLocation: { name: "Oban" },
+			distanceMetres: 250,
+		},
+		source: { provider: "Primary live provider", cache: "network" },
+		sources: [
+			{ provider: "Primary live provider", cache: "network", valid: true },
+			{ provider: "Secondary cached provider", cache: "fallback", valid: true },
+		],
+	});
+	assert.equal(mixedProviders.cachedFallback, false);
+	assert.equal(mixedProviders.selection, "Nearest weather location");
+	assert.equal(mixedProviders.fallbackMessage, "");
 });
 
 test("anchoring prompt requires an explicit current backend suggestion", () => {
@@ -488,10 +535,9 @@ test("controller labels last-known positions and rejects late fresh-position anc
 	assert.match(controls.unavailable.textContent, /Waiting for the current vessel position/);
 
 	const environmentRequest = controller.notifyPositionChanged({
-		isStale: true,
-		isLost: true,
 		latitude: 56.27224,
 		longitude: -5.637656,
+		lastSeenDate: new Date(Date.now() - 60_000),
 	});
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.ok(calls.some((url) => url.includes("/tides/status?latitude=56.27224")));
@@ -518,6 +564,7 @@ test("controller labels last-known positions and rejects late fresh-position anc
 		isLost: false,
 		latitude: 56.27224,
 		longitude: -5.637656,
+		lastSeenDate: new Date(),
 	});
 	assert.equal(
 		calls.filter((url) => url.includes("/tides/status")).length,
@@ -547,6 +594,7 @@ test("controller labels last-known positions and rejects late fresh-position anc
 		isLost: false,
 		latitude: 56.27224,
 		longitude: -5.637656,
+		lastSeenDate: new Date(),
 	});
 	await new Promise((resolve) => setImmediate(resolve));
 	assert.equal(anchoringRequestCount, 2);

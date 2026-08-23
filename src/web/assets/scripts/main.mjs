@@ -41,7 +41,10 @@ import {
 } from "./main-target-runtime-setup.mjs";
 import { createRouteController } from "./route-controller.mjs";
 import { chartResourcesPath } from "./startup-data-routes.mjs";
-import { createStartupPositionGate } from "./startup-position-gate.mjs";
+import {
+	applyStartupChartDecision,
+	createStartupPositionGate,
+} from "./startup-position-gate.mjs";
 import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 import { createVoyageObservationController } from "./voyage-observation.mjs";
@@ -167,19 +170,25 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 	});
 
 const startupPositionCover = document.getElementById("displayPositionGate");
-function revealInitialChart(positionState) {
-	document.body.classList.remove("ajrm-marine-position-pending");
-	document.body.dataset.ajrmMarinePositionState = positionState;
-	if (startupPositionCover) startupPositionCover.hidden = true;
-	window.requestAnimationFrame?.(() => map.invalidateSize?.({ animate: false }));
-}
+const applyInitialChartDecision = (positionState, updateAutoCharts = false) =>
+	applyStartupChartDecision({
+		positionState,
+		updateAutoCharts,
+		autoCharts,
+		map,
+		documentRef: document,
+		windowRef: window,
+		cover: startupPositionCover,
+	});
 const startupPositionGate = createStartupPositionGate({
 	map,
 	getSelfTarget: state.getSelfTarget,
 	subscribeSelfTarget: state.subscribeSelfTarget,
 	onWaiting: () => document.body.classList.add("ajrm-marine-position-pending"),
-	onResolved: ({ positionSource }) => revealInitialChart(positionSource),
-	onUnavailable: () => revealInitialChart("unavailable"),
+	onResolved: ({ positionSource }) =>
+		applyInitialChartDecision(positionSource, true),
+	onUnavailable: () => applyInitialChartDecision("unavailable"),
+	setDisableMoveend: state.setDisableMoveend,
 });
 startupPositionGate.start();
 createChartCycleControls({

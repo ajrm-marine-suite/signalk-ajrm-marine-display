@@ -15,7 +15,13 @@ Display consumes these versioned projections:
 - AJRM Marine Audio runtime status at
   `vessels.self.plugins.ajrmMarineAudio`;
 - AJRM Marine Capture replay state at
-  `vessels.self.plugins.ajrmMarineCapture.playback`.
+  `vessels.self.plugins.ajrmMarineCapture.playback`;
+- `ajrm-marine-locations-service-v1` for the spatial catalogue and anchoring
+  assistance;
+- `ajrm-marine-tidal-database-service-v2` for current tide service operations
+  (the returned tide resolver projection remains version 1); and
+- `ajrm-marine-weather-database-service-v1`, including nearest-location
+  resolution metadata version 1.
 
 It also consumes standard Signal K own-navigation, vessel, notification and
 chart-resource trees as the interoperability and reduced-mode baseline.
@@ -28,6 +34,11 @@ as either `fresh` or `last-known`; `isStale` and `isLost` retained self targets
 remain last-known even though their coordinates are usable. The startup gate
 is registered before the tide/weather controller, so it centres the chart
 before automatic environmental requests can start.
+
+A fresh fix requires explicit timestamp/age evidence no more than 30 seconds
+old, matching Display's Signal K GPS fallback indicator. Older evidence and a
+coordinate without usable age evidence fail closed as `last-known`; Display
+does not infer freshness merely because coordinates are present.
 
 Automatic tide and nearest-weather requests may use either resolved position
 class, but never use the displayed chart centre. Weather distance text says
@@ -58,16 +69,36 @@ The Display plugin publishes:
   "sessionId": "uuid",
   "sequence": 1,
   "enabled": true,
-  "version": "0.7.0",
+  "version": "0.8.27",
+  "locationsService": "ajrm-marine-locations-service-v1",
+  "tideService": "ajrm-marine-tidal-database-service-v2",
+  "weatherService": "ajrm-marine-weather-database-service-v1",
   "defaults": {
     "refreshIntervalMs": 1000,
     "latitude": 56.45,
     "longitude": -5.45,
-    "zoom": 10
+    "zoom": 10,
+    "coordinateFormat": "dms"
   },
-  "updatedAt": "2026-06-20T00:00:00.000Z"
+  "diagnostics": {
+    "browserRefreshDiagnostics": false
+  },
+  "routes": {
+    "directory": "/home/signalk/AJRMMarineRoutes",
+    "active": null
+  },
+  "anchor": {
+    "active": false,
+    "mark": null
+  },
+  "updatedAt": "2026-08-23T16:00:00.000Z"
 }
 ```
+
+Display advertises the exact current service contracts above so Console BITE
+and other consumers can fail clearly on an unsupported boundary. In
+particular, Tidal Database service v1 is no longer accepted as the current
+Display integration contract.
 
 If this status is unavailable, the web app defaults to enabled so that it can
 still operate as a generic Signal K display.

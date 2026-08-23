@@ -29,7 +29,7 @@ const {
 
 const PLUGIN_ID = "signalk-ajrm-marine-display";
 const LOCATIONS_SERVICE_CONTRACT = "ajrm-marine-locations-service-v1";
-const TIDAL_DATABASE_SERVICE_CONTRACT = "ajrm-marine-tidal-database-service-v1";
+const TIDAL_DATABASE_SERVICE_CONTRACT = "ajrm-marine-tidal-database-service-v2";
 const WEATHER_DATABASE_SERVICE_CONTRACT = "ajrm-marine-weather-database-service-v1";
 const STATUS_PATH = "plugins.ajrmMarineDisplay";
 const OBSERVATION_SOURCE = "ajrm-marine-display";

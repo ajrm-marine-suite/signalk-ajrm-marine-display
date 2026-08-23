@@ -254,7 +254,7 @@ test("plugin publishes enabled Display status", () => {
   assert.equal(value.path, "plugins.ajrmMarineDisplay");
   assert.equal(value.value.contract, "ajrm-marine-display-status");
   assert.equal(value.value.locationsService, "ajrm-marine-locations-service-v1");
-  assert.equal(value.value.tideService, "ajrm-marine-tidal-database-service-v1");
+  assert.equal(value.value.tideService, "ajrm-marine-tidal-database-service-v2");
   assert.equal(value.value.weatherService, "ajrm-marine-weather-database-service-v1");
   assert.equal(value.value.contractVersion, 1);
   assert.equal(value.value.enabled, true);
@@ -352,6 +352,13 @@ test("OpenAPI documents every registered Signal K route", () => {
     }
   }
   assert.deepEqual(new Set(routes.keys()), documented);
+  const statusSchema = plugin.getOpenApi().components.schemas.DisplayStatus;
+  assert.deepEqual(statusSchema.properties.tideService.enum, [
+    "ajrm-marine-tidal-database-service-v2",
+  ]);
+  assert.deepEqual(statusSchema.properties.weatherService.enum, [
+    "ajrm-marine-weather-database-service-v1",
+  ]);
 });
 
 test("Signal K API exposes AJRM Marine Traffic targets under ajrmMarineDisplay", () => {
