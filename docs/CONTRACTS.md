@@ -20,6 +20,21 @@ Display consumes these versioned projections:
 It also consumes standard Signal K own-navigation, vessel, notification and
 chart-resource trees as the interoperability and reduced-mode baseline.
 
+## Startup position and environmental context
+
+Display does not expose the initially configured chart centre while resolving
+the own-vessel position. The first valid coordinate is classified explicitly
+as either `fresh` or `last-known`; `isStale` and `isLost` retained self targets
+remain last-known even though their coordinates are usable. The startup gate
+is registered before the tide/weather controller, so it centres the chart
+before automatic environmental requests can start.
+
+Automatic tide and nearest-weather requests may use either resolved position
+class, but never use the displayed chart centre. Weather distance text says
+`Distance from last known position` when appropriate, and cached-weather text
+uses the same qualification. Last-known positions are not used to request
+anchoring suggestions.
+
 For versioned projections, Display:
 
 - accepts only supported contract major versions;

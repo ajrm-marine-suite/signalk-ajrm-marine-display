@@ -43,7 +43,7 @@ export function mapToolbarButtonSpecs({
 		},
 		{
 			icon: DISPLAY_CONTROL_ICONS.tides,
-			title: "Tides and locations",
+			title: "Tides and Weather",
 			action: () => document.getElementById("buttonOpenTides")?.click(),
 		},
 		{

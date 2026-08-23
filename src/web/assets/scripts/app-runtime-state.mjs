@@ -6,6 +6,7 @@ export function createAppRuntimeState() {
 	let collisionProfiles;
 	let selfMmsi;
 	let selfTarget;
+	const selfTargetSubscribers = new Set();
 	let disableMoveend = false;
 	let disableMapPanTo = false;
 	let selectedVesselMmsi;
@@ -27,6 +28,20 @@ export function createAppRuntimeState() {
 		getSelfTarget: () => selfTarget,
 		setSelfTarget: (target) => {
 			selfTarget = target;
+			for (const subscriber of [...selfTargetSubscribers]) {
+				try {
+					subscriber(target);
+				} catch (error) {
+					console.error("Self-target subscriber failed:", error);
+				}
+			}
+		},
+		subscribeSelfTarget: (subscriber) => {
+			if (typeof subscriber !== "function") {
+				throw new TypeError("Self-target subscriber must be a function");
+			}
+			selfTargetSubscribers.add(subscriber);
+			return () => selfTargetSubscribers.delete(subscriber);
 		},
 		getDisableMoveend: () => disableMoveend,
 		setDisableMoveend: (value) => {

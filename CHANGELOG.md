@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.8.26
+
+- Rename the chart control and popup to **Tides and Weather**, with an
+  independent Weather tab that renders the Weather Database hourly table.
+- Resolve weather at the nearest eligible Location and label any different
+  cached fallback with its distance from the fresh or last-known vessel
+  position.
+- Keep the startup chart covered until Display has resolved and centred on a
+  fresh or retained last-known own-vessel position, then start tide and weather
+  selection without ever substituting the chart centre.
+- Refresh environmental data when fresh GPS replaces a retained fix, and keep
+  anchoring suggestions restricted to fresh positions.
+
 ## 0.8.25
 
 - Explain automatic direct-station preference and display tidal-definition

@@ -41,6 +41,7 @@ import {
 } from "./main-target-runtime-setup.mjs";
 import { createRouteController } from "./route-controller.mjs";
 import { chartResourcesPath } from "./startup-data-routes.mjs";
+import { createStartupPositionGate } from "./startup-position-gate.mjs";
 import { createConfiguredTargetSupport } from "./target-support-setup.mjs";
 import { createConfiguredTargetUi } from "./target-ui-setup.mjs";
 import { createVoyageObservationController } from "./voyage-observation.mjs";
@@ -164,6 +165,23 @@ const { map, easyButton, autoCharts, mapFollow, baseMaps, OpenSeaMap } =
 		loadCharts,
 		storage: window.localStorage,
 	});
+
+const startupPositionCover = document.getElementById("displayPositionGate");
+function revealInitialChart(positionState) {
+	document.body.classList.remove("ajrm-marine-position-pending");
+	document.body.dataset.ajrmMarinePositionState = positionState;
+	if (startupPositionCover) startupPositionCover.hidden = true;
+	window.requestAnimationFrame?.(() => map.invalidateSize?.({ animate: false }));
+}
+const startupPositionGate = createStartupPositionGate({
+	map,
+	getSelfTarget: state.getSelfTarget,
+	subscribeSelfTarget: state.subscribeSelfTarget,
+	onWaiting: () => document.body.classList.add("ajrm-marine-position-pending"),
+	onResolved: ({ positionSource }) => revealInitialChart(positionSource),
+	onUnavailable: () => revealInitialChart("unavailable"),
+});
+startupPositionGate.start();
 createChartCycleControls({
 	autoCharts,
 	button: mapControls.chartCycleButton,
@@ -208,7 +226,7 @@ createDialogResizeController({
 	handle: locationTideControls.resizeHandle,
 	storage: window.localStorage,
 });
-createLocationTideController({
+const locationTideController = createLocationTideController({
 	L,
 	map,
 	controls: locationTideControls,
@@ -216,8 +234,22 @@ createLocationTideController({
 	fetchFn: fetch,
 	storage: window.localStorage,
 	windowObject: window,
+	getOwnPosition: state.getSelfTarget,
 	onProfileChanged: profileActions.refreshProfilesFromServer,
-}).init();
+});
+locationTideController.init();
+const unsubscribeLocationTidePosition = state.subscribeSelfTarget((target) =>
+	locationTideController.notifyPositionChanged(target),
+);
+window.addEventListener(
+	"pagehide",
+	() => {
+		unsubscribeLocationTidePosition();
+		startupPositionGate.stop();
+		locationTideController.stop();
+	},
+	{ once: true },
+);
 if (window.AJRM_MARINE_DISPLAY_DEBUG) {
 	startDisplayDebugControlPolling({
 		windowRef: window,

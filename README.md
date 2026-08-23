@@ -1,5 +1,22 @@
 # AJRM Marine Display
 
+At startup, Display keeps the chart covered until it has resolved an
+own-vessel coordinate. A fresh GPS fix is preferred, but a retained
+last-known position is also usable after GPS loss or a browser restart. Display
+centres the chart before tide or weather selection starts, and automatic
+environmental selection never substitutes the initial or browsed chart centre
+for the vessel position. A retained position remains explicitly qualified:
+the vessel marker and GPS state stay stale, tidal selection says it used the
+last-known vessel position, and Weather labels its distance from the last-known
+position. If neither a fresh nor retained coordinate arrives within the
+bounded startup wait, Display makes the chart browsable but leaves automatic
+tide and weather selection unavailable until a coordinate arrives.
+
+Version `0.8.26` adds the independent Weather tab and position-first startup
+behaviour described above. Weather Database—not Display—selects the nearest
+weather Location or offline cached fallback, and Display makes the selected
+distance and fresh/last-known position basis explicit.
+
 Version `0.8.25` publishes the exact Locations and Tidal Database contracts
 consumed by its browser so Console BITE can verify that cross-app boundary.
 Version `0.8.25` displays Tidal Database caution messages and incomplete station capabilities explicitly. A high-water-only or low-water-only station may show its available next event and provenance, but Display leaves current height and the missing extreme blank and refuses to draw a misleading tidal curve. Automatic selection also explains when a direct provider station has replaced matching entered corrections.
@@ -489,7 +506,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.25 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.26 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

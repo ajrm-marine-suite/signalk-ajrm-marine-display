@@ -151,6 +151,37 @@ $bootstrap-icons-font-dir: "bootstrap-icons/font/fonts";
 	max-height: 100%;
 }
 
+.ajrm-weather-forecast-table-wrap {
+	max-height: min(24rem, 52vh);
+	border: 1px solid var(--bs-border-color);
+	border-radius: var(--bs-border-radius);
+}
+
+.ajrm-weather-forecast-table {
+	min-width: 62rem;
+	font-size: 0.78rem;
+	white-space: nowrap;
+}
+
+.ajrm-weather-forecast-table thead th {
+	position: sticky;
+	top: 0;
+	z-index: 2;
+	background: var(--bs-secondary-bg);
+}
+
+.ajrm-weather-forecast-table :is(th, td):first-child {
+	position: sticky;
+	left: 0;
+	z-index: 1;
+	background: var(--bs-body-bg);
+}
+
+.ajrm-weather-forecast-table thead th:first-child {
+	z-index: 3;
+	background: var(--bs-secondary-bg);
+}
+
 .ajrm-dialog-resize-handle {
 	position: absolute;
 	right: 0.2rem;

@@ -255,6 +255,7 @@ test("plugin publishes enabled Display status", () => {
   assert.equal(value.value.contract, "ajrm-marine-display-status");
   assert.equal(value.value.locationsService, "ajrm-marine-locations-service-v1");
   assert.equal(value.value.tideService, "ajrm-marine-tidal-database-service-v1");
+  assert.equal(value.value.weatherService, "ajrm-marine-weather-database-service-v1");
   assert.equal(value.value.contractVersion, 1);
   assert.equal(value.value.enabled, true);
   assert.equal(value.value.sequence, 1);

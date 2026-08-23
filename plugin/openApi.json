@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.8.25",
+    "version": "0.8.26",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],

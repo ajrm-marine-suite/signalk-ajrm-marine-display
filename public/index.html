@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.25";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.26";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -48,6 +48,31 @@
       #map {
         height: 100dvh;
         width: 100vw;
+      }
+
+      body.ajrm-marine-position-pending #map {
+        visibility: hidden;
+      }
+
+      #displayPositionGate {
+        position: fixed;
+        inset: 0;
+        z-index: 2000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--bs-body-bg, #fff);
+        color: var(--bs-body-color, #212529);
+      }
+
+      #displayPositionGate[hidden] {
+        display: none;
+      }
+
+      .ajrm-marine-position-gate-message {
+        padding: 1rem 1.25rem;
+        text-align: center;
+        font-weight: 600;
       }
 
       body.ajrm-marine-alert-panel-open #map {
@@ -193,13 +218,18 @@
         pointer-events: none;
       }
     </style>
-    <script type="module" crossorigin src="./assets/index-Ci5IiV1B.js"></script>
-    <link rel="stylesheet" crossorigin href="./assets/index-Ece98DUa.css">
+    <script type="module" crossorigin src="./assets/index-yT4xTQAU.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-CHPc9raX.css">
   </head>
 
-  <body>
+  <body class="ajrm-marine-position-pending">
     <div id="map"></div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.25</div>
+    <div id="displayPositionGate" role="status" aria-live="polite">
+      <div class="ajrm-marine-position-gate-message">
+        Determining vessel position…
+      </div>
+    </div>
+    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.26</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"
@@ -238,7 +268,7 @@
         id="tideStatusPanel"
         type="button"
         class="ajrm-marine-tide-status shadow-sm d-none"
-        aria-label="Open tide details"
+        aria-label="Open tides and weather"
       >
         <span class="fw-semibold"><i class="bi bi-water"></i> Tide unavailable</span>
       </button>
@@ -253,7 +283,7 @@
       type="button"
       class="d-none"
       id="buttonOpenTides"
-    >Tides and locations</button>
+    >Tides and Weather</button>
     <button
       type="button"
       class="d-none"
@@ -341,25 +371,30 @@
         <div class="modal-dialog modal-dialog-scrollable modal-lg ajrm-tide-modal-dialog" id="tideModalDialog">
           <div class="modal-content">
             <div class="modal-header">
-              <h5 class="modal-title" id="modalTidesTitle">Tides and locations</h5>
+              <h5 class="modal-title" id="modalTidesTitle">Tides and Weather</h5>
               <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-              <div id="tideUnavailable" class="alert alert-warning d-none"></div>
               <ul class="nav nav-tabs" id="tideTabs" role="tablist">
                 <li class="nav-item" role="presentation">
                   <button class="nav-link active" id="tideDetailsTab" data-bs-toggle="tab" data-bs-target="#tideDetailsPane" type="button" role="tab" aria-controls="tideDetailsPane" aria-selected="true">
-                    Details
+                    Tide details
                   </button>
                 </li>
                 <li class="nav-item" role="presentation">
                   <button class="nav-link" id="tideGraphTab" data-bs-toggle="tab" data-bs-target="#tideGraphPane" type="button" role="tab" aria-controls="tideGraphPane" aria-selected="false">
-                    Graph
+                    Tide graph
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button class="nav-link" id="weatherTab" data-bs-toggle="tab" data-bs-target="#weatherPane" type="button" role="tab" aria-controls="weatherPane" aria-selected="false">
+                    Weather
                   </button>
                 </li>
               </ul>
               <div class="tab-content border border-top-0 rounded-bottom p-3">
                 <div class="tab-pane fade show active" id="tideDetailsPane" role="tabpanel" aria-labelledby="tideDetailsTab" tabindex="0">
+                  <div id="tideUnavailable" class="alert alert-warning d-none"></div>
                   <h6 class="mb-3" id="tideDetailsPortName">No tidal port</h6>
                   <dl class="row small mb-0">
                     <dt class="col-5">Current height</dt><dd class="col-7" id="tideHeightNow">—</dd>
@@ -385,7 +420,7 @@
                     <button type="button" class="btn btn-outline-primary ms-auto" id="buttonRefreshTides">Refresh</button>
                   </div>
 				  <div id="tideActionStatus" class="form-text mt-2" role="status" aria-live="polite"></div>
-				  <p class="small text-body-secondary mt-2 mb-0">Choosing a tidal port applies it immediately and pauses automatic selection. Automatic selection follows the vessel position when available, otherwise the centre of the displayed chart.</p>
+				  <p class="small text-body-secondary mt-2 mb-0">Choosing a tidal port applies it immediately and pauses automatic selection. Automatic selection starts only after a fresh or retained last-known vessel position is available and never uses the displayed chart centre.</p>
                   <p class="small text-body-secondary mt-3 mb-0">
                     Contains ADMIRALTY® tidal data: © Crown Copyright and database right.
                     Predictions and interpolation are planning aids; verify station, datum and freshness.
@@ -407,9 +442,33 @@
                   </div>
                   <div id="tideCurve" class="ajrm-tide-curve" aria-label="Tide curve"></div>
                 </div>
+                <div class="tab-pane fade" id="weatherPane" role="tabpanel" aria-labelledby="weatherTab" tabindex="0">
+                  <div id="weatherUnavailable" class="alert alert-secondary"></div>
+                  <div id="weatherFallback" class="alert alert-warning d-none" role="status"></div>
+                  <div class="d-flex flex-wrap align-items-start justify-content-between gap-2 mb-2">
+                    <h6 class="mb-0" id="weatherLocationName">No weather location</h6>
+                    <button type="button" class="btn btn-sm btn-outline-primary" id="buttonRefreshWeather">Reload weather</button>
+                  </div>
+                  <dl class="row small mb-3">
+                    <dt class="col-5 col-md-3" id="weatherDistanceLabel">Distance from vessel</dt><dd class="col-7 col-md-9" id="weatherDistance">—</dd>
+                    <dt class="col-5 col-md-3">Selected as</dt><dd class="col-7 col-md-9" id="weatherSelection">—</dd>
+                    <dt class="col-5 col-md-3">Source/freshness</dt><dd class="col-7 col-md-9" id="weatherSourceFreshness">—</dd>
+                  </dl>
+                  <div id="weatherStatus" class="form-text mb-2" role="status" aria-live="polite"></div>
+                  <div class="table-responsive ajrm-weather-forecast-table-wrap" role="region" aria-label="Hourly weather forecast" tabindex="0">
+                    <table class="table table-sm table-striped table-hover align-middle mb-0 ajrm-weather-forecast-table" id="weatherForecastTable">
+                      <caption class="visually-hidden">Hourly weather and marine forecast for the selected weather location</caption>
+                      <thead></thead>
+                      <tbody></tbody>
+                    </table>
+                  </div>
+                  <p class="small text-body-secondary mt-3 mb-0">
+                    Weather is selected independently from the tidal port. Display asks Weather Database for the nearest weather location to the resolved fresh or last-known vessel position. If live data cannot be fetched, Weather Database may return the nearest usable cached location. Distances are explicitly labelled when the vessel position is last-known.
+                  </p>
+                </div>
               </div>
             </div>
-            <button type="button" class="ajrm-dialog-resize-handle" id="tideModalResizeHandle" aria-label="Resize tide window" title="Drag to resize the tide window; double-click to reset"></button>
+            <button type="button" class="ajrm-dialog-resize-handle" id="tideModalResizeHandle" aria-label="Resize tides and weather window" title="Drag to resize the tides and weather window; double-click to reset"></button>
           </div>
         </div>
       </div>
@@ -1247,7 +1306,7 @@
                 </div>
                 <div class="card mb-3">
                   <div class="card-body">
-                    <h6 class="card-title">Locations and tides</h6>
+                    <h6 class="card-title">Locations, tides and weather</h6>
                     <div class="form-check form-switch">
                       <input class="form-check-input" type="checkbox" id="checkShowAnchorages" checked />
                       <label class="form-check-label" for="checkShowAnchorages">Show anchorages and moorings</label>
@@ -1260,7 +1319,7 @@
                       <input class="form-check-input" type="checkbox" id="checkShowTideStatus" checked />
                       <label class="form-check-label" for="checkShowTideStatus">Show tide status above chart</label>
                     </div>
-                    <div class="form-text">Click a location symbol for its stored details. Tide selection and predictions are provided by AJRM Marine Tidal Database.</div>
+                    <div class="form-text">Click a location symbol for its stored details. Tide predictions come from AJRM Marine Tidal Database; the Tides and Weather popup gets its independent nearest-location forecast from AJRM Marine Weather Database.</div>
                   </div>
                 </div>
                 <div class="card mb-3">
@@ -1736,7 +1795,7 @@
                 and can attach Snapshot evidence when that service is available.
               </p>
               <p>
-                <strong>Tides and locations</strong> shows optional anchorage,
+                <strong>Tides and Weather</strong> shows optional anchorage,
                 mooring and other saved-location symbols. Its popup consumes
                 Tidal Database's shared resolver to show current height,
                 trend, next high/low waters, datum, station, selection reason,
@@ -1745,9 +1804,12 @@
                 preceding phase and before the next; local tidal response may
                 lag that lunar phase. The graph range defaults to seven days
 				and is remembered by this browser. Automatic tidal-port selection
-				uses the live vessel position when available and otherwise the chart
-				centre; a selected standard or secondary port overrides it until
-				automatic selection is restored.
+				waits for a fresh or retained last-known vessel position and never uses the chart centre;
+				a selected standard or secondary port overrides it until automatic
+				selection is restored. The Weather tab separately asks Weather
+				Database for the nearest weather location. When live forecasts are
+				unavailable, it can show the nearest usable cached forecast and the
+				distance of that weather location from the resolved vessel position.
               </p>
               <p>
                 <strong>Assisted anchoring</strong> asks before selecting the
