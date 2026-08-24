@@ -204,7 +204,7 @@ test("nearest cached weather presentation makes vessel distance explicit", () =>
 			fetchedAt: "2026-08-23T08:00:00Z",
 			cache: "nearest-fallback",
 		},
-		freshness: { state: "stale" },
+		freshness: { state: "stale", ageSeconds: 25 * 3600, ageBand: "warning" },
 	});
 	assert.equal(presentation.locationName, "Cached Bay");
 	assert.equal(presentation.distance, "2.5 NM (4.6 km)");
@@ -212,6 +212,16 @@ test("nearest cached weather presentation makes vessel distance explicit", () =>
 	assert.match(presentation.fallbackMessage, /2\.5 NM \(4\.6 km\) from the vessel/);
 	assert.match(presentation.fallbackMessage, /Pi is offline/);
 	assert.match(presentation.sourceFreshness, /nearest-fallback/);
+	assert.match(presentation.sourceFreshness, /25\.0 h old/);
+	assert.match(presentation.sourceFreshness, /Warning: over 24 hours old/);
+	assert.equal(presentation.ageBand, "warning");
+	const danger = weatherPresentation({
+		valid:true,
+		source:{ provider:"Open-Meteo",fetchedAt:"2026-08-20T00:00:00Z",cache:"fallback" },
+		freshness:{ state:"stale",ageSeconds:73 * 3600,ageBand:"danger" },
+	});
+	assert.equal(danger.ageBand,"danger");
+	assert.match(danger.sourceFreshness,/Danger: over 72 hours old/);
 	const lastKnownPresentation = weatherPresentation(
 		{
 			valid: true,

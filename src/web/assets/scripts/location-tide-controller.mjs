@@ -246,6 +246,18 @@ function weatherFetchedAtLabel(value) {
 	}).format(new Date(value));
 }
 
+function weatherAgeLabel(freshness = {}) {
+	const seconds = Number(freshness.ageSeconds);
+	if (!Number.isFinite(seconds)) return "age unknown";
+	const hours = seconds / 3600;
+	const band = freshness.ageBand === "danger"
+		? "Danger: over 72 hours old"
+		: freshness.ageBand === "warning"
+			? "Warning: over 24 hours old"
+			: "under 24 hours old";
+	return `${hours.toFixed(1)} h old · ${band}`;
+}
+
 export function weatherPresentation(
 	projection,
 	{ isLastKnownPosition = false } = {},
@@ -260,9 +272,11 @@ export function weatherPresentation(
 	const source = projection?.source || {};
 	const sourceName = source.provider || source.providerId || "Unknown provider";
 	const freshnessState = projection?.freshness?.state || source.freshness?.state || "unknown freshness";
+	const freshness = projection?.freshness || source.freshness || {};
+	const ageBand = ["warning", "danger"].includes(freshness.ageBand) ? freshness.ageBand : "normal";
 	const cacheState = source.cache || "unknown cache state";
 	const sourceFreshness = projection?.valid
-		? `${sourceName} · fetched ${weatherFetchedAtLabel(source.fetchedAt)} · ${freshnessState} · ${cacheState}`
+		? `${sourceName} · fetched ${weatherFetchedAtLabel(source.fetchedAt)} · ${weatherAgeLabel(freshness)} · ${freshnessState} · ${cacheState}`
 		: "—";
 	const selection = differentCachedLocation
 		? "Nearest cached weather location"
@@ -281,6 +295,7 @@ export function weatherPresentation(
 		? `Live weather was unavailable. ${fallbackLead} ${locationName}, ${distance} from ${positionBasis}.${resolution.fallbackReason ? ` ${resolution.fallbackReason}` : ""}`
 		: "";
 	return {
+		ageBand,
 		cachedFallback,
 		distance,
 		fallbackMessage,
@@ -380,7 +395,7 @@ export function createLocationTideController({
 			controls.statusPanel.innerHTML = "";
 			controls.statusPanel.classList.add("d-none");
 			controls.statusPanel.classList.remove(
-				"ajrm-marine-tide-status-stale",
+				"ajrm-marine-tide-status-refresh-due",
 				"ajrm-marine-tide-status-invalid",
 			);
 			controls.unavailable.classList.remove("d-none");
@@ -418,7 +433,7 @@ export function createLocationTideController({
 			? `<span class="fw-semibold"><i class="bi bi-water"></i> ${escapeHtml(heightLabel(tide.heightNowM))} · ${escapeHtml(tide.trend)} · ${escapeHtml(stationName)}</span>`
 			: `<span class="fw-semibold"><i class="bi bi-water"></i> ${hasEvents ? "Partial tide data" : "Tide unavailable"}${stationName === "No station" ? "" : ` · ${escapeHtml(stationName)}`}</span>`;
 		controls.statusPanel.classList.toggle("d-none", !controls.showStatus.checked);
-		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-stale", tide?.freshness?.state === "stale");
+		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-refresh-due", tide?.freshness?.refreshDue === true);
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-invalid", !valid);
 		controls.unavailable.classList.toggle("d-none", valid && !tide?.advisory);
 		controls.unavailable.textContent = [valid ? null : tide?.error || "Tide Resolver has no valid result.", tide?.advisory?.message].filter(Boolean).join(" ");
@@ -466,6 +481,8 @@ export function createLocationTideController({
 		controls.weatherDistance.textContent = valid ? presentation.distance : "—";
 		controls.weatherSelection.textContent = valid ? presentation.selection : "—";
 		controls.weatherSourceFreshness.textContent = presentation.sourceFreshness;
+		controls.weatherSourceFreshness.classList.toggle("text-warning", presentation.ageBand === "warning");
+		controls.weatherSourceFreshness.classList.toggle("text-danger", presentation.ageBand === "danger");
 		controls.weatherFallback.classList.toggle(
 			"d-none",
 			!valid || !presentation.cachedFallback,

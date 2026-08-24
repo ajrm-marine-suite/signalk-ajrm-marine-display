@@ -1,5 +1,14 @@
 # Changelog
 
+## 0.8.28 — 2026-08-24
+
+- Keep distant and old Weather Database fallbacks visible with their selected
+  location and distance, exact fetch age, Warning colouring after 24 hours and
+  Danger colouring after 72 hours.
+- Treat Tidal Database fetch age as refresh scheduling rather than calling a
+  covered tide prediction stale.
+- Align onboard Help with Traffic's 30-second, 2-knot default Anchored release.
+
 ## 0.8.27
 
 - Preserve vessel-follow state while the position-first startup gate performs

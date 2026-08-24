@@ -165,7 +165,7 @@ Traffic's Anchored profile, records the current own-vessel position and depth
 below keel, and places a persistent labelled anchor symbol on the chart.
 **Un-anchor** always selects Coastal and removes the marker; changing away from
 Anchored elsewhere removes it automatically. Traffic also releases Anchored
-after sustained movement above its configured speed threshold (2 knots for 60
+after sustained movement above its configured speed threshold (2 knots for 30
 seconds by default), or—when this manual mark exists—after the vessel remains
 beyond its configured anchor radius (100 m for 30 seconds by default).
 
@@ -521,7 +521,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.27 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.28 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 
