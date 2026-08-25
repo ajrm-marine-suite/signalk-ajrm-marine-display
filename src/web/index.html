@@ -11,7 +11,7 @@
     <meta http-equiv="Pragma" content="no-cache" />
     <meta http-equiv="Expires" content="0" />
     <script>
-      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.28";
+      window.AJRM_MARINE_WEBAPP_VERSION = "0.8.29";
       (async () => {
         try {
           const response = await fetch(`./version.json?ts=${Date.now()}`, {
@@ -206,19 +206,6 @@
         width: 0.7rem;
       }
 
-      .ajrm-marine-display-version {
-        position: fixed;
-        right: 0.5rem;
-        bottom: 0.25rem;
-        z-index: 1020;
-        border: 1px solid rgba(var(--bs-secondary-rgb), 0.45);
-        border-radius: 999px;
-        background: rgba(var(--bs-body-bg-rgb), 0.82);
-        padding: 0.12rem 0.45rem;
-        color: var(--bs-secondary-color);
-        font-size: 0.68rem;
-        pointer-events: none;
-      }
     </style>
   </head>
 
@@ -229,7 +216,6 @@
         Determining vessel position…
       </div>
     </div>
-    <div class="ajrm-marine-display-version">AJRM Marine Display v0.8.28</div>
     <div id="topStatusStack" class="ajrm-marine-top-status-stack">
       <div
         id="connectionStatus"

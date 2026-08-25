@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import fs from "node:fs/promises";
 import test from "node:test";
 
 import {
@@ -62,15 +63,29 @@ function fixture(stored = null, formatStored = null, defaultCoordinateFormat = "
 	};
 }
 
-test("cursor readout is disabled by default and persists the device preference", () => {
+test("cursor readout is enabled by default and persists the device preference", () => {
 	const view = fixture();
+	assert.equal(view.checkbox.checked, true);
+	assert.equal(view.classes.has("d-none"), false);
+
+	view.checkbox.checked = false;
+	view.checkbox.onChange();
+	assert.equal(view.classes.has("d-none"), true);
+	assert.deepEqual(view.storageWrites, [[CURSOR_POSITION_STORAGE_KEY, "false"]]);
+});
+
+test("cursor readout honours an explicit disabled device preference", () => {
+	const view = fixture("false");
 	assert.equal(view.checkbox.checked, false);
 	assert.equal(view.classes.has("d-none"), true);
+});
 
-	view.checkbox.checked = true;
-	view.checkbox.onChange();
-	assert.equal(view.classes.has("d-none"), false);
-	assert.deepEqual(view.storageWrites, [[CURSOR_POSITION_STORAGE_KEY, "true"]]);
+test("Display does not render a fixed name and version badge over the cursor", async () => {
+	const html = await fs.readFile(
+		new URL("../src/web/index.html", import.meta.url),
+		"utf8",
+	);
+	assert.doesNotMatch(html, /ajrm-marine-display-version/);
 });
 
 test("coordinate format uses the configured default and a remembered browser override", () => {

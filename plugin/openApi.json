@@ -2,7 +2,7 @@
   "openapi": "3.0.3",
   "info": {
     "title": "AJRM Marine Display API",
-    "version": "0.8.28",
+    "version": "0.8.29",
     "description": "Read-only Display projections plus authenticated route, voyage-observation and diagnostic controls. Traffic, Notifications and Audio remain the authoritative providers."
   },
   "servers": [{ "url": "/plugins/signalk-ajrm-marine-display" }],
@@ -79,7 +79,7 @@
           "sessionId": { "type": "string", "format": "uuid" },
           "sequence": { "type": "integer", "minimum": 1 },
           "enabled": { "type": "boolean" },
-          "version": { "type": "string", "example": "0.8.28" },
+          "version": { "type": "string", "example": "0.8.29" },
           "locationsService": { "type": "string", "enum": ["ajrm-marine-locations-service-v1"] },
           "tideService": { "type": "string", "enum": ["ajrm-marine-tidal-database-service-v2"] },
           "weatherService": { "type": "string", "enum": ["ajrm-marine-weather-database-service-v1"] },

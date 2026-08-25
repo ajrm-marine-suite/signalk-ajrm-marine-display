@@ -24,7 +24,8 @@ export function createCursorPositionController({
 	getOwnPosition = () => null,
 	storage = globalThis.localStorage,
 }) {
-	let enabled = storage?.getItem?.(CURSOR_POSITION_STORAGE_KEY) === "true";
+	let enabled =
+		storage?.getItem?.(CURSOR_POSITION_STORAGE_KEY) !== "false";
 	let lastEvent = null;
 	let coordinateFormat = normalizeCoordinateFormat(
 		storage?.getItem?.(COORDINATE_FORMAT_STORAGE_KEY),

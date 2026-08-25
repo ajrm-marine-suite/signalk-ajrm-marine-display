@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.29 — 2026-08-25
+
+- Show the DR Plotter-style chart cursor latitude/longitude and own-vessel
+  range/bearing by default, while retaining an explicit per-browser off setting.
+- Remove the fixed Display name/version badge that obscured the cursor readout.
+
 ## 0.8.28 — 2026-08-24
 
 - Keep distant and old Weather Database fallbacks visible with their selected
