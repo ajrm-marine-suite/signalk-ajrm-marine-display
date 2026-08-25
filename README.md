@@ -1,5 +1,10 @@
 # AJRM Marine Display
 
+Version `0.8.30` makes the top-centre tide status identify the selected tidal
+port. When the selected result is a secondary port, its underlying standard
+port is shown separately as the reference, avoiding an apparent conflict with
+the Tides and Weather popup.
+
 At startup, Display keeps the chart covered until it has resolved an
 own-vessel coordinate. A fresh GPS fix is preferred, but a retained
 last-known position is also usable after GPS loss or a browser restart. Fresh
@@ -521,7 +526,7 @@ corresponding source times.
 
 ```bash
 cd ~/.signalk
-npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.29 --omit=dev --no-package-lock
+npm install git+https://github.com/ajrm-marine-suite/signalk-ajrm-marine-display.git#v0.8.30 --omit=dev --no-package-lock
 sudo systemctl restart signalk
 ```
 

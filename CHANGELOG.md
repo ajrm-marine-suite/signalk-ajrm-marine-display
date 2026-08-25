@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.8.30 — 2026-08-25
+
+- Lead the top-centre tide status with the selected tidal port. For a secondary
+  port, label the underlying standard port separately as its reference instead
+  of presenting the reference station as though it were the selected result.
+
 ## 0.8.29 — 2026-08-25
 
 - Show the DR Plotter-style chart cursor latitude/longitude and own-vessel

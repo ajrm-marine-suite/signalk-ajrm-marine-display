@@ -18,6 +18,7 @@ import {
 	tideGraphDays,
 	tideMeasurementLabels,
 	tidePortTitles,
+	tideStatusLocationLabel,
 	tideRequestContext,
 	tideStatusUrl,
 	tideCurveSvg,
@@ -33,6 +34,24 @@ test("both tide tabs identify the selected tidal port", () => {
 		graph: "Port Ellen — tidal curve",
 	});
 	assert.deepEqual(tidePortTitles(null), { details: "No tidal port", graph: "No tidal port — tidal curve" });
+});
+
+test("top tide status leads with the selected port and identifies its reference port", () => {
+	assert.equal(tideStatusLocationLabel({
+		selectedPort: { id: "loch-melfort", name: "Loch Melfort", types: ["tidalSecondaryPort"] },
+		station: {
+			name: "Oban",
+			standardPort: { id: "oban", name: "Oban port" },
+		},
+	}), "Loch Melfort · reference Oban port");
+	assert.equal(tideStatusLocationLabel({
+		selectedPort: { id: "oban", name: "Oban port", types: ["tidalStandardPort"] },
+		station: {
+			name: "Oban",
+			standardPort: { id: "oban", name: "Oban port" },
+		},
+	}), "Oban port");
+	assert.equal(tideStatusLocationLabel({ station: { name: "Legacy station" } }), "Legacy station");
 });
 
 test("tidal selection reasons are translated into skipper-facing explanations", () => {

@@ -60,6 +60,21 @@ export function tidePortTitles(tide) {
 	return { details: portName, graph: `${portName} — tidal curve` };
 }
 
+export function tideStatusLocationLabel(tide) {
+	const selectedPort = tide?.selectedPort;
+	const selectedName = String(selectedPort?.name || "").trim();
+	const standardPort = tide?.station?.standardPort;
+	const standardName = String(standardPort?.name || "").trim();
+	const explicitlySecondary = selectedPort?.types?.includes?.("tidalSecondaryPort") === true;
+	const explicitlyDifferentPort = Boolean(
+		selectedPort?.id && standardPort?.id && selectedPort.id !== standardPort.id,
+	);
+	if (selectedName && standardName && (explicitlySecondary || explicitlyDifferentPort)) {
+		return `${selectedName} · reference ${standardName}`;
+	}
+	return selectedName || standardName || String(tide?.station?.name || "").trim() || "No tidal port";
+}
+
 export function anchoringSuggestionText(value) {
 	return value?.state === "suggested" && value?.suggestionId
 		? `You appear stationary at ${value.location?.name || "an anchorage or mooring"}. Select the Anchored profile?`
@@ -428,10 +443,10 @@ export function createLocationTideController({
 		controls.detailsPortName.textContent = titles.details;
 		controls.graphPortName.textContent = titles.graph;
 		const measurements = tideMeasurementLabels(tide);
-		const stationName = tide?.station?.name || tide?.selectedPort?.name || "No station";
+		const statusLocation = tideStatusLocationLabel(tide);
 		controls.statusPanel.innerHTML = valid
-			? `<span class="fw-semibold"><i class="bi bi-water"></i> ${escapeHtml(heightLabel(tide.heightNowM))} · ${escapeHtml(tide.trend)} · ${escapeHtml(stationName)}</span>`
-			: `<span class="fw-semibold"><i class="bi bi-water"></i> ${hasEvents ? "Partial tide data" : "Tide unavailable"}${stationName === "No station" ? "" : ` · ${escapeHtml(stationName)}`}</span>`;
+			? `<span class="fw-semibold"><i class="bi bi-water"></i> ${escapeHtml(heightLabel(tide.heightNowM))} · ${escapeHtml(tide.trend)} · ${escapeHtml(statusLocation)}</span>`
+			: `<span class="fw-semibold"><i class="bi bi-water"></i> ${hasEvents ? "Partial tide data" : "Tide unavailable"}${statusLocation === "No tidal port" ? "" : ` · ${escapeHtml(statusLocation)}`}</span>`;
 		controls.statusPanel.classList.toggle("d-none", !controls.showStatus.checked);
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-refresh-due", tide?.freshness?.refreshDue === true);
 		controls.statusPanel.classList.toggle("ajrm-marine-tide-status-invalid", !valid);
